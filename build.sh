@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 # set all environment variables here
 # QT_PATH
 source env.sh
