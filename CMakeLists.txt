@@ -5,11 +5,15 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
 
-include_directories(src/gui/include)
+include_directories(src/include src/gui/include src/dict/include)
 
 qt_add_executable(lexis src/gui/main.cpp
                         src/gui/start_page.cpp
-                        src/gui/completer.cpp)
+                        src/dict/completer.cpp
+                        src/dict/predictor.cpp
+                        src/dict/include/predictor.hpp)
+
+add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 
 target_link_libraries(lexis PUBLIC
     Qt::Core
