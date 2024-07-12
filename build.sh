@@ -2,6 +2,7 @@
 
 # set all environment variables here
 # QT_PATH
+# PREDICTOR_API_KEY
 source env.sh
 
 cmake -G"Ninja" -B build                \

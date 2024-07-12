@@ -5,15 +5,19 @@
 
 namespace lexis {
 
-class Predictor : QObject {
+class Predictor : public QObject {
  Q_OBJECT
 
  private:
   QNetworkAccessManager* _manager = nullptr;
+  QString _query;
 
  public:
   explicit Predictor(QObject* parent = nullptr);
-  std::vector<std::string> getPrediction(std::string_view query);
+  void requestPredictions(const QString& query);
+
+ signals:
+  void predictionsReceived(const QStringList& predictions);
 
  private slots:
   void replyFinished(QNetworkReply* reply);

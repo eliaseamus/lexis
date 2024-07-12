@@ -14,6 +14,8 @@ StartPage::StartPage(QWidget* parent) :
   _searchLine->setPlaceholderText("Search history..");
   _searchLine->setCompleter(_completer->get());
 
+  connect(_searchLine, SIGNAL(textEdited(const QString&)), _completer, SLOT(onTextEdited(const QString&)));
+
   auto layout = new QVBoxLayout;
   layout->addWidget(_searchLine);
   layout->addStretch(1);
