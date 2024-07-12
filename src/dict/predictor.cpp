@@ -21,8 +21,8 @@ void Predictor::requestPredictions(const QString& query) {
   static const auto urlFormat = "https://predictor.yandex.net/api/v1/predict.json/complete?key=%1&q=%2&lang=en&limit=%3";
  
   _query = query;
-  const auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY), QString(query).replace(' ', '+'), QString::number(limit));
-  _manager->get(QNetworkRequest(QUrl(url)));
+  _manager->get(QNetworkRequest(QUrl(QString(urlFormat)
+    .arg(MAKE_STR(PREDICTOR_API_KEY), QString(query).replace(' ', '+'), QString::number(limit)))));
 }
 
 void Predictor::replyFinished(QNetworkReply* reply) {
@@ -50,13 +50,6 @@ void Predictor::replyFinished(QNetworkReply* reply) {
     } else if (isEndOfWord && !prediction.startsWith(_query)) {
       prediction.prepend(_query + space);
     }
-//    if (isEndOfWord && !prediction.startsWith(_query)) {
-//      if (isPhrase && _query.endsWith(space)) {
-//        prediction.prepend(_query.mid(0, _query.lastIndexOf(space) + 1));
-//      } else {
-//        prediction.prepend(_query + space);
-//      }
-//    }
     predictions.push_back(std::move(prediction));
   }
 
