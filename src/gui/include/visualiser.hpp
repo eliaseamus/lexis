@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QWidget>
+#include <QSplitter>
 #include <QtWebEngineWidgets/QWebEngineView>
-#include <QLabel>
+
+#include <image.hpp>
 
 namespace lexis {
 
@@ -11,14 +13,14 @@ class Visualiser : public QWidget {
 
  private:
   QWebEngineView* _view = nullptr;
-  QLabel* _image = nullptr;
+  Image* _image = nullptr;
 
  public:
   Visualiser(QWidget* aprent = nullptr);
 
  public slots:
   void loadImages(const QString& query);
-
+  void onLoadFinished(bool ok);
 };
 
 }

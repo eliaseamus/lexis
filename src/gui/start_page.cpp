@@ -11,7 +11,7 @@ StartPage::StartPage(QWidget* parent) :
   QWidget(parent)
 {
   _searchLine = new QLineEdit(this);
-  _searchButton = new QPushButton("Search", this);
+  _searchButton = new QPushButton("&Search", this);
   _completer = new DictionaryCompleter(this);
   _visualiser = new Visualiser(this);
 

@@ -15,7 +15,9 @@ qt_add_executable(lexis src/gui/main.cpp
                         src/dict/predictor.cpp
                         src/dict/include/predictor.hpp
                         src/gui/visualiser.cpp
-                        src/gui/include/visualiser.hpp)
+                        src/gui/include/visualiser.hpp
+                        src/gui/image.cpp
+                        src/gui/include/image.hpp)
 
 add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 add_definitions(-DCSE_ID=${CSE_ID})
