@@ -18,7 +18,6 @@ class DictionaryCompleter : public QObject {
   DictionaryCompleter(QObject* parent);
   QCompleter* get() const {return _completer;}
 
-
  public slots:
   void onTextEdited(const QString& text);
   void onPredictionsReceived(const QStringList& predictions);

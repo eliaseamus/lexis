@@ -13,20 +13,23 @@ StartPage::StartPage(QWidget* parent) :
   _searchLine = new QLineEdit(this);
   _searchButton = new QPushButton("&Search", this);
   _completer = new DictionaryCompleter(this);
-  _visualiser = new Visualiser(this);
+//  _visualiser = new Visualiser(this);
+  _wordCard = new WordCard(this);
 
   _searchLine->setPlaceholderText("Search history..");
   _searchLine->setCompleter(_completer->get());
 
   connect(_searchLine, SIGNAL(textEdited(const QString&)), _completer, SLOT(onTextEdited(const QString&)));
   connect(_searchButton, SIGNAL(clicked()), this, SLOT(doSearch()));
+  connect(_searchLine, SIGNAL(returnPressed()), this, SLOT(doSearch()));
 
   auto layout = new QVBoxLayout;
   auto searchBar = new QHBoxLayout;
   searchBar->addWidget(_searchLine);
   searchBar->addWidget(_searchButton);
   layout->addLayout(searchBar);
-  layout->addWidget(_visualiser);
+//  layout->addWidget(_visualiser);
+  layout->addWidget(_wordCard);
   setLayout(layout);
 
   resizePage();
@@ -42,7 +45,8 @@ void StartPage::resizePage() {
 }
 
 void StartPage::doSearch() {
-  _visualiser->loadImages(_searchLine->text());
+  _wordCard->build(_searchLine->text());
+//  _visualiser->loadImages(_searchLine->text());
 }
 
 }

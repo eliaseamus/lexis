@@ -14,14 +14,18 @@ qt_add_executable(lexis src/gui/main.cpp
                         src/dict/include/completer.hpp
                         src/dict/predictor.cpp
                         src/dict/include/predictor.hpp
+                        src/dict/dictionary.cpp
+                        src/dict/include/dictionary.hpp
                         src/gui/visualiser.cpp
                         src/gui/include/visualiser.hpp
                         src/gui/image.cpp
-                        src/gui/include/image.hpp)
+                        src/gui/include/image.hpp
+                        src/gui/word_card.cpp
+                        src/gui/include/word_card.hpp)
 
 add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
+add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})
 add_definitions(-DCSE_ID=${CSE_ID})
-
 
 target_link_libraries(lexis PUBLIC
     Qt::Core

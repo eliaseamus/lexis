@@ -6,6 +6,7 @@
 
 #include "completer.hpp"
 #include "visualiser.hpp"
+#include "word_card.hpp"
 
 namespace lexis {
 
@@ -17,6 +18,7 @@ class StartPage : public QWidget {
   QPushButton* _searchButton = nullptr;
   DictionaryCompleter* _completer = nullptr;
   Visualiser* _visualiser = nullptr;
+  WordCard* _wordCard = nullptr;
 
  public:
   StartPage(QWidget* parent = nullptr);

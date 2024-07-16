@@ -35,7 +35,7 @@ void Predictor::replyFinished(QNetworkReply* reply) {
 
   QVector<QString> predictions;
   predictions.reserve(values.size());
-  for (const auto value : values) {
+  for (const auto& value : values) {
     QString prediction = value.toString();
     if (isPhrase) {
       const QString& startOfQuery = _query.mid(0, _query.lastIndexOf(space) + 1);
