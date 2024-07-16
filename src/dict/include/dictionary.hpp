@@ -7,8 +7,8 @@ namespace lexis {
 
 struct Translation {
   QString text;
-  QVector<QString> synonyms;
-  QVector<QString> meanings;
+  QStringList synonyms;
+  QStringList meanings;
 };
 
 struct Definition {

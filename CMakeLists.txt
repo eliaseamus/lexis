@@ -7,7 +7,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network WebEngineWidgets)
 
 include_directories(src/include src/gui/include src/dict/include)
 
-qt_add_executable(lexis src/gui/main.cpp
+qt_add_executable(lexis src/main.cpp
                         src/gui/start_page.cpp
                         src/gui/include/start_page.hpp
                         src/dict/completer.cpp

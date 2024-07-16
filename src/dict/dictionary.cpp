@@ -50,7 +50,7 @@ void Dictionary::replyFinished(QNetworkReply* reply) {
       translation.text = translationObject["text"].toString();
       if (translationObject.contains("syn")) {
         auto synonymValues = translationObject["syn"].toArray();
-        QVector<QString> synonyms;
+        QStringList synonyms;
         synonyms.reserve(synonymValues.size());
         for (const auto& synonymValue : synonymValues) {
           auto synonymObject = synonymValue.toObject();
@@ -61,7 +61,7 @@ void Dictionary::replyFinished(QNetworkReply* reply) {
 
       if (translationObject.contains("mean")) {
         auto meaningValues = translationObject["mean"].toArray();
-        QVector<QString> meanings;
+        QStringList meanings;
         meanings.reserve(meaningValues.size());
         for (const auto& meaningValue : meaningValues) {
           auto meaningObject = meaningValue.toObject();

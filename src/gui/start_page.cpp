@@ -30,6 +30,7 @@ StartPage::StartPage(QWidget* parent) :
   layout->addLayout(searchBar);
 //  layout->addWidget(_visualiser);
   layout->addWidget(_wordCard);
+  layout->addStretch(1);
   setLayout(layout);
 
   resizePage();
