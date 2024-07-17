@@ -9,6 +9,7 @@ WordCard::WordCard(QWidget* parent) :
   _dict = new Dictionary(this);
   _title = new QLabel(this);
   _transcription = new QLabel(this);
+  _definitions = new QLabel(this);
   _image = new QPushButton("?", this);
 
   QFont titleFont;
@@ -25,16 +26,19 @@ WordCard::WordCard(QWidget* parent) :
   _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   _transcription->setStyleSheet("background: #FFF0AE;");
 
-  _briefInfo = new QVBoxLayout;
+  _definitions->setFont(_textFont);
+
+  auto* dictPage = new QVBoxLayout;
   auto* topBar = new QHBoxLayout;
   topBar->setSizeConstraint(QLayout::SetMinimumSize);
   topBar->addWidget(_title);
   topBar->addWidget(_transcription);
-  _briefInfo->addLayout(topBar);
-  _briefInfo->addSpacing(20);
+  dictPage->addLayout(topBar);
+  dictPage->addSpacing(20);
+  dictPage->addWidget(_definitions);
   
   auto* lexisInfo = new QHBoxLayout;
-  lexisInfo->addLayout(_briefInfo);
+  lexisInfo->addLayout(dictPage);
   lexisInfo->addWidget(_image);
 
   auto* layout = new QVBoxLayout;
@@ -46,6 +50,7 @@ WordCard::WordCard(QWidget* parent) :
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
+  hide();
 }
 
 WordCard::WordCard(const QString& word, QWidget* parent) :
@@ -55,7 +60,6 @@ WordCard::WordCard(const QString& word, QWidget* parent) :
 }
 
 void WordCard::build(const QString& word) {
-  _title->setText(word);
   _dict->lookup(word);
 }
 
@@ -63,25 +67,29 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
   const auto defNum = definitions.size();
   const bool isMultipleDefinitions = defNum > 1;
 
-  int num = 1;
+  if (!definitions.isEmpty()) {
+    auto def = definitions.front();
+    _title->setText(def.text);
+    _transcription->setText(QString("[%1]").arg(def.transcription));
+  } else {
+    _title->setText("");
+    _transcription->setText("");
+    _definitions->setText("");
+  }
+
+  QString defText = "<html>";
+  if (isMultipleDefinitions) {
+    defText.append("<ol>");
+  }
+
   for (const auto& def : definitions) {
-    if (_transcription->text().isEmpty()) {
-      _transcription->setText(QString("[%1]").arg(def.transcription));
+    if (isMultipleDefinitions) {
+      defText.append("<li>");
     }
+    defText.append(def.partOfSpeech);
 
-    auto* posLabel = new QLabel(this);
-    posLabel->setFont(_textFont);
-    const auto pos = isMultipleDefinitions ? QString("%1. %2").arg(QString::number(num), def.partOfSpeech)
-                                           : def.partOfSpeech;
-    posLabel->setText(pos);
-    _briefInfo->addWidget(posLabel);
-
-    auto* trLabel = new QLabel(this);
-    trLabel->setFont(_textFont);
-    trLabel->setStyleSheet("margin-left: 10");
-  
     QString trText;
-    trText.append("<html><ul>");
+    trText.append("<ul>");
     for (const auto& translation : def.translations) {
       trText.append("<li>");
       trText.append(translation.text);
@@ -93,11 +101,20 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
       }
       trText.append("</li>");
     }
-    trText.append("</ul></html>");
-    trLabel->setText(trText);
-    _briefInfo->addWidget(trLabel);
-    num++;
+    trText.append("</ul>");
+    defText.append(std::move(trText));
+    if (isMultipleDefinitions) {
+      defText.append("</li>");
+    }
   }
+
+  if (isMultipleDefinitions) {
+    defText.append("</ol>");
+  }
+
+  defText.append("</html>");
+  _definitions->setText(defText);
+  show();
 }
 
 }

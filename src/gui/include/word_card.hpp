@@ -16,8 +16,8 @@ class WordCard : public QWidget {
   Dictionary* _dict = nullptr;
   QLabel* _title = nullptr;
   QLabel* _transcription = nullptr;
+  QLabel* _definitions = nullptr;
   QPushButton* _image = nullptr;
-  QVBoxLayout* _briefInfo = nullptr;
   QFont _textFont;
 
  public:
@@ -27,6 +27,7 @@ class WordCard : public QWidget {
 
  public slots:
   void displayDefinitions(const QVector<Definition>& definitions);
+
 };
 
 }
