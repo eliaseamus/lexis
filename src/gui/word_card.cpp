@@ -10,7 +10,7 @@ WordCard::WordCard(QWidget* parent) :
   _title = new QLabel(this);
   _transcription = new QLabel(this);
   _definitions = new QLabel(this);
-  _image = new QPushButton("?", this);
+  _image = new QLabel("?", this);
 
   QFont titleFont;
   titleFont.setBold(true);
@@ -27,26 +27,41 @@ WordCard::WordCard(QWidget* parent) :
   _transcription->setStyleSheet("background: #FFF0AE;");
 
   _definitions->setFont(_textFont);
+  _definitions->setWordWrap(true);
+  _definitions->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
+  _image->setStyleSheet("background: #F1F1F1;");
+  _image->setFont(_textFont);
+  _image->setFixedSize(500, 350);
+  _image->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  
+  auto* shadow = new QGraphicsDropShadowEffect();
+  shadow->setBlurRadius(20);
+  shadow->setOffset(10, 10);
+  shadow->setColor(Qt::black);
+  _image->setGraphicsEffect(shadow);
+  
   auto* dictPage = new QVBoxLayout;
   auto* topBar = new QHBoxLayout;
   topBar->setSizeConstraint(QLayout::SetMinimumSize);
   topBar->addWidget(_title);
   topBar->addWidget(_transcription);
+
+  dictPage->setSizeConstraint(QLayout::SetMinimumSize);
   dictPage->addLayout(topBar);
   dictPage->addSpacing(20);
   dictPage->addWidget(_definitions);
+  dictPage->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   
   auto* lexisInfo = new QHBoxLayout;
   lexisInfo->addLayout(dictPage);
+  lexisInfo->addStretch(1);
   lexisInfo->addWidget(_image);
+  lexisInfo->addStretch(1);
 
   auto* layout = new QVBoxLayout;
   layout->addLayout(lexisInfo);
   setLayout(layout);
-
-  _image->setStyleSheet("background: #F1F1F1");
-  _image->setFont(_textFont);
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
@@ -75,6 +90,7 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
     _title->setText("");
     _transcription->setText("");
     _definitions->setText("");
+    return;
   }
 
   QString defText = "<html>";

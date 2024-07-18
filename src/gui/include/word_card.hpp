@@ -2,7 +2,6 @@
 
 #include <QWidget>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "dictionary.hpp"
@@ -17,7 +16,7 @@ class WordCard : public QWidget {
   QLabel* _title = nullptr;
   QLabel* _transcription = nullptr;
   QLabel* _definitions = nullptr;
-  QPushButton* _image = nullptr;
+  QLabel* _image = nullptr;
   QFont _textFont;
 
  public:
