@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 #include <QSplitter>
 #include <QtWebEngineWidgets/QWebEngineView>
 
@@ -8,7 +8,7 @@
 
 namespace lexis {
 
-class Visualiser : public QWidget {
+class Visualiser : public QDialog {
  Q_OBJECT
 
  private:
@@ -16,11 +16,14 @@ class Visualiser : public QWidget {
   Image* _image = nullptr;
 
  public:
-  Visualiser(QWidget* aprent = nullptr);
+  Visualiser(QWidget* parent = nullptr);
 
  public slots:
   void loadImages(const QString& query);
   void onLoadFinished(bool ok);
+
+ signals:
+  void imageChosen(const QUrl& url);
 };
 
 }

@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "dictionary.hpp"
@@ -16,7 +17,7 @@ class WordCard : public QWidget {
   QLabel* _title = nullptr;
   QLabel* _transcription = nullptr;
   QLabel* _definitions = nullptr;
-  QLabel* _image = nullptr;
+  QPushButton* _image = nullptr;
   QFont _textFont;
 
  public:
@@ -26,6 +27,10 @@ class WordCard : public QWidget {
 
  public slots:
   void displayDefinitions(const QVector<Definition>& definitions);
+  void onImageChosen(const QUrl& url);
+
+ private slots:
+  void selectImage();
 
 };
 

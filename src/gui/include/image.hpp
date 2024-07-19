@@ -11,6 +11,7 @@ class Image : public QWidget {
 
  private:
   QLabel* _label = nullptr;
+  QUrl _url;
 
  public:
   explicit Image(QWidget* parent = nullptr);
@@ -25,6 +26,10 @@ class Image : public QWidget {
   void dragLeaveEvent(QDragLeaveEvent* event) override;
   void dragMoveEvent(QDragMoveEvent* event) override;
   void dropEvent(QDropEvent* event) override;
+
+ signals:
+  void canceled();
+  void chosen(const QUrl& url);
 
 };
 

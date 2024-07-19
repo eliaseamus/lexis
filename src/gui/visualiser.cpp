@@ -8,12 +8,17 @@
 namespace lexis {
 
 Visualiser::Visualiser(QWidget* parent) :
-  QWidget(parent)
+  QDialog(parent)
 {
   _view = new QWebEngineView(this);
   _image = new Image(this);
 
   connect(_view, SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
+  connect(_image, &Image::chosen, this, [this](const QUrl& url) {
+    emit imageChosen(url);
+    this->accept();
+  });
+  connect(_image, &Image::canceled, this, &QDialog::reject);
 
   auto* layout = new QHBoxLayout;
   auto* splitter = new QSplitter(this);

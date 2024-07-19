@@ -23,7 +23,8 @@ Image::Image(QWidget* parent) :
   actions->addWidget(cancel);
   layout->addLayout(actions);
 
-  connect(cancel, &QPushButton::clicked, this, [this](){this->clearChosenImage();});
+  connect(ok, &QPushButton::clicked, this, [this](){emit chosen(_url);});
+  connect(cancel, &QPushButton::clicked, this, [this](){emit canceled();});
 
   setLayout(layout);
   setBackgroundColor(Qt::GlobalColor::lightGray);
@@ -82,7 +83,8 @@ void Image::dropEvent(QDropEvent* event) {
     auto urllist = event->mimeData()->urls();
     for (const auto& url : urllist) {
       if (url.isLocalFile()) {
-        auto pixmap = QPixmap(url.toLocalFile());
+        _url = url;
+        auto pixmap = QPixmap(_url.toLocalFile());
         pixmap = pixmap.scaled(_label->size(), Qt::KeepAspectRatio);
         _label->setPixmap(std::move(pixmap));
         setBackgroundColor(Qt::GlobalColor::lightGray);

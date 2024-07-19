@@ -1,6 +1,8 @@
 #include "word_card.hpp"
 #include <QtWidgets>
 
+#include "visualiser.hpp"
+
 namespace lexis {
 
 WordCard::WordCard(QWidget* parent) :
@@ -10,7 +12,7 @@ WordCard::WordCard(QWidget* parent) :
   _title = new QLabel(this);
   _transcription = new QLabel(this);
   _definitions = new QLabel(this);
-  _image = new QLabel("?", this);
+  _image = new QPushButton("?", this);
 
   QFont titleFont;
   titleFont.setBold(true);
@@ -24,16 +26,18 @@ WordCard::WordCard(QWidget* parent) :
   _transcription->setFont(_textFont);
   _transcription->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-  _transcription->setStyleSheet("background: #FFF0AE;");
+  _transcription->setStyleSheet("background: #FFF0AE; border-radius: 15px;");
 
   _definitions->setFont(_textFont);
   _definitions->setWordWrap(true);
   _definitions->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-  _image->setStyleSheet("background: #F1F1F1;");
-  _image->setFont(_textFont);
+  QFont buttonFont;
+  buttonFont.setPointSize(32);
+  buttonFont.setFamily("Monospace");
+  _image->setStyleSheet("QPushButton {background: #F1F1F1; border-radius: 25px;} QPushButton:pressed {background: #E1E1E1}");
+  _image->setFont(buttonFont);
   _image->setFixedSize(500, 350);
-  _image->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   
   auto* shadow = new QGraphicsDropShadowEffect();
   shadow->setBlurRadius(20);
@@ -65,6 +69,7 @@ WordCard::WordCard(QWidget* parent) :
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
+  connect(_image, SIGNAL(clicked()), this, SLOT(selectImage()));
   hide();
 }
 
@@ -131,6 +136,22 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
   defText.append("</html>");
   _definitions->setText(defText);
   show();
+}
+
+void WordCard::onImageChosen(const QUrl& url) {
+  _image->setText("");
+  auto pixmap = QPixmap(url.toLocalFile());
+  pixmap = pixmap.scaled(_image->size(), Qt::IgnoreAspectRatio);
+  QIcon icon(pixmap);
+  _image->setIcon(icon);
+  _image->setIconSize(pixmap.rect().size());
+}
+
+void WordCard::selectImage() {
+  Visualiser vis;
+  connect(&vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
+  vis.loadImages(_title->text());
+  vis.exec();
 }
 
 }
