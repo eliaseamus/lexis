@@ -21,14 +21,15 @@ WordCard::WordCard(QWidget* parent) :
   titleFont.setFamily("Monospace");
   _title->setFont(titleFont);
 
-  _textFont.setPointSize(16);
-  _textFont.setFamily("Monospace");
-  _transcription->setFont(_textFont);
+  QFont textFont;
+  textFont.setPointSize(16);
+  textFont.setFamily("Monospace");
+  _transcription->setFont(textFont);
   _transcription->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   _transcription->setStyleSheet("background: #FFF0AE; border-radius: 15px;");
 
-  _definitions->setFont(_textFont);
+  _definitions->setFont(textFont);
   _definitions->setWordWrap(true);
   _definitions->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
@@ -57,8 +58,8 @@ WordCard::WordCard(QWidget* parent) :
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
-  connect(_image, &Image::clicked, this, [this](){_image->darken();});
-  connect(_image, &Image::released, this, [this](){
+  connect(_image, &Image::clicked, this, [this]() {_image->darken();});
+  connect(_image, &Image::released, this, [this]() {
     _image->brighten();
     selectImage();
   });
@@ -79,10 +80,13 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
   const auto defNum = definitions.size();
   const bool isMultipleDefinitions = defNum > 1;
 
+  _imageQueries.clear();
+
   if (!definitions.isEmpty()) {
     auto def = definitions.front();
     _title->setText(def.text);
     _transcription->setText(QString("[%1]").arg(def.transcription));
+    _imageQueries.append(def.text);
   } else {
     _title->setText("");
     _transcription->setText("");
@@ -106,11 +110,14 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
     for (const auto& translation : def.translations) {
       trText.append("<li>");
       trText.append(translation.text);
+      _imageQueries.append(translation.text);
       if (!translation.synonyms.isEmpty()) {
         trText.append(QString(" (%1)").arg(translation.synonyms.join(", ")));
+        _imageQueries.append(translation.synonyms);
       } 
       if (!translation.meanings.isEmpty()) {
         trText.append(QString(": %1").arg(translation.meanings.join(", ")));
+        _imageQueries.append(translation.meanings);
       }
       trText.append("</li>");
     }
@@ -142,7 +149,7 @@ void WordCard::onImageChosen(const QUrl& url) {
 void WordCard::selectImage() {
   auto* vis = new Visualiser(this);
   connect(vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
-  vis->loadImages(_title->text());
+  vis->loadImages(_imageQueries);
   vis->exec();
 }
 

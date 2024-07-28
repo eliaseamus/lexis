@@ -18,7 +18,7 @@ class WordCard : public QWidget {
   QLabel* _transcription = nullptr;
   QLabel* _definitions = nullptr;
   Image* _image = nullptr;
-  QFont _textFont;
+  QStringList _imageQueries;
 
  public:
   WordCard(QWidget* parent = nullptr);

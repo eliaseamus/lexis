@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QComboBox>
 #include <QSplitter>
 #include <QtWebEngineWidgets/QWebEngineView>
 
@@ -12,6 +13,7 @@ class Visualiser : public QDialog {
  Q_OBJECT
 
  private:
+  QComboBox* _queries = nullptr;
   QWebEngineView* _view = nullptr;
   Image* _image = nullptr;
 
@@ -23,6 +25,9 @@ class Visualiser : public QDialog {
 
  public slots:
   void loadImages(const QString& query);
+  void loadImages(const QStringList& queries);
+
+ private slots:
   void onLoadFinished(bool ok);
 
  signals:

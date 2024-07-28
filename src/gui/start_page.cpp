@@ -2,8 +2,7 @@
 #include "completer.hpp"
 #include <QScreen>
 #include <QStyleHints>
-#include <QLayout>
-#include <qboxlayout.h>
+#include <QtWidgets>
 
 namespace lexis {
 
@@ -13,7 +12,6 @@ StartPage::StartPage(QWidget* parent) :
   _searchLine = new QLineEdit(this);
   _searchButton = new QPushButton("&Search", this);
   _completer = new DictionaryCompleter(this);
-//  _visualiser = new Visualiser(this);
   _wordCard = new WordCard(this);
 
   _searchLine->setPlaceholderText("Search history..");
@@ -27,10 +25,10 @@ StartPage::StartPage(QWidget* parent) :
   auto searchBar = new QHBoxLayout;
   searchBar->addWidget(_searchLine);
   searchBar->addWidget(_searchButton);
+  layout->setAlignment(Qt::AlignTop);
   layout->addLayout(searchBar);
-//  layout->addWidget(_visualiser);
+
   layout->addWidget(_wordCard);
-  layout->addStretch(1);
   setLayout(layout);
 
   resizeWindow();
