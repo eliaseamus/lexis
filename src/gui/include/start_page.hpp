@@ -24,7 +24,7 @@ class StartPage : public QWidget {
   StartPage(QWidget* parent = nullptr);
  
  private:
-  void resizePage();
+  void resizeWindow();
 
  private slots:
   void doSearch();

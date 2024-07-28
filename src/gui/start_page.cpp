@@ -33,10 +33,10 @@ StartPage::StartPage(QWidget* parent) :
   layout->addStretch(1);
   setLayout(layout);
 
-  resizePage();
+  resizeWindow();
 }
 
-void StartPage::resizePage() {
+void StartPage::resizeWindow() {
   if (!QGuiApplication::styleHints()->showIsFullScreen() && !QGuiApplication::styleHints()->showIsMaximized()) {
     const QRect availableGeometry = this->screen()->availableGeometry();
     this->resize(availableGeometry.width() / 3, availableGeometry.height() * 2 / 3);

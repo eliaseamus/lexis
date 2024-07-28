@@ -1,14 +1,16 @@
 #include "image.hpp"
 
 #include <QtWidgets>
+#include <qnamespace.h>
 
 namespace lexis {
 
-Image::Image(QWidget* parent) :
+Image::Image(const QString& startText, QWidget* parent) :
   QWidget(parent)
 {
   _label = new QLabel(this);
   _label->setMinimumWidth(400);
+  _label->setMinimumHeight(350);
   _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   setAcceptDrops(true);
 
@@ -16,20 +18,18 @@ Image::Image(QWidget* parent) :
   layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
 
-  auto* actions = new QHBoxLayout;
-  auto* ok = new QPushButton("&OK", this);
-  auto* cancel = new QPushButton("&Cancel", this);
-  actions->addWidget(ok);
-  actions->addWidget(cancel);
-  layout->addLayout(actions);
-
-  connect(ok, &QPushButton::clicked, this, [this](){emit chosen(_url);});
-  connect(cancel, &QPushButton::clicked, this, [this](){emit canceled();});
-
   setLayout(layout);
   setBackgroundColor(Qt::GlobalColor::lightGray);
-  clearChosenImage();
+  _label->setText(startText);
   addShadow();
+}
+
+void Image::setImageFromUrl(const QUrl& url) {
+  _url = url;
+  auto pixmap = QPixmap(_url.toLocalFile());
+  pixmap = pixmap.scaled(_label->size(), Qt::KeepAspectRatio);
+  _label->setPixmap(std::move(pixmap));
+  setBackgroundColor(Qt::lightGray);
 }
 
 void Image::setBackgroundColor(Qt::GlobalColor color) {
@@ -39,8 +39,38 @@ void Image::setBackgroundColor(Qt::GlobalColor color) {
   setPalette(pal);
 }
 
-void Image::clearChosenImage() {
-  _label->setText("Pick an image representing\nthe word and drop it in this area");
+void Image::darken() {
+  if (_url.isEmpty()) {
+    setBackgroundColor(Qt::darkGray);
+  } else {
+    auto image = _label->pixmap().toImage();
+
+    for (int x = 0; x < image.width(); ++x) {
+      for (int y = 0; y < image.height(); ++y) {
+        auto originalColor = image.pixelColor(x, y);
+        image.setPixelColor(x, y, originalColor.darker(kGrayScaleFactor));
+      }
+    }
+
+    _label->setPixmap(QPixmap::fromImage(std::move(image)));
+  }
+}
+
+void Image::brighten() {
+  if (_url.isEmpty()) {
+    setBackgroundColor(Qt::lightGray);
+  } else {
+    auto image = _label->pixmap().toImage();
+
+    for (int x = 0; x < image.width(); ++x) {
+      for (int y = 0; y < image.height(); ++y) {
+        auto originalColor = image.pixelColor(x, y);
+        image.setPixelColor(x, y, originalColor.lighter(kGrayScaleFactor));
+      }
+    }
+
+    _label->setPixmap(QPixmap::fromImage(std::move(image)));
+  }
 }
 
 void Image::addShadow() {
@@ -58,7 +88,7 @@ void Image::addShadow() {
 void Image::dragEnterEvent(QDragEnterEvent* event) {
   if (event->mimeData()->hasUrls()) {
     event->acceptProposedAction();
-    setBackgroundColor(Qt::GlobalColor::darkGray);
+    setBackgroundColor(Qt::darkGray);
     QGuiApplication::setOverrideCursor(QCursor(Qt::DragCopyCursor));
   }
 }
@@ -83,16 +113,20 @@ void Image::dropEvent(QDropEvent* event) {
     auto urllist = event->mimeData()->urls();
     for (const auto& url : urllist) {
       if (url.isLocalFile()) {
-        _url = url;
-        auto pixmap = QPixmap(_url.toLocalFile());
-        pixmap = pixmap.scaled(_label->size(), Qt::KeepAspectRatio);
-        _label->setPixmap(std::move(pixmap));
-        setBackgroundColor(Qt::GlobalColor::lightGray);
+        setImageFromUrl(url);
         event->acceptProposedAction();
         QGuiApplication::restoreOverrideCursor();
       }
     }
   }
+}
+
+void Image::mousePressEvent(QMouseEvent* event) {
+  emit clicked();
+}
+
+void Image::mouseReleaseEvent(QMouseEvent* event) {
+  emit released();
 }
 
 }

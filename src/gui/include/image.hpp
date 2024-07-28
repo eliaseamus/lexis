@@ -9,28 +9,34 @@ namespace lexis {
 class Image : public QWidget {
  Q_OBJECT
 
+ static constexpr auto kGrayScaleFactor = 200;
+
  private:
   QLabel* _label = nullptr;
   QUrl _url;
 
  public:
-  explicit Image(QWidget* parent = nullptr);
+  explicit Image(const QString& startText, QWidget* parent = nullptr);
+  QUrl getUrl() const {return _url;}
+  void setImageFromUrl(const QUrl& url);
+  void setBackgroundColor(Qt::GlobalColor color);
+  void darken();
+  void brighten();
 
  private:
   void addShadow();
-  void setBackgroundColor(Qt::GlobalColor color);
-  void clearChosenImage();
 
  protected:
   void dragEnterEvent(QDragEnterEvent* event) override;
   void dragLeaveEvent(QDragLeaveEvent* event) override;
   void dragMoveEvent(QDragMoveEvent* event) override;
   void dropEvent(QDropEvent* event) override;
+  void mousePressEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
 
  signals:
-  void canceled();
-  void chosen(const QUrl& url);
-
+  void clicked();
+  void released();
 };
 
 }

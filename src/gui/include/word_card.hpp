@@ -2,9 +2,9 @@
 
 #include <QWidget>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
 
+#include "image.hpp"
 #include "dictionary.hpp"
 
 namespace lexis {
@@ -17,7 +17,7 @@ class WordCard : public QWidget {
   QLabel* _title = nullptr;
   QLabel* _transcription = nullptr;
   QLabel* _definitions = nullptr;
-  QPushButton* _image = nullptr;
+  Image* _image = nullptr;
   QFont _textFont;
 
  public:

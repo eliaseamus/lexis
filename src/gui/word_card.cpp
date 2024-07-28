@@ -12,7 +12,7 @@ WordCard::WordCard(QWidget* parent) :
   _title = new QLabel(this);
   _transcription = new QLabel(this);
   _definitions = new QLabel(this);
-  _image = new QPushButton("?", this);
+  _image = new Image("Click to select an image", this);
 
   QFont titleFont;
   titleFont.setBold(true);
@@ -32,19 +32,6 @@ WordCard::WordCard(QWidget* parent) :
   _definitions->setWordWrap(true);
   _definitions->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-  QFont buttonFont;
-  buttonFont.setPointSize(32);
-  buttonFont.setFamily("Monospace");
-  _image->setStyleSheet("QPushButton {background: #F1F1F1; border-radius: 25px;} QPushButton:pressed {background: #E1E1E1}");
-  _image->setFont(buttonFont);
-  _image->setFixedSize(500, 350);
-  
-  auto* shadow = new QGraphicsDropShadowEffect();
-  shadow->setBlurRadius(20);
-  shadow->setOffset(10, 10);
-  shadow->setColor(Qt::black);
-  _image->setGraphicsEffect(shadow);
-  
   auto* dictPage = new QVBoxLayout;
   auto* topBar = new QHBoxLayout;
   topBar->setSizeConstraint(QLayout::SetMinimumSize);
@@ -56,12 +43,13 @@ WordCard::WordCard(QWidget* parent) :
   dictPage->addSpacing(20);
   dictPage->addWidget(_definitions);
   dictPage->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  
+ 
+  auto* imageSide = new QVBoxLayout;
+  imageSide->addWidget(_image);
+
   auto* lexisInfo = new QHBoxLayout;
   lexisInfo->addLayout(dictPage);
-  lexisInfo->addStretch(1);
-  lexisInfo->addWidget(_image);
-  lexisInfo->addStretch(1);
+  lexisInfo->addLayout(imageSide);
 
   auto* layout = new QVBoxLayout;
   layout->addLayout(lexisInfo);
@@ -69,7 +57,11 @@ WordCard::WordCard(QWidget* parent) :
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
-  connect(_image, SIGNAL(clicked()), this, SLOT(selectImage()));
+  connect(_image, &Image::clicked, this, [this](){_image->darken();});
+  connect(_image, &Image::released, this, [this](){
+    _image->brighten();
+    selectImage();
+  });
   hide();
 }
 
@@ -139,19 +131,19 @@ void WordCard::displayDefinitions(const QVector<Definition>& definitions) {
 }
 
 void WordCard::onImageChosen(const QUrl& url) {
-  _image->setText("");
-  auto pixmap = QPixmap(url.toLocalFile());
-  pixmap = pixmap.scaled(_image->size(), Qt::IgnoreAspectRatio);
-  QIcon icon(pixmap);
-  _image->setIcon(icon);
-  _image->setIconSize(pixmap.rect().size());
+  if (url.isEmpty()) {
+    qDebug() << "empty url was provided";
+    return;
+  }
+  _image->setImageFromUrl(url);
+  _image->setBackgroundColor(Qt::white);
 }
 
 void WordCard::selectImage() {
-  Visualiser vis;
-  connect(&vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
-  vis.loadImages(_title->text());
-  vis.exec();
+  auto* vis = new Visualiser(this);
+  connect(vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
+  vis->loadImages(_title->text());
+  vis->exec();
 }
 
 }

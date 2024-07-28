@@ -18,6 +18,9 @@ class Visualiser : public QDialog {
  public:
   Visualiser(QWidget* parent = nullptr);
 
+ private:
+  void resizeWindow();
+
  public slots:
   void loadImages(const QString& query);
   void onLoadFinished(bool ok);
