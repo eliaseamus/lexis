@@ -1,5 +1,7 @@
 #include "start_page.hpp"
 #include "completer.hpp"
+#include "new_lexis_dialog.hpp"
+
 #include <QScreen>
 #include <QStyleHints>
 #include <QtWidgets>
@@ -11,8 +13,8 @@ StartPage::StartPage(QWidget* parent) :
 {
   _searchLine = new QLineEdit(this);
   _searchButton = new QPushButton("&Search", this);
-  _completer = new DictionaryCompleter(this);
-  _wordCard = new WordCard(this);
+  _completer = new Completer(this);
+  _addItem = new QPushButton("&Add", this);
 
   _searchLine->setPlaceholderText("Search history..");
   _searchLine->setCompleter(_completer->get());
@@ -20,17 +22,22 @@ StartPage::StartPage(QWidget* parent) :
   connect(_searchLine, SIGNAL(textEdited(const QString&)), _completer, SLOT(onTextEdited(const QString&)));
   connect(_searchButton, SIGNAL(clicked()), this, SLOT(doSearch()));
   connect(_searchLine, SIGNAL(returnPressed()), this, SLOT(doSearch()));
+  connect(_addItem, SIGNAL(clicked()), this, SLOT(addItem()));
 
-  auto layout = new QVBoxLayout;
-  auto searchBar = new QHBoxLayout;
+  auto* layout = new QVBoxLayout;
+  auto* searchBar = new QHBoxLayout;
   searchBar->addWidget(_searchLine);
   searchBar->addWidget(_searchButton);
-  layout->setAlignment(Qt::AlignTop);
+  
+  auto* footer = new QHBoxLayout;
+  footer->setAlignment(Qt::AlignRight);
+  footer->addWidget(_addItem);
+
   layout->addLayout(searchBar);
+  layout->addStretch(1);
+  layout->addLayout(footer);
 
-  layout->addWidget(_wordCard);
   setLayout(layout);
-
   resizeWindow();
 }
 
@@ -44,8 +51,12 @@ void StartPage::resizeWindow() {
 }
 
 void StartPage::doSearch() {
-  _wordCard->build(_searchLine->text());
-//  _visualiser->loadImages(_searchLine->text());
+
+}
+
+void StartPage::addItem() {
+  auto* newLexis = new NewLexisDialog(this);
+  newLexis->exec();
 }
 
 }

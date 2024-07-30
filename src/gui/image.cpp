@@ -9,14 +9,18 @@ Image::Image(const QString& startText, QWidget* parent) :
   QWidget(parent)
 {
   _label = new QLabel(this);
-  _label->setMinimumWidth(400);
-  _label->setMinimumHeight(350);
   _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  _label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
   setAcceptDrops(true);
-
+  
   auto* layout = new QVBoxLayout;
   layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
+
+  QPalette pal;
+  pal.setColor(QPalette::Window, Qt::darkGreen);
+  _label->setAutoFillBackground(true);
+  _label->setPalette(pal);
 
   setLayout(layout);
   setBackgroundColor(Qt::GlobalColor::lightGray);
@@ -130,5 +134,4 @@ void Image::mouseReleaseEvent(QMouseEvent* event) {
 }
 
 }
-
 

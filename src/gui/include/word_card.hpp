@@ -21,7 +21,7 @@ class WordCard : public QWidget {
   QStringList _imageQueries;
 
  public:
-  WordCard(QWidget* parent = nullptr);
+  explicit WordCard(QWidget* parent = nullptr);
   WordCard(const QString& word, QWidget* parent = nullptr);
   void build(const QString& word);
 

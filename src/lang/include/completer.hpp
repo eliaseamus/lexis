@@ -6,7 +6,7 @@
 
 namespace lexis {
 
-class DictionaryCompleter : public QObject {
+class Completer : public QObject {
  Q_OBJECT
 
  private:
@@ -15,7 +15,7 @@ class DictionaryCompleter : public QObject {
   QStringListModel* _model = nullptr;
 
  public:
-  DictionaryCompleter(QObject* parent);
+  explicit Completer(QObject* parent);
   QCompleter* get() const {return _completer;}
 
  public slots:

@@ -9,14 +9,15 @@ namespace lexis {
 class Image : public QWidget {
  Q_OBJECT
 
- static constexpr auto kGrayScaleFactor = 200;
+ private:
+  static constexpr auto kGrayScaleFactor = 200;
 
  private:
   QLabel* _label = nullptr;
   QUrl _url;
 
  public:
-  explicit Image(const QString& startText, QWidget* parent = nullptr);
+  Image(const QString& startText, QWidget* parent = nullptr);
   QUrl getUrl() const {return _url;}
   void setImageFromUrl(const QUrl& url);
   void setBackgroundColor(Qt::GlobalColor color);

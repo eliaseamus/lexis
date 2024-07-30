@@ -1,15 +1,15 @@
 #pragma once
 
-#include <QDialog>
 #include <QComboBox>
 #include <QSplitter>
 #include <QtWebEngineWidgets/QWebEngineView>
 
-#include <image.hpp>
+#include "lexis_dialog.hpp"
+#include "image.hpp"
 
 namespace lexis {
 
-class Visualiser : public QDialog {
+class Visualiser : public LexisDialog {
  Q_OBJECT
 
  private:
@@ -18,10 +18,7 @@ class Visualiser : public QDialog {
   Image* _image = nullptr;
 
  public:
-  Visualiser(QWidget* parent = nullptr);
-
- private:
-  void resizeWindow();
+  explicit Visualiser(QWidget* parent = nullptr);
 
  public slots:
   void loadImages(const QString& query);

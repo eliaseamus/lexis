@@ -25,7 +25,7 @@ class Dictionary : public QObject {
   QNetworkAccessManager* _manager = nullptr;
 
  public:
-  Dictionary(QObject* parent = nullptr);
+  explicit Dictionary(QObject* parent = nullptr);
   void lookup(const QString& query);
 
  signals:

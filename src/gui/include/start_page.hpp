@@ -5,8 +5,6 @@
 #include <QPushButton>
 
 #include "completer.hpp"
-#include "visualiser.hpp"
-#include "word_card.hpp"
 
 namespace lexis {
 
@@ -16,18 +14,18 @@ class StartPage : public QWidget {
  private:
   QLineEdit* _searchLine = nullptr;
   QPushButton* _searchButton = nullptr;
-  DictionaryCompleter* _completer = nullptr;
-  Visualiser* _visualiser = nullptr;
-  WordCard* _wordCard = nullptr;
+  Completer* _completer = nullptr;
+  QPushButton* _addItem = nullptr;
 
  public:
-  StartPage(QWidget* parent = nullptr);
+  explicit StartPage(QWidget* parent = nullptr);
  
  private:
   void resizeWindow();
 
  private slots:
   void doSearch();
+  void addItem();
 };
 
 }

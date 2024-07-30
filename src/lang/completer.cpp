@@ -2,7 +2,7 @@
 
 namespace lexis {
 
-DictionaryCompleter::DictionaryCompleter(QObject* parent) :
+Completer::Completer(QObject* parent) :
   QObject(parent)
 {
   _predictor = new Predictor(this);
@@ -16,11 +16,11 @@ DictionaryCompleter::DictionaryCompleter(QObject* parent) :
           this, SLOT(onPredictionsReceived(const QStringList&)));
 }
 
-void DictionaryCompleter::onTextEdited(const QString& text) {
+void Completer::onTextEdited(const QString& text) {
   _predictor->requestPredictions(text);
 }
 
-void DictionaryCompleter::onPredictionsReceived(const QStringList& predictions) {
+void Completer::onPredictionsReceived(const QStringList& predictions) {
   _model->setStringList(predictions);
 }
 

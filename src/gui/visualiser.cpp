@@ -2,12 +2,13 @@
 
 #include <QtWidgets>
 
+#include "ok_cancel_box.hpp"
 #include "utils.hpp"
 
 namespace lexis {
 
 Visualiser::Visualiser(QWidget* parent) :
-  QDialog(parent)
+  LexisDialog(parent)
 {
   _queries = new QComboBox(this);
   _view = new QWebEngineView(this);
@@ -22,18 +23,15 @@ Visualiser::Visualiser(QWidget* parent) :
   
   auto* rightSide = new QFrame(this);
   auto* rightSideLayout = new QVBoxLayout;
-  auto* actions = new QHBoxLayout;
-  auto* ok = new QPushButton("&OK", this);
-  auto* cancel = new QPushButton("&Cancel", this);
-  actions->addWidget(ok);
-  actions->addWidget(cancel);
+
+  auto* okCancel = new OkCancelButtonBox(this);
  
   connect(_queries, SIGNAL(currentTextChanged(const QString&)), this, SLOT(loadImages(const QString&)));
-  connect(ok, &QPushButton::clicked, this, [this]() {
+  connect(okCancel, &OkCancelButtonBox::accepted, this, [this]() {
     emit imageChosen(_image->getUrl());
     this->accept();
   });
-  connect(cancel, &QPushButton::clicked, this, &QDialog::reject);
+  connect(okCancel, &OkCancelButtonBox::rejected, this, &QDialog::reject);
   
   _queries->hide();
   _view->hide();
@@ -42,7 +40,7 @@ Visualiser::Visualiser(QWidget* parent) :
   leftSide->setLayout(leftSideLayout);
 
   rightSideLayout->addWidget(_image);
-  rightSideLayout->addLayout(actions);
+  rightSideLayout->addWidget(okCancel);
   rightSide->setLayout(rightSideLayout);
 
   splitter->addWidget(leftSide);
@@ -50,20 +48,6 @@ Visualiser::Visualiser(QWidget* parent) :
   splitter->setSizes(QList<int>({INT_MAX, INT_MAX}));
   layout->addWidget(splitter);
   setLayout(layout);
-  resizeWindow();
-}
-
-void Visualiser::resizeWindow() {
-    if (auto* parent = parentWidget(); !parent) {
-      qDebug() << "no parent";
-    } else if (auto* grandParent = parent->parentWidget(); !grandParent) {
-      qDebug() << "no grandparent";
-    } else {
-      static auto kScale = 0.9;
-      auto parentRect = grandParent->geometry();
-      move(parentRect.center() - rect().center());
-      resize(kScale * parentRect.width(), kScale * parentRect.height());
-    }
 }
 
 void Visualiser::loadImages(const QString& query) {
