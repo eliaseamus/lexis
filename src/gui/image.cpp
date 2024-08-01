@@ -17,11 +17,6 @@ Image::Image(const QString& startText, QWidget* parent) :
   layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
 
-  QPalette pal;
-  pal.setColor(QPalette::Window, Qt::darkGreen);
-  _label->setAutoFillBackground(true);
-  _label->setPalette(pal);
-
   setLayout(layout);
   setBackgroundColor(Qt::GlobalColor::lightGray);
   _label->setText(startText);
@@ -30,9 +25,8 @@ Image::Image(const QString& startText, QWidget* parent) :
 
 void Image::setImageFromUrl(const QUrl& url) {
   _url = url;
-  auto pixmap = QPixmap(_url.toLocalFile());
-  pixmap = pixmap.scaled(_label->size(), Qt::KeepAspectRatio);
-  _label->setPixmap(std::move(pixmap));
+  _pixmap = QPixmap(_url.toLocalFile());
+  _label->setPixmap(_pixmap.scaled(_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
   setBackgroundColor(Qt::lightGray);
 }
 
@@ -87,6 +81,17 @@ void Image::addShadow() {
   shadow->setOffset(10, 10);
   shadow->setColor(Qt::black);
   _label->setGraphicsEffect(shadow);
+}
+
+void Image::resizeEvent(QResizeEvent* event) {
+  if (_url.isEmpty()) {
+    return;
+  }
+  static auto kScale = 0.99;
+  auto size = _label->size();
+  auto w = static_cast<int>(size.width() * kScale);
+  auto h = static_cast<int>(size.height() * kScale);
+  _label->setPixmap(_pixmap.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void Image::dragEnterEvent(QDragEnterEvent* event) {

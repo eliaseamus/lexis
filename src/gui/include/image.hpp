@@ -15,6 +15,7 @@ class Image : public QWidget {
  private:
   QLabel* _label = nullptr;
   QUrl _url;
+  QPixmap _pixmap;
 
  public:
   Image(const QString& startText, QWidget* parent = nullptr);
@@ -28,6 +29,7 @@ class Image : public QWidget {
   void addShadow();
 
  protected:
+  void resizeEvent(QResizeEvent* event) override;
   void dragEnterEvent(QDragEnterEvent* event) override;
   void dragLeaveEvent(QDragLeaveEvent* event) override;
   void dragMoveEvent(QDragMoveEvent* event) override;
