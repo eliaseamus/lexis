@@ -18,8 +18,8 @@ Image::Image(const QString& startText, QWidget* parent) :
   layout->addWidget(_label);
 
   setLayout(layout);
+  setStartText(startText);
   setBackgroundColor(Qt::GlobalColor::lightGray);
-  _label->setText(startText);
   addShadow();
 }
 
@@ -69,6 +69,10 @@ void Image::brighten() {
 
     _label->setPixmap(QPixmap::fromImage(std::move(image)));
   }
+}
+
+void Image::setStartText(const QString& text) {
+  _label->setText(text);
 }
 
 void Image::addShadow() {

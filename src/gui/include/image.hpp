@@ -24,6 +24,8 @@ class Image : public QWidget {
   void setBackgroundColor(Qt::GlobalColor color);
   void darken();
   void brighten();
+  bool isSet() const {return !_url.isEmpty();}
+  void setStartText(const QString& text);
 
  private:
   void addShadow();

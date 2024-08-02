@@ -12,7 +12,7 @@ NewLexisDialog::NewLexisDialog(QWidget* parent) :
 {
   _title = new QLineEdit(this);
   _completer = new Completer(this);
-  _image = new Image("Click to select a poster", this);
+  _image = new Image("Insert title", this);
   _type = new QComboBox(this);
 
   _title->setPlaceholderText("Title");
@@ -22,28 +22,38 @@ NewLexisDialog::NewLexisDialog(QWidget* parent) :
 
   _image->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 
-  auto* rightSide = new QVBoxLayout;
-  rightSide->addWidget(_title);
-  rightSide->addWidget(_type);
-  rightSide->setAlignment(Qt::AlignTop);
-
-  auto* lexisFeatures = new QHBoxLayout;
-  lexisFeatures->addWidget(_image);
-  lexisFeatures->addLayout(rightSide);
-
   auto* okCancel = new OkCancelButtonBox(this);
   
   auto* layout = new QVBoxLayout;
-  layout->addLayout(lexisFeatures);
+  layout->addWidget(_title);
+  layout->addWidget(_type);
+  layout->addWidget(_image);
   layout->addWidget(okCancel);
 
   setLayout(layout);
   
   connect(_title, &QLineEdit::textEdited, _completer, &Completer::onTextEdited);
-  connect(_image, &Image::clicked, this, [this]() {_image->darken();});
+  connect(_title, &QLineEdit::textEdited, this, [this](const QString& text) {
+    if (_image->isSet()) {
+      return;
+    }
+
+    if (text.isEmpty()) {
+      _image->setStartText("Insert title");
+    } else {
+      _image->setStartText("Click to select a poster");
+    }
+  });
+  connect(_image, &Image::clicked, this, [this]() {
+    if (!_title->text().isEmpty()) {
+      _image->darken();
+    }
+  });
   connect(_image, &Image::released, this, [this]() {
-    _image->brighten();
-    selectImage();
+    if (!_title->text().isEmpty()) {
+      _image->brighten();
+      selectImage();
+    }
   });
   connect(okCancel, &OkCancelButtonBox::accepted, this, &QDialog::accept);
   connect(okCancel, &OkCancelButtonBox::rejected, this, &QDialog::reject);
