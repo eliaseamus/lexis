@@ -1,32 +1,32 @@
 #include "image.hpp"
 
 #include <QtWidgets>
-#include <qnamespace.h>
 
 namespace lexis {
 
-Image::Image(const QString& startText, QWidget* parent) :
+Image::Image(QWidget* parent) :
   QWidget(parent)
 {
   _label = new QLabel(this);
   _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   _label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-  setAcceptDrops(true);
   
   auto* layout = new QVBoxLayout;
   layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
 
   setLayout(layout);
+}
+
+Image::Image(const QString& startText, QWidget* parent) :
+  Image(parent)
+{
   setStartText(startText);
-  setBackgroundColor(Qt::GlobalColor::lightGray);
-  addShadow();
 }
 
 void Image::setImageFromUrl(const QUrl& url) {
   _url = url;
-  _pixmap = QPixmap(_url.toLocalFile());
-  _label->setPixmap(_pixmap.scaled(_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+  setPixmap(_url.toLocalFile());
   setBackgroundColor(Qt::lightGray);
 }
 
@@ -38,9 +38,7 @@ void Image::setBackgroundColor(Qt::GlobalColor color) {
 }
 
 void Image::darken() {
-  if (_url.isEmpty()) {
-    setBackgroundColor(Qt::darkGray);
-  } else {
+  if (!_pixmap.isNull()) {
     auto image = _label->pixmap().toImage();
 
     for (int x = 0; x < image.width(); ++x) {
@@ -55,9 +53,7 @@ void Image::darken() {
 }
 
 void Image::brighten() {
-  if (_url.isEmpty()) {
-    setBackgroundColor(Qt::lightGray);
-  } else {
+  if (!_pixmap.isNull()) {
     auto image = _label->pixmap().toImage();
 
     for (int x = 0; x < image.width(); ++x) {
@@ -73,6 +69,12 @@ void Image::brighten() {
 
 void Image::setStartText(const QString& text) {
   _label->setText(text);
+}
+
+void Image::setPixmap(const QString& name) {
+  _pixmap = QPixmap(name);
+  qDebug() << name << _label->size();
+  _label->setPixmap(_pixmap.scaled(_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void Image::addShadow() {
@@ -96,42 +98,6 @@ void Image::resizeEvent(QResizeEvent* event) {
   auto w = static_cast<int>(size.width() * kScale);
   auto h = static_cast<int>(size.height() * kScale);
   _label->setPixmap(_pixmap.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-}
-
-void Image::dragEnterEvent(QDragEnterEvent* event) {
-  if (event->mimeData()->hasUrls()) {
-    event->acceptProposedAction();
-    setBackgroundColor(Qt::darkGray);
-    QGuiApplication::setOverrideCursor(QCursor(Qt::DragCopyCursor));
-  }
-}
-
-void Image::dragLeaveEvent(QDragLeaveEvent* event) {
-  event->accept();
-  setBackgroundColor(Qt::GlobalColor::lightGray);
-  QGuiApplication::restoreOverrideCursor();
-}
-
-void Image::dragMoveEvent(QDragMoveEvent* event) {
-  event->accept();
-}
-
-void Image::dropEvent(QDropEvent* event) {
-  if (event->source() == this) {
-    event->ignore();
-    return;
-  }
-
-  if (event->mimeData()->hasUrls()) {
-    auto urllist = event->mimeData()->urls();
-    for (const auto& url : urllist) {
-      if (url.isLocalFile()) {
-        setImageFromUrl(url);
-        event->acceptProposedAction();
-        QGuiApplication::restoreOverrideCursor();
-      }
-    }
-  }
 }
 
 void Image::mousePressEvent(QMouseEvent* event) {

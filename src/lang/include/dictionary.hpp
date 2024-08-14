@@ -1,7 +1,6 @@
 #pragma once
 
-#include <QObject>
-#include <QNetworkAccessManager>
+#include "web_service.hpp"
 
 namespace lexis {
 
@@ -18,21 +17,18 @@ struct Definition {
   QVector<Translation> translations;
 };
 
-class Dictionary : public QObject {
+class Dictionary : public WebService {
  Q_OBJECT
 
- private:
-  QNetworkAccessManager* _manager = nullptr;
-
  public:
-  explicit Dictionary(QObject* parent = nullptr);
-  void lookup(const QString& query);
+  explicit Dictionary(QObject* parent = nullptr) : WebService(parent) {}
+  void request(const QString& query) override;
 
  signals:
   void definitionsReady(const QVector<Definition>& definitions);
 
  public slots:
-  void replyFinished(QNetworkReply* reply); 
+  void onFinished(QNetworkReply* reply) override;
 
 };
 

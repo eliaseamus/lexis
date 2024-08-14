@@ -8,24 +8,17 @@
 
 namespace lexis {
 
-Predictor::Predictor(QObject* parent) :
-  QObject(parent)
-{
-  _manager = new QNetworkAccessManager(this);
-  connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-}
-
-
-void Predictor::requestPredictions(const QString& query) {
+void Predictor::request(const QString& query) {
   static const auto limit = 10;
   static const auto urlFormat = "https://predictor.yandex.net/api/v1/predict.json/complete?key=%1&q=%2&lang=en&limit=%3";
  
   _query = query;
-  _manager->get(QNetworkRequest(QUrl(QString(urlFormat)
-    .arg(MAKE_STR(PREDICTOR_API_KEY), QString(query).replace(' ', '+'), QString::number(limit)))));
+  WebService::request(QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY),
+                                             QString(query).replace(' ', '+'),
+                                             QString::number(limit)));
 }
 
-void Predictor::replyFinished(QNetworkReply* reply) {
+void Predictor::onFinished(QNetworkReply* reply) {
   static const auto space = ' ';
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();

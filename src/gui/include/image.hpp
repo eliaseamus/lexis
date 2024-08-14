@@ -18,6 +18,7 @@ class Image : public QWidget {
   QPixmap _pixmap;
 
  public:
+  Image(QWidget* parent = nullptr);
   Image(const QString& startText, QWidget* parent = nullptr);
   QUrl getUrl() const {return _url;}
   void setImageFromUrl(const QUrl& url);
@@ -26,16 +27,11 @@ class Image : public QWidget {
   void brighten();
   bool isSet() const {return !_url.isEmpty();}
   void setStartText(const QString& text);
-
- private:
+  void setPixmap(const QString& name);
   void addShadow();
 
  protected:
   void resizeEvent(QResizeEvent* event) override;
-  void dragEnterEvent(QDragEnterEvent* event) override;
-  void dragLeaveEvent(QDragLeaveEvent* event) override;
-  void dragMoveEvent(QDragMoveEvent* event) override;
-  void dropEvent(QDropEvent* event) override;
   void mousePressEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;
 

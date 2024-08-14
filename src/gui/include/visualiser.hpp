@@ -5,7 +5,7 @@
 #include <QtWebEngineWidgets/QWebEngineView>
 
 #include "lexis_dialog.hpp"
-#include "image.hpp"
+#include "drag_drop_image.hpp"
 
 namespace lexis {
 
@@ -15,7 +15,7 @@ class Visualiser : public LexisDialog {
  private:
   QComboBox* _queries = nullptr;
   QWebEngineView* _view = nullptr;
-  Image* _image = nullptr;
+  DragDropImage* _image = nullptr;
 
  public:
   explicit Visualiser(QWidget* parent = nullptr);

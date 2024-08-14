@@ -6,14 +6,18 @@
 
 #include "image.hpp"
 #include "dictionary.hpp"
+#include "pronunciation_player.hpp"
+#include "lexis_dialog.hpp"
 
 namespace lexis {
 
-class WordCard : public QWidget {
+class WordCard : public LexisDialog {
  Q_OBJECT
 
  private:
   Dictionary* _dict = nullptr;
+  PronunciationService* _pronunciationService = nullptr;
+  PronunciationPlayer* _pronunciationPlayer = nullptr;
   QLabel* _title = nullptr;
   QLabel* _transcription = nullptr;
   QLabel* _definitions = nullptr;

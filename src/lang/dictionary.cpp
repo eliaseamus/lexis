@@ -6,25 +6,16 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <qcontainerfwd.h>
 
 namespace lexis {
 
-Dictionary::Dictionary(QObject* parent) :
-  QObject(parent)
-{
-  _manager = new QNetworkAccessManager(this);
-  connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-}
-
-void Dictionary::lookup(const QString& query) {
+void Dictionary::request(const QString& query) {
   static const auto lang = "en-ru";
   static const auto urlFormat = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=%1&lang=%2&text=%3";
-  _manager->get(QNetworkRequest(QUrl(QString(urlFormat)
-    .arg(MAKE_STR(DICTIONARY_API_KEY), lang, QString(query).replace(' ', '+')))));
+  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY), lang, QString(query).replace(' ', '+')));
 }
 
-void Dictionary::replyFinished(QNetworkReply* reply) {
+void Dictionary::onFinished(QNetworkReply* reply) {
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray defValues = root["def"].toArray();

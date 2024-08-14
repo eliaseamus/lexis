@@ -6,9 +6,11 @@
 namespace lexis {
 
 WordCard::WordCard(QWidget* parent) :
-  QWidget(parent)
+  LexisDialog(parent)
 {
   _dict = new Dictionary(this);
+  _pronunciationService = new PronunciationService(this);
+  _pronunciationPlayer = new PronunciationPlayer(this);
   _title = new QLabel(this);
   _transcription = new QLabel(this);
   _definitions = new QLabel(this);
@@ -27,7 +29,7 @@ WordCard::WordCard(QWidget* parent) :
   _transcription->setFont(textFont);
   _transcription->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-  _transcription->setStyleSheet("background: #FFF0AE; border-radius: 15px;");
+  _transcription->setStyleSheet("background: #FFF0AE; padding: 5px 5px 5px 5px; border-radius: 15px; border: 2px solid black");
 
   _definitions->setFont(textFont);
   _definitions->setWordWrap(true);
@@ -38,6 +40,7 @@ WordCard::WordCard(QWidget* parent) :
   topBar->setSizeConstraint(QLayout::SetMinimumSize);
   topBar->addWidget(_title);
   topBar->addWidget(_transcription);
+  topBar->addWidget(_pronunciationPlayer);
 
   dictPage->setSizeConstraint(QLayout::SetMinimumSize);
   dictPage->addLayout(topBar);
@@ -58,6 +61,8 @@ WordCard::WordCard(QWidget* parent) :
 
   connect(_dict, SIGNAL(definitionsReady(const QVector<Definition>&)),
            this, SLOT(displayDefinitions(const QVector<Definition>&)));
+  connect(_pronunciationService, &PronunciationService::pronunciationReady,
+          _pronunciationPlayer, &PronunciationPlayer::addPronunciations);
   connect(_image, &Image::clicked, this, [this]() {_image->darken();});
   connect(_image, &Image::released, this, [this]() {
     _image->brighten();
@@ -73,7 +78,8 @@ WordCard::WordCard(const QString& word, QWidget* parent) :
 }
 
 void WordCard::build(const QString& word) {
-  _dict->lookup(word);
+  _dict->request(word);
+  _pronunciationService->request(word);
 }
 
 void WordCard::displayDefinitions(const QVector<Definition>& definitions) {

@@ -17,7 +17,7 @@ Completer::Completer(QObject* parent) :
 }
 
 void Completer::onTextEdited(const QString& text) {
-  _predictor->requestPredictions(text);
+  _predictor->request(text);
 }
 
 void Completer::onPredictionsReceived(const QStringList& predictions) {

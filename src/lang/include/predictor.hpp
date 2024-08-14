@@ -1,26 +1,24 @@
 #pragma once
 
-#include <QObject>
-#include <QNetworkAccessManager>
+#include "web_service.hpp"
 
 namespace lexis {
 
-class Predictor : public QObject {
+class Predictor : public WebService {
  Q_OBJECT
 
  private:
-  QNetworkAccessManager* _manager = nullptr;
   QString _query;
 
  public:
-  explicit Predictor(QObject* parent = nullptr);
-  void requestPredictions(const QString& query);
+  explicit Predictor(QObject* parent = nullptr) : WebService(parent) {}
+  void request(const QString& query) override;
 
  signals:
   void predictionsReceived(const QStringList& predictions);
 
  private slots:
-  void replyFinished(QNetworkReply* reply);
+  void onFinished(QNetworkReply* reply) override;
 
 };
 

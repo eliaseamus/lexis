@@ -18,7 +18,7 @@ NewLexisDialog::NewLexisDialog(QWidget* parent) :
   _title->setPlaceholderText("Title");
   _title->setCompleter(_completer->get());
 
-  _type->addItems(QStringList() << "Book" << "Movie/TV" << "Music");
+  _type->addItems(QStringList() << "Book" << "Movie/TV" << "Music" << "Topic");
 
   _image->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 

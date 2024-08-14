@@ -1,6 +1,7 @@
 #include "start_page.hpp"
 #include "completer.hpp"
 #include "new_lexis_dialog.hpp"
+#include "word_card.hpp"
 
 #include <QScreen>
 #include <QStyleHints>
@@ -55,8 +56,10 @@ void StartPage::doSearch() {
 }
 
 void StartPage::addItem() {
-  auto* newLexis = new NewLexisDialog(this);
-  newLexis->exec();
+//  auto* newLexis = new NewLexisDialog(this);
+//  newLexis->exec();
+  auto newWord = new WordCard("cork", this);
+  newWord->exec();
 }
 
 }
