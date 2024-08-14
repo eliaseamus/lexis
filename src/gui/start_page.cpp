@@ -58,7 +58,7 @@ void StartPage::doSearch() {
 void StartPage::addItem() {
 //  auto* newLexis = new NewLexisDialog(this);
 //  newLexis->exec();
-  auto newWord = new WordCard("cork", this);
+  auto newWord = new WordCard("lantern", this);
   newWord->exec();
 }
 

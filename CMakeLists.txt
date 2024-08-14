@@ -9,14 +9,16 @@ include_directories(src/include src/gui/include src/lang/include)
 
 qt_add_executable(lexis src/main.cpp
                         src/utils.cpp
+                        src/web_service.cpp
+                        src/include/web_service.hpp
+                        src/file_downloader.cpp
+                        src/include/file_downloader.hpp
                         src/gui/start_page.cpp
                         src/gui/include/start_page.hpp
                         src/gui/lexis_dialog.cpp
                         src/gui/include/lexis_dialog.hpp
                         src/lang/completer.cpp
                         src/lang/include/completer.hpp
-                        src/lang/web_service.cpp
-                        src/lang/include/web_service.hpp
                         src/lang/predictor.cpp
                         src/lang/include/predictor.hpp
                         src/lang/dictionary.cpp

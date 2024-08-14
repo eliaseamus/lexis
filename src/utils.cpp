@@ -1,6 +1,5 @@
 #include "utils.hpp"
 
-
 JSCode removeElementByID() {
   return {"                                        \
     function removeElementByID(id, index, array) { \

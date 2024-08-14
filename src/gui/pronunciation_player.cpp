@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "icon.hpp"
+#include "file_downloader.hpp"
 
 namespace lexis {
 
@@ -33,8 +34,9 @@ void PronunciationPlayer::addPronunciations(const QVector<Pronunciation>& pronun
   auto row = layout();
   for (const auto& pronunciation : _pronunciations) {
     auto accent = new Icon(icons[pronunciation.accent], this);
-    connect(accent, &Icon::released, this, [this, accent, pronunciation]() {
-      _player->setSource(QUrl(pronunciation.url));
+    auto audio = new FileDownloader(pronunciation.url, this);
+    connect(accent, &Icon::released, this, [this, audio]() {
+      _player->setSource(QUrl::fromLocalFile(audio->name()));
       _player->play();
     });
     row->addWidget(accent);
