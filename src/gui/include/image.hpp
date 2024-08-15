@@ -28,6 +28,7 @@ class Image : public QWidget {
   bool isSet() const {return !_url.isEmpty();}
   void setStartText(const QString& text);
   void setPixmapFromFile(const QString& name);
+  void setPixmapFromFile(const QString& name, QSize size);
   void addShadow();
 
  protected:

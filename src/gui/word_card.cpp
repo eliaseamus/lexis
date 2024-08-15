@@ -41,11 +41,10 @@ WordCard::WordCard(QWidget* parent) :
   topBar->addWidget(_title);
   topBar->addStretch(1);
   topBar->addWidget(_transcription);
-  topBar->addWidget(_pronunciationPlayer);
 
   dictPage->setSizeConstraint(QLayout::SetMinimumSize);
   dictPage->addLayout(topBar);
-  dictPage->addSpacing(20);
+  dictPage->addWidget(_pronunciationPlayer);
   dictPage->addWidget(_definitions);
   dictPage->setAlignment(Qt::AlignTop | Qt::AlignLeft);
  

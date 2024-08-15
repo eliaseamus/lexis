@@ -56,10 +56,10 @@ void StartPage::doSearch() {
 }
 
 void StartPage::addItem() {
-//  auto* newLexis = new NewLexisDialog(this);
-//  newLexis->exec();
-  auto newWord = new WordCard("stork", this);
-  newWord->exec();
+  auto* newLexis = new NewLexisDialog(this);
+  newLexis->exec();
+//  auto newWord = new WordCard("jolly", this);
+//  newWord->exec();
 }
 
 }

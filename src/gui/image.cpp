@@ -10,11 +10,12 @@ Image::Image(QWidget* parent) :
   _label = new QLabel(this);
   
   auto* layout = new QVBoxLayout;
-  layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
+  layout->setAlignment(Qt::AlignHCenter);
   layout->setContentsMargins(0, 0, 0, 0);
 
   setLayout(layout);
+  setContentsMargins(0, 0, 0, 0); 
 }
 
 Image::Image(const QString& startText, QWidget* parent) :
@@ -23,7 +24,7 @@ Image::Image(const QString& startText, QWidget* parent) :
   setStartText(startText);
   setBackgroundColor(Qt::lightGray);
   _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  _label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+  _label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void Image::setImageFromUrl(const QUrl& url) {
@@ -78,8 +79,12 @@ void Image::setStartText(const QString& text) {
 }
 
 void Image::setPixmapFromFile(const QString& name) {
+  setPixmapFromFile(name, _label->size());
+}
+
+void Image::setPixmapFromFile(const QString& name, QSize size) {
   _pixmap = QPixmap(name);
-  _label->setPixmap(_pixmap.scaled(_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+  _label->setPixmap(_pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void Image::addShadow() {
