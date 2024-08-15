@@ -2,10 +2,10 @@
 
 namespace lexis {
 
-Icon::Icon(const QString& name, QWidget* parent) :
+Icon::Icon(const QString& resource, QWidget* parent) :
   Icon(parent)
 {
-  setPixmap(name);
+  setPixmapFromFile(resource);
 }
 
 void Icon::enterEvent(QEnterEvent* event) {

@@ -15,6 +15,7 @@ WordCard::WordCard(QWidget* parent) :
   _transcription = new QLabel(this);
   _definitions = new QLabel(this);
   _image = new Image("Click to select an image", this);
+  _image->addShadow();
 
   QFont titleFont;
   titleFont.setBold(true);
@@ -27,9 +28,8 @@ WordCard::WordCard(QWidget* parent) :
   textFont.setPointSize(16);
   textFont.setFamily("Monospace");
   _transcription->setFont(textFont);
-  _transcription->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   _transcription->setStyleSheet("background: #FFF0AE; padding: 5px 5px 5px 5px; border-radius: 15px; border: 2px solid black");
+  _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
   _definitions->setFont(textFont);
   _definitions->setWordWrap(true);
@@ -39,6 +39,7 @@ WordCard::WordCard(QWidget* parent) :
   auto* topBar = new QHBoxLayout;
   topBar->setSizeConstraint(QLayout::SetMinimumSize);
   topBar->addWidget(_title);
+  topBar->addStretch(1);
   topBar->addWidget(_transcription);
   topBar->addWidget(_pronunciationPlayer);
 

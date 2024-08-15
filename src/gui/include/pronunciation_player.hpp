@@ -4,7 +4,6 @@
 #include <QtMultimedia/QMediaPlayer>
 
 #include "pronunciation_service.hpp"
-#include "image.hpp"
 
 namespace lexis {
 
@@ -13,7 +12,6 @@ class PronunciationPlayer : public QWidget {
 
  private:
   QMediaPlayer* _player = nullptr;
-  Image* _audio = nullptr;
   QVector<Pronunciation> _pronunciations;
 
  public:

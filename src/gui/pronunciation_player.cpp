@@ -14,11 +14,8 @@ PronunciationPlayer::PronunciationPlayer(QWidget* parent) :
 {
   _player = new QMediaPlayer(this);
   _player->setAudioOutput(new QAudioOutput);
-  _audio = new Image(this);
-  _audio->setPixmap(":/icons/audio-mute.png");
 
   auto layout = new QHBoxLayout;
-  layout->addWidget(_audio);
   setLayout(layout);
 }
 
@@ -29,7 +26,6 @@ void PronunciationPlayer::addPronunciations(const QVector<Pronunciation>& pronun
     {Accent::kAustralian, ":/icons/au.png"},
     {Accent::kUnknown, ":/icons/audio.png"},
   };
-  _audio->setPixmap(":/icons/audio.png");
   _pronunciations = pronunciations;
   auto row = layout();
   for (const auto& pronunciation : _pronunciations) {

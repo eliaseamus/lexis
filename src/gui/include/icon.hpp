@@ -9,7 +9,7 @@ class Icon : public Image {
 
  public:
   explicit Icon(QWidget* parent = nullptr) : Image(parent) {}
-  Icon(const QString& name, QWidget* parent = nullptr);
+  Icon(const QString& resource, QWidget* parent = nullptr);
 
  protected:
   void enterEvent(QEnterEvent* event) override;

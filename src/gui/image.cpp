@@ -8,12 +8,11 @@ Image::Image(QWidget* parent) :
   QWidget(parent)
 {
   _label = new QLabel(this);
-  _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  _label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
   
   auto* layout = new QVBoxLayout;
   layout->setAlignment(Qt::AlignHCenter);
   layout->addWidget(_label);
+  layout->setContentsMargins(0, 0, 0, 0);
 
   setLayout(layout);
 }
@@ -22,11 +21,14 @@ Image::Image(const QString& startText, QWidget* parent) :
   Image(parent)
 {
   setStartText(startText);
+  setBackgroundColor(Qt::lightGray);
+  _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  _label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 }
 
 void Image::setImageFromUrl(const QUrl& url) {
   _url = url;
-  setPixmap(_url.toLocalFile());
+  setPixmapFromFile(_url.toLocalFile());
   setBackgroundColor(Qt::lightGray);
 }
 
@@ -38,7 +40,9 @@ void Image::setBackgroundColor(Qt::GlobalColor color) {
 }
 
 void Image::darken() {
-  if (!_pixmap.isNull()) {
+  if (_pixmap.isNull()) {
+    setBackgroundColor(Qt::darkGray);
+  } else {
     auto image = _label->pixmap().toImage();
 
     for (int x = 0; x < image.width(); ++x) {
@@ -53,7 +57,9 @@ void Image::darken() {
 }
 
 void Image::brighten() {
-  if (!_pixmap.isNull()) {
+  if (_pixmap.isNull()) {
+    setBackgroundColor(Qt::lightGray);
+  } else {
     auto image = _label->pixmap().toImage();
 
     for (int x = 0; x < image.width(); ++x) {
@@ -71,9 +77,8 @@ void Image::setStartText(const QString& text) {
   _label->setText(text);
 }
 
-void Image::setPixmap(const QString& name) {
+void Image::setPixmapFromFile(const QString& name) {
   _pixmap = QPixmap(name);
-  qDebug() << name << _label->size();
   _label->setPixmap(_pixmap.scaled(_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 

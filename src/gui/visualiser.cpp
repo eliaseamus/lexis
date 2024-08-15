@@ -13,6 +13,7 @@ Visualiser::Visualiser(QWidget* parent) :
   _queries = new QComboBox(this);
   _view = new QWebEngineView(this);
   _image = new DragDropImage("Pick an image representing\nthe word and drop it in this area", this);
+  _image->addShadow();
 
   connect(_view, SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
 
