@@ -1,6 +1,6 @@
 #include "start_page.hpp"
 #include "completer.hpp"
-#include "new_lexis_dialog.hpp"
+#include "new_library_item_dialog.hpp"
 #include "word_card.hpp"
 
 #include <QScreen>
@@ -45,7 +45,7 @@ StartPage::StartPage(QWidget* parent) :
 void StartPage::resizeWindow() {
   if (!QGuiApplication::styleHints()->showIsFullScreen() && !QGuiApplication::styleHints()->showIsMaximized()) {
     const QRect availableGeometry = this->screen()->availableGeometry();
-    this->resize(availableGeometry.width() / 3, availableGeometry.height() * 2 / 3);
+    this->resize(availableGeometry.width() * 3 / 4, availableGeometry.height() * 3 / 4);
     this->move((availableGeometry.width() - this->width()) / 2,
                 (availableGeometry.height() - this->height()) / 2);
   }
@@ -56,9 +56,9 @@ void StartPage::doSearch() {
 }
 
 void StartPage::addItem() {
-  auto* newLexis = new NewLexisDialog(this);
+  auto* newLexis = new NewLibraryItemDialog(this);
   newLexis->exec();
-//  auto newWord = new WordCard("jolly", this);
+//  auto newWord = new WordCard("ingenious", this);
 //  newWord->exec();
 }
 

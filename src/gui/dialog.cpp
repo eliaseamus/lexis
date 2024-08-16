@@ -1,14 +1,14 @@
-#include "lexis_dialog.hpp"
+#include "dialog.hpp"
 
 namespace lexis {
 
-LexisDialog::LexisDialog(QWidget* parent) :
+Dialog::Dialog(QWidget* parent) :
   QDialog(parent)
 {
   resizeWindow();
 }
 
-void LexisDialog::resizeWindow() {
+void Dialog::resizeWindow() {
   if (auto* parent = parentWidget(); !parent) {
     qDebug() << "no parent";
 //  } else if (auto* grandParent = parent->parentWidget(); !grandParent) {

@@ -1,14 +1,14 @@
-#include "new_lexis_dialog.hpp"
+#include "new_library_item_dialog.hpp"
 
 #include "ok_cancel_box.hpp"
-#include "visualiser.hpp"
+#include "image_picker.hpp"
 
 #include <QtWidgets>
 
 namespace lexis {
 
-NewLexisDialog::NewLexisDialog(QWidget* parent) :
-  LexisDialog(parent)
+NewLibraryItemDialog::NewLibraryItemDialog(QWidget* parent) :
+  Dialog(parent)
 {
   _title = new QLineEdit(this);
   _completer = new Completer(this);
@@ -21,6 +21,7 @@ NewLexisDialog::NewLexisDialog(QWidget* parent) :
   _type->addItems(QStringList() << "Book" << "Movie/TV" << "Music" << "Topic");
 
   _image->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+  _image->addShadow();
 
   auto* okCancel = new OkCancelButtonBox(this);
   
@@ -59,25 +60,26 @@ NewLexisDialog::NewLexisDialog(QWidget* parent) :
   connect(okCancel, &OkCancelButtonBox::rejected, this, &QDialog::reject);
 }
 
-void NewLexisDialog::onImageChosen(const QUrl& url) {
+void NewLibraryItemDialog::onImageChosen(const QUrl& url) {
   if (url.isEmpty()) {
     qDebug() << "empty url was provided";
     return;
   }
+  _imageUrl = url;
   _image->setImageFromUrl(url);
   _image->setBackgroundColor(Qt::white);
 }
 
-void NewLexisDialog::selectImage() {
+void NewLibraryItemDialog::selectImage() {
   if (_title->text().isEmpty()) {
     qDebug() << "no title was provided";
     return;
   }
 
-  auto* vis = new Visualiser(this);
-  connect(vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
-  vis->loadImages(_title->text());
-  vis->exec();
+  auto* picker = new ImagePicker(this);
+  connect(picker, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
+  picker->loadImages(_title->text());
+  picker->exec();
 }
 
 }

@@ -1,12 +1,12 @@
 #include "word_card.hpp"
 #include <QtWidgets>
 
-#include "visualiser.hpp"
+#include "image_picker.hpp"
 
 namespace lexis {
 
 WordCard::WordCard(QWidget* parent) :
-  LexisDialog(parent)
+  Dialog(parent)
 {
   _dict = new Dictionary(this);
   _pronunciationService = new PronunciationService(this);
@@ -153,10 +153,10 @@ void WordCard::onImageChosen(const QUrl& url) {
 }
 
 void WordCard::selectImage() {
-  auto* vis = new Visualiser(this);
-  connect(vis, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
-  vis->loadImages(_imageQueries);
-  vis->exec();
+  auto* picker = new ImagePicker(this);
+  connect(picker, SIGNAL(imageChosen(const QUrl&)), this, SLOT(onImageChosen(const QUrl&)));
+  picker->loadImages(_imageQueries);
+  picker->exec();
 }
 
 }

@@ -4,12 +4,12 @@
 #include <QSplitter>
 #include <QtWebEngineWidgets/QWebEngineView>
 
-#include "lexis_dialog.hpp"
+#include "dialog.hpp"
 #include "drag_drop_image.hpp"
 
 namespace lexis {
 
-class Visualiser : public LexisDialog {
+class ImagePicker : public Dialog {
  Q_OBJECT
 
  private:
@@ -18,7 +18,7 @@ class Visualiser : public LexisDialog {
   DragDropImage* _image = nullptr;
 
  public:
-  explicit Visualiser(QWidget* parent = nullptr);
+  explicit ImagePicker(QWidget* parent = nullptr);
 
  public slots:
   void loadImages(const QString& query);

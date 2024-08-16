@@ -4,9 +4,9 @@
 
 namespace lexis {
 
-class LexisDialog : public QDialog {
+class Dialog : public QDialog {
  public:
-  explicit LexisDialog(QWidget* parent = nullptr);
+  explicit Dialog(QWidget* parent = nullptr);
 
  private:
   void resizeWindow();

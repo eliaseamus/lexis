@@ -1,4 +1,4 @@
-#include "visualiser.hpp"
+#include "image_picker.hpp"
 
 #include <QtWidgets>
 
@@ -7,8 +7,8 @@
 
 namespace lexis {
 
-Visualiser::Visualiser(QWidget* parent) :
-  LexisDialog(parent)
+ImagePicker::ImagePicker(QWidget* parent) :
+  Dialog(parent)
 {
   _queries = new QComboBox(this);
   _view = new QWebEngineView(this);
@@ -51,13 +51,13 @@ Visualiser::Visualiser(QWidget* parent) :
   setLayout(layout);
 }
 
-void Visualiser::loadImages(const QString& query) {
+void ImagePicker::loadImages(const QString& query) {
   static const auto urlFormat = "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2";
 
   _view->load(QUrl(QString(urlFormat).arg(MAKE_STR(CSE_ID), query)));
 }
 
-void Visualiser::loadImages(const QStringList& queries) {
+void ImagePicker::loadImages(const QStringList& queries) {
   if (queries.isEmpty()) {
     qDebug() << "empty queries list";
     return;
@@ -67,7 +67,7 @@ void Visualiser::loadImages(const QStringList& queries) {
   loadImages(queries.front());
 }
 
-void Visualiser::onLoadFinished(bool ok) {
+void ImagePicker::onLoadFinished(bool ok) {
   if (!ok) {
     qDebug() << "failed to load page";
     return;

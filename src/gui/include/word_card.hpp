@@ -7,11 +7,11 @@
 #include "image.hpp"
 #include "dictionary.hpp"
 #include "pronunciation_player.hpp"
-#include "lexis_dialog.hpp"
+#include "dialog.hpp"
 
 namespace lexis {
 
-class WordCard : public LexisDialog {
+class WordCard : public Dialog {
  Q_OBJECT
 
  private:
