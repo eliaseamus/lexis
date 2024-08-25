@@ -17,9 +17,18 @@ class Library : public QObject {
  
  private:
   QSqlDatabase _db;
+  QSqlTableModel* _model = nullptr;
 
  public:
   explicit Library(QObject* parent = nullptr);
+  QSqlTableModel* getModel() {return _model;}
+
+ public slots:
+  void addItem(const LibraryItem& item);
+
+ private:
+  void createTable();
+  QByteArray readImage(const QUrl& url);
 };
 
 }

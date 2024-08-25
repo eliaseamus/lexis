@@ -56,7 +56,14 @@ NewLibraryItemDialog::NewLibraryItemDialog(QWidget* parent) :
       selectImage();
     }
   });
-  connect(okCancel, &OkCancelButtonBox::accepted, this, &QDialog::accept);
+  connect(okCancel, &OkCancelButtonBox::accepted, this, [this](){
+    LibraryItem item;
+    item.title = _title->text();
+    item.type = _type->currentText();
+    item.imageUrl = _imageUrl;
+    emit newLibraryItemAdded(item);
+    accept();
+  });
   connect(okCancel, &OkCancelButtonBox::rejected, this, &QDialog::reject);
 }
 

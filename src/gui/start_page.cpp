@@ -12,6 +12,8 @@ namespace lexis {
 StartPage::StartPage(QWidget* parent) :
   QWidget(parent)
 {
+  _library = new Library(this);
+  _libraryView = new QTableView(this);
   _searchLine = new QLineEdit(this);
   _searchButton = new QPushButton("&Search", this);
   _completer = new Completer(this);
@@ -19,6 +21,8 @@ StartPage::StartPage(QWidget* parent) :
 
   _searchLine->setPlaceholderText("Search history..");
   _searchLine->setCompleter(_completer->get());
+
+  _libraryView->setModel(_library->getModel());
 
   connect(_searchLine, SIGNAL(textEdited(const QString&)), _completer, SLOT(onTextEdited(const QString&)));
   connect(_searchButton, SIGNAL(clicked()), this, SLOT(doSearch()));
@@ -35,6 +39,7 @@ StartPage::StartPage(QWidget* parent) :
   footer->addWidget(_addItem);
 
   layout->addLayout(searchBar);
+  layout->addWidget(_libraryView);
   layout->addStretch(1);
   layout->addLayout(footer);
 
@@ -56,10 +61,11 @@ void StartPage::doSearch() {
 }
 
 void StartPage::addItem() {
-  auto* newLexis = new NewLibraryItemDialog(this);
+  auto newLexis = new NewLibraryItemDialog(this);
+  connect(newLexis, &NewLibraryItemDialog::newLibraryItemAdded, _library, &Library::addItem);
   newLexis->exec();
-//  auto newWord = new WordCard("ingenious", this);
-//  newWord->exec();
+  // auto newWord = new WordCard("heed", this);
+  // newWord->exec();
 }
 
 }

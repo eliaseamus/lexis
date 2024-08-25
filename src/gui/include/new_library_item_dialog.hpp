@@ -6,6 +6,7 @@
 #include "dialog.hpp"
 #include "image.hpp"
 #include "completer.hpp"
+#include "library.hpp"
 
 namespace lexis {
 
@@ -21,6 +22,9 @@ class NewLibraryItemDialog : public Dialog {
 
  public:
   explicit NewLibraryItemDialog(QWidget* parent = nullptr);
+
+ signals:
+  void newLibraryItemAdded(const LibraryItem& item);
  
  public slots: 
   void onImageChosen(const QUrl& url);
