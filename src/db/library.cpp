@@ -27,7 +27,6 @@ Library::Library(QObject* parent) :
 }
 
 void Library::addItem(const LibraryItem& item) {
-  qDebug() << "addItem";
   auto row = _model->rowCount();
   if (!_model->insertRow(row)) {
     qDebug() << "failed to insert a new row";
@@ -45,7 +44,8 @@ void Library::addItem(const LibraryItem& item) {
 void Library::createTable() {
   QSqlQuery query;
   auto createTableQuery = "CREATE TABLE IF NOT EXISTS library \
-                          (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, image BLOB)";
+                          (id INTEGER PRIMARY KEY AUTOINCREMENT, \
+                           title TEXT, type text, image BLOB)";
   if (!query.exec(createTableQuery)) {
     qDebug() << "failed to create library table:" << query.lastError();
   }

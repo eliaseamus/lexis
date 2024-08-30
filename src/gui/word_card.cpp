@@ -28,7 +28,10 @@ WordCard::WordCard(QWidget* parent) :
   textFont.setPointSize(16);
   textFont.setFamily("Monospace");
   _transcription->setFont(textFont);
-  _transcription->setStyleSheet("background: #FFF0AE; padding: 5px 5px 5px 5px; border-radius: 15px; border: 2px solid black");
+  _transcription->setStyleSheet("background: #FFF0AE;      \
+                                 padding: 5px 5px 5px 5px; \
+                                 border-radius: 15px;      \
+                                 border: 2px solid black");
   _transcription->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
   _definitions->setFont(textFont);

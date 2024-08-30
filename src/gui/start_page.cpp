@@ -2,6 +2,7 @@
 #include "completer.hpp"
 #include "new_library_item_dialog.hpp"
 #include "word_card.hpp"
+#include "grid_item.hpp"
 
 #include <QScreen>
 #include <QStyleHints>
@@ -13,7 +14,7 @@ StartPage::StartPage(QWidget* parent) :
   QWidget(parent)
 {
   _library = new Library(this);
-  _libraryView = new QTableView(this);
+  // _view = new LibraryView(this);
   _searchLine = new QLineEdit(this);
   _searchButton = new QPushButton("&Search", this);
   _completer = new Completer(this);
@@ -22,7 +23,7 @@ StartPage::StartPage(QWidget* parent) :
   _searchLine->setPlaceholderText("Search history..");
   _searchLine->setCompleter(_completer->get());
 
-  _libraryView->setModel(_library->getModel());
+  // _view->setModel(_library->getModel());
 
   connect(_searchLine, SIGNAL(textEdited(const QString&)), _completer, SLOT(onTextEdited(const QString&)));
   connect(_searchButton, SIGNAL(clicked()), this, SLOT(doSearch()));
@@ -33,13 +34,26 @@ StartPage::StartPage(QWidget* parent) :
   auto* searchBar = new QHBoxLayout;
   searchBar->addWidget(_searchLine);
   searchBar->addWidget(_searchButton);
-  
+
+  auto dublinersUrl = QUrl::fromLocalFile("/home/eseamus/Downloads/dubliners.jpeg.jpg");
+  auto dubliners = new GridItem("Dubliners", dublinersUrl, this);
+  dubliners->setFixedSize(200, 320);
+  dubliners->setBackgroundColor(0xf1ffc4);
+  auto paleFireUrl = QUrl::fromLocalFile("/home/eseamus/Downloads/pale_fire.jpg");
+  auto paleFire = new GridItem("Pale fire", paleFireUrl, this);
+  paleFire->setFixedSize(200, 320);
+  paleFire->setBackgroundColor(0xffcaaf);
+  auto shelf = new QHBoxLayout;
+  shelf->addWidget(dubliners);
+  shelf->addWidget(paleFire);
+  shelf->addStretch(1);
+
   auto* footer = new QHBoxLayout;
   footer->setAlignment(Qt::AlignRight);
   footer->addWidget(_addItem);
 
   layout->addLayout(searchBar);
-  layout->addWidget(_libraryView);
+  layout->addLayout(shelf);
   layout->addStretch(1);
   layout->addLayout(footer);
 

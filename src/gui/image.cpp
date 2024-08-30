@@ -8,10 +8,11 @@ Image::Image(QWidget* parent) :
   QWidget(parent)
 {
   _label = new QLabel(this);
-  
-  auto* layout = new QVBoxLayout;
+  _label->setAlignment(Qt::AlignCenter);
+
+  auto layout = new QVBoxLayout;
   layout->addWidget(_label);
-  layout->setAlignment(Qt::AlignHCenter);
+  layout->setAlignment(Qt::AlignCenter);
   layout->setContentsMargins(0, 0, 0, 0);
 
   setLayout(layout);
@@ -23,14 +24,12 @@ Image::Image(const QString& startText, QWidget* parent) :
 {
   setStartText(startText);
   setBackgroundColor(Qt::lightGray);
-  _label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  _label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  expandImage();
 }
 
 void Image::setImageFromUrl(const QUrl& url) {
   _url = url;
   setPixmapFromFile(_url.toLocalFile());
-  setBackgroundColor(Qt::lightGray);
 }
 
 void Image::setBackgroundColor(Qt::GlobalColor color) {
@@ -97,6 +96,10 @@ void Image::addShadow() {
   shadow->setOffset(10, 10);
   shadow->setColor(Qt::black);
   _label->setGraphicsEffect(shadow);
+}
+
+void Image::expandImage() {
+  _label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void Image::resizeEvent(QResizeEvent* event) {

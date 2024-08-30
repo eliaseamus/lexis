@@ -30,6 +30,7 @@ class Image : public QWidget {
   void setPixmapFromFile(const QString& name);
   void setPixmapFromFile(const QString& name, QSize size);
   void addShadow();
+  void expandImage();
 
  protected:
   void resizeEvent(QResizeEvent* event) override;

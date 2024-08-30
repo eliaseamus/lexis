@@ -5,44 +5,48 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network WebEngineWidgets Multimedia Sql)
 
-include_directories(src/include src/db/include src/gui/include src/lang/include)
+include_directories(src src/db src/gui src/lang)
 
 qt_add_executable(lexis src/main.cpp
                         src/utils.cpp
                         src/web_service.cpp
-                        src/include/web_service.hpp
+                        src/web_service.hpp
                         src/file_downloader.cpp
-                        src/include/file_downloader.hpp
+                        src/file_downloader.hpp
                         src/db/library.cpp
-                        src/db/include/library.hpp
+                        src/db/library.hpp
                         src/gui/start_page.cpp
-                        src/gui/include/start_page.hpp
+                        src/gui/start_page.hpp
                         src/gui/dialog.cpp
-                        src/gui/include/dialog.hpp
+                        src/gui/dialog.hpp
                         src/gui/image_picker.cpp
-                        src/gui/include/image_picker.hpp
+                        src/gui/image_picker.hpp
                         src/gui/image.cpp
-                        src/gui/include/image.hpp
+                        src/gui/image.hpp
                         src/gui/drag_drop_image.cpp
-                        src/gui/include/drag_drop_image.hpp
+                        src/gui/drag_drop_image.hpp
                         src/gui/icon.cpp
-                        src/gui/include/icon.hpp
+                        src/gui/icon.hpp
                         src/gui/pronunciation_player.cpp
-                        src/gui/include/pronunciation_player.hpp
+                        src/gui/pronunciation_player.hpp
                         src/gui/word_card.cpp
-                        src/gui/include/word_card.hpp
+                        src/gui/word_card.hpp
                         src/gui/new_library_item_dialog.cpp
-                        src/gui/include/new_library_item_dialog.hpp
+                        src/gui/new_library_item_dialog.hpp
                         src/gui/ok_cancel_box.cpp
-                        src/gui/include/ok_cancel_box.hpp
+                        src/gui/ok_cancel_box.hpp
                         src/lang/completer.cpp
-                        src/lang/include/completer.hpp
+                        src/lang/completer.hpp
                         src/lang/predictor.cpp
-                        src/lang/include/predictor.hpp
+                        src/lang/predictor.hpp
                         src/lang/dictionary.cpp
-                        src/lang/include/dictionary.hpp
+                        src/lang/dictionary.hpp
                         src/lang/pronunciation_service.cpp
-                        src/lang/include/pronunciation_service.hpp)
+                        src/lang/pronunciation_service.hpp
+                        src/gui/library_view.cpp
+                        src/gui/library_view.hpp
+                        src/gui/grid_item.cpp
+                        src/gui/grid_item.hpp)
 
 set(resource_files "icons/au.png"
                    "icons/audio.png"
