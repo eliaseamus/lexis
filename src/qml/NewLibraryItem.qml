@@ -8,9 +8,9 @@ Rectangle {
   ColumnLayout {
     id: metaData
     anchors.fill: parent
-    // anchors.top: parent.top
-    // anchors.left: parent.left
-    // anchors.right: parent.right
+    anchors.topMargin: 50
+    anchors.leftMargin: 50
+    anchors.rightMargin: 50
 
     ComboBox {
       id: type
@@ -26,11 +26,13 @@ Rectangle {
 
     RowLayout {
       visible: type.currentText !== "Subject group"
+
       TextField {
         id: author
         Layout.fillWidth: true
         placeholderText: qsTr("Author")
       }
+
       TextField {
         id: year
         Layout.fillWidth: true
