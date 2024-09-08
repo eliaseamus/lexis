@@ -2,12 +2,13 @@
 
 #include <QObject>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 namespace lexis {
 
 class WebService : public QObject {
  Q_OBJECT
- 
+
  private:
   QNetworkAccessManager* _manager = nullptr;
 

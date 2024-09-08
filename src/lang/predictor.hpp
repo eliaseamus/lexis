@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qqml.h>
+
 #include "web_service.hpp"
 
 namespace lexis {
@@ -12,7 +14,7 @@ class Predictor : public WebService {
 
  public:
   explicit Predictor(QObject* parent = nullptr) : WebService(parent) {}
-  void request(const QString& query) override;
+  Q_INVOKABLE void request(const QString& query) override;
 
  signals:
   void predictionsReceived(const QStringList& predictions);

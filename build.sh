@@ -7,13 +7,30 @@
 # DICTIONARY_API_KEY
 source env.sh
 
-cmake -G"Ninja" -B build                         \
-      -DCMAKE_EXPORT_COMPILE_COMMANDS=1          \
-      -DCMAKE_PREFIX_PATH=${QT_PATH}             \
-      -DPREDICTOR_API_KEY=${PREDICTOR_API_KEY}   \
-      -DDICTIONARY_API_KEY=${DICTIONARY_API_KEY} \
-      -DCSE_ID=${CSE_ID}
+function build {
+    cmake -G"Ninja" -B build                         \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=1          \
+        -DCMAKE_PREFIX_PATH=${QT_PATH}             \
+        -DPREDICTOR_API_KEY=${PREDICTOR_API_KEY}   \
+        -DDICTIONARY_API_KEY=${DICTIONARY_API_KEY} \
+        -DCSE_ID=${CSE_ID}
 
-ninja -C build
-ln -sf build/compile_commands.json compile_commands.json
+    ninja -C build
+    ln -sf build/compile_commands.json compile_commands.json
+}
 
+function clean {
+    rm -fR build
+}
+
+case $1 in
+    "-c"|"--clean")
+        clean
+        ;;
+    "-b"|"--build")
+        build
+        ;;
+    *)
+        build
+        ;;
+esac

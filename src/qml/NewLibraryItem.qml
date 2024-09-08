@@ -53,7 +53,7 @@ Rectangle {
     Button {
       id: ok
       text: "Ok"
-      Material.background: Material.Red
+      Material.background: Material.accentColor
       onClicked: stackView.pop()
     }
     Button {
