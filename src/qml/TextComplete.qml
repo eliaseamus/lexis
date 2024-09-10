@@ -22,29 +22,21 @@ Item {
     }
   }
 
-  Rectangle {
+  Popup {
     id: completionsBox
+    y: textField.height
+    width: childrenRect.width
     visible: false
-    radius: 5
+    height: completions.delegate.height * completions.model.length
 
-    anchors.top: parent.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    height: childrenRect.height
-
-    border.width: 2
-    border.color: Material.accentColor
-    color: palette.window
     Column {
-      anchors.top: parent.top
-      anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.fill: parent
       Repeater {
         id: completions
+        model: []
         property int currentIndex: -1
 
         ItemDelegate {
-          id: completion
           required property string modelData
           required property int index
           text: modelData
@@ -52,16 +44,14 @@ Item {
           anchors.right: parent.right
           hoverEnabled: true
           highlighted: index == completions.currentIndex
+          onHoveredChanged: {
+            completions.currentIndex = index
+            console.log(completions.currentIndex)
+          }
+
           background: Rectangle {
-            property bool isTop: index == 0
-            property bool isBottom: index === completions.model.length - 1
-            property int kRadius: 5
             visible: highlighted || hovered
             color: Material.accentColor
-            topLeftRadius: isTop ? kRadius: 0
-            topRightRadius: isTop ? kRadius : 0
-            bottomLeftRadius: isBottom ? kRadius: 0
-            bottomRightRadius: isBottom ? kRadius : 0
           }
         }
       }
@@ -88,7 +78,7 @@ Item {
     }
   }
 
-  Keys.onPressed: function onPressed(event) {
+  Keys.onPressed: (event) => {
     if (completionsBox.visible) {
       switch (event.key) {
         case Qt.Key_Escape:
@@ -97,21 +87,17 @@ Item {
           event.accepted = true
           break
         case Qt.Key_Up:
-          completions.currentIndex--
-
-          if (completions.currentIndex < 0)
-            completions.currentIndex = completions.model.length - 1
-
-          textField.text = completions.model[completions.currentIndex]
+          if (completions.currentIndex > 0) {
+            completions.currentIndex--
+            textField.text = completions.model[completions.currentIndex]
+          }
           event.accepted = true
           break
         case Qt.Key_Down:
-          completions.currentIndex++
-
-          if (completions.currentIndex > completions.model.length - 1)
-              completions.currentIndex = 0
-
-          textField.text = completions.model[completions.currentIndex]
+          if (completions.currentIndex < completions.model.length - 1) {
+            completions.currentIndex++
+            textField.text = completions.model[completions.currentIndex]
+          }
           event.accepted = true
           break
         case Qt.Key_Return:
