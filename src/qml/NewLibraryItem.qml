@@ -18,25 +18,25 @@ Rectangle {
       model: ["Subject group", "Book", "Article", "Movie", "Series", "Album", "Song"]
     }
 
-    TextField {
+    TextComplete {
       id: title
       Layout.fillWidth: true
-      placeholderText: qsTr("Title")
+      placeholder: qsTr("Title")
     }
 
     RowLayout {
       visible: type.currentText !== "Subject group"
 
-      TextField {
+      TextComplete {
         id: author
         Layout.fillWidth: true
-        placeholderText: qsTr("Author")
+        placeholder: qsTr("Author")
       }
 
-      TextField {
+      TextComplete {
         id: year
         Layout.fillWidth: true
-        placeholderText: qsTr("Year")
+        placeholder: qsTr("Year")
       }
     }
 

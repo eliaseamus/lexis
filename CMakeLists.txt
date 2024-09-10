@@ -11,8 +11,6 @@ include_directories(src src/db src/gui src/lang)
 
 qt_add_executable(${PROJECT_NAME}
   src/main.cpp
-  src/lang/predictor.cpp
-  src/lang/predictor.hpp
   src/web_service.cpp
   src/web_service.hpp
   # src/utils.cpp
@@ -74,6 +72,9 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/NewLibraryItem.qml
     src/qml/ButtonsBox.qml
     src/qml/TextComplete.qml
+  SOURCES
+    src/lang/predictor.cpp
+    src/lang/predictor.hpp
   RESOURCES
     icons/au.png
     icons/audio.png

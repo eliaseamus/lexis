@@ -1,30 +1,32 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-// import QtQuick.Controls.Material
 
 Pane {
   id: startPage
   leftPadding: 0
   rightPadding: 0
 
-  TextComplete {
-    id: searchLine
+  ColumnLayout {
+    id: layout
+    anchors.fill: parent
     anchors.topMargin: 50
     anchors.leftMargin: 50
     anchors.rightMargin: 50
-    placeholder: qsTr("Search")
-  }
 
-  RoundButton {
-    id: addLibraryItem
-    text: "+"
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: 10
-    anchors.right: parent.right
-    anchors.rightMargin: 50
-    Material.background: Material.accentColor
-    onClicked: stackView.push(newItem)
+    TextComplete {
+      id: searchLine
+      Layout.fillWidth: true
+      placeholder: qsTr("Search")
+    }
+
+    RoundButton {
+      id: addLibraryItem
+      text: "+"
+      Layout.alignment: Qt.AlignRight | Qt.AlignBottom
+      Material.background: Material.accentColor
+      onClicked: stackView.push(newItem)
+    }
   }
 
   NewLibraryItem {

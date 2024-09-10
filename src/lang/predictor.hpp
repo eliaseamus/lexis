@@ -8,6 +8,7 @@ namespace lexis {
 
 class Predictor : public WebService {
  Q_OBJECT
+ QML_ELEMENT
 
  private:
   QString _query;
