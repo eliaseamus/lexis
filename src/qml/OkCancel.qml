@@ -4,14 +4,18 @@ import QtQuick.Controls
 
 RowLayout {
   id: buttonBox
-  anchors.bottom: parent.bottom
-  anchors.horizontalCenter: parent.horizontalCenter
+  property var okay: function () {}
+  Layout.alignment: Qt.AlignHCenter
   Button {
     id: ok
     text: "Ok"
+    Material.background: Material.accentColor
+    onClicked: okay()
   }
+
   Button {
     id: cancel
     text: "Cancel"
+    onClicked: stackView.pop()
   }
 }

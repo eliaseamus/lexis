@@ -10,9 +10,7 @@ Rectangle {
   ColumnLayout {
     id: metaData
     anchors.fill: parent
-    anchors.topMargin: 50
-    anchors.leftMargin: 50
-    anchors.rightMargin: 50
+    anchors.margins: 20
 
     ComboBox {
       id: type
@@ -80,6 +78,7 @@ Rectangle {
       text: "Pick an image"
       Material.background: Material.accentColor
       Layout.alignment: Qt.AlignHCenter
+      onClicked: stackView.push(imagePicker)
     }
 
     Item {
@@ -87,21 +86,17 @@ Rectangle {
       Layout.fillHeight: true
     }
 
-    RowLayout {
-      id: buttonBox
-      Layout.alignment: Qt.AlignHCenter
-      Button {
-        id: ok
-        text: "Ok"
-        Material.background: Material.accentColor
-        onClicked: stackView.pop()
-      }
-      Button {
-        id: cancel
-        text: "Cancel"
-        onClicked: stackView.pop()
+    OkCancel {
+      okay: function () {
+        stackView.pop()
       }
     }
 
   }
+
+  ImagePicker {
+    id: imagePicker
+    visible: false
+  }
+
 }

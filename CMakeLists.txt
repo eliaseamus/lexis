@@ -70,8 +70,9 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/Main.qml
     src/qml/StartPage.qml
     src/qml/NewLibraryItem.qml
-    src/qml/ButtonsBox.qml
+    src/qml/OkCancel.qml
     src/qml/TextComplete.qml
+    src/qml/ImagePicker.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
