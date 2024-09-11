@@ -10,9 +10,6 @@ class Image : public QWidget {
  Q_OBJECT
 
  private:
-  static constexpr auto kGrayScaleFactor = 200;
-
- private:
   QLabel* _label = nullptr;
   QUrl _url;
   QPixmap _pixmap;
@@ -20,17 +17,17 @@ class Image : public QWidget {
  public:
   Image(QWidget* parent = nullptr);
   Image(const QString& startText, QWidget* parent = nullptr);
-  QUrl getUrl() const {return _url;}
   void setImageFromUrl(const QUrl& url);
   void setBackgroundColor(Qt::GlobalColor color);
   void darken();
   void brighten();
-  bool isSet() const {return !_url.isEmpty();}
   void setStartText(const QString& text);
   void setPixmapFromFile(const QString& name);
   void setPixmapFromFile(const QString& name, QSize size);
   void addShadow();
   void expandImage();
+  bool isSet() const {return !_url.isEmpty();}
+  QUrl getUrl() const {return _url;}
 
  protected:
   void resizeEvent(QResizeEvent* event) override;

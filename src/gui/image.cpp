@@ -48,7 +48,7 @@ void Image::darken() {
     for (int x = 0; x < image.width(); ++x) {
       for (int y = 0; y < image.height(); ++y) {
         auto originalColor = image.pixelColor(x, y);
-        image.setPixelColor(x, y, originalColor.darker(kGrayScaleFactor));
+        image.setPixelColor(x, y, originalColor.darker());
       }
     }
 
@@ -65,7 +65,7 @@ void Image::brighten() {
     for (int x = 0; x < image.width(); ++x) {
       for (int y = 0; y < image.height(); ++y) {
         auto originalColor = image.pixelColor(x, y);
-        image.setPixelColor(x, y, originalColor.lighter(kGrayScaleFactor));
+        image.setPixelColor(x, y, originalColor.lighter());
       }
     }
 

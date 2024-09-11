@@ -75,6 +75,8 @@ qt_add_qml_module(${PROJECT_NAME}
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
+    src/gui/image.cpp
+    src/gui/image.hpp
   RESOURCES
     icons/au.png
     icons/audio.png

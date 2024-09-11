@@ -4,6 +4,8 @@ import QtQuick.Layouts
 
 Rectangle {
   id: newItem
+  property color backgroundColor: "white"
+  color: backgroundColor
 
   ColumnLayout {
     id: metaData
@@ -48,26 +50,58 @@ Rectangle {
       }
     }
 
-    Image {
-      Layout.fillHeight: true
+    RowLayout {
+      Layout.alignment: Qt.AlignHCenter
       Layout.fillWidth: true
+      Layout.topMargin: 20
+      spacing: 30
+      Repeater {
+        id: backgroundColors
+        model: ["#ffffff", "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
+                "#ff8b94", "#1b85b8", "#c3cb71", "#ffd4e5",
+                "#d4ffea", "#eecbff", "#feffa3", "#dbdcff"]
+        RoundButton {
+          required property string modelData
+          Material.background: modelData
+          onClicked: {
+            backgroundColor = modelData
+          }
+        }
+      }
     }
-  }
 
-  RowLayout {
-    id: buttonBox
-    anchors.bottom: parent.bottom
-    anchors.horizontalCenter: parent.horizontalCenter
+    Item {
+      id: spacer
+      Layout.fillHeight: true
+    }
+
     Button {
-      id: ok
-      text: "Ok"
+      id: pickImage
+      text: "Pick an image"
       Material.background: Material.accentColor
-      onClicked: stackView.pop()
+      Layout.alignment: Qt.AlignHCenter
     }
-    Button {
-      id: cancel
-      text: "Cancel"
-      onClicked: stackView.pop()
+
+    Item {
+      id: spacer2
+      Layout.fillHeight: true
     }
+
+    RowLayout {
+      id: buttonBox
+      Layout.alignment: Qt.AlignHCenter
+      Button {
+        id: ok
+        text: "Ok"
+        Material.background: Material.accentColor
+        onClicked: stackView.pop()
+      }
+      Button {
+        id: cancel
+        text: "Cancel"
+        onClicked: stackView.pop()
+      }
+    }
+
   }
 }
