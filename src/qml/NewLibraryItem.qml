@@ -33,10 +33,18 @@ Rectangle {
         placeholder: qsTr("Author")
       }
 
-      TextComplete {
+      TextField {
         id: year
-        Layout.fillWidth: true
-        placeholder: qsTr("Year")
+        placeholderText: qsTr("Year")
+        validator: IntValidator {bottom: 0; top: 9999;}
+      }
+
+      CheckBox {
+        id: bc
+        visible: type.currentText === "Book"
+        text: qsTr("BC")
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Before Christ")
       }
     }
 

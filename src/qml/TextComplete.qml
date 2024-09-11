@@ -44,14 +44,18 @@ Item {
           anchors.right: parent.right
           hoverEnabled: true
           highlighted: index == completions.currentIndex
-          onHoveredChanged: {
-            completions.currentIndex = index
-            console.log(completions.currentIndex)
-          }
-
           background: Rectangle {
-            visible: highlighted || hovered
+            visible: highlighted
             color: Material.accentColor
+          }
+          onHoveredChanged: {
+            if (hovered)
+              completions.currentIndex = index
+          }
+          onClicked: {
+            textField.text = modelData
+            textField.accepted()
+            completionsBox.visible = false
           }
         }
       }
@@ -103,7 +107,7 @@ Item {
         case Qt.Key_Return:
           textField.text = completions.model[completions.currentIndex]
           textField.accepted()
-          event.accepted = true;
+          event.accepted = true
           completionsBox.visible = false
           break
       }
@@ -114,7 +118,10 @@ Item {
           event.accepted = true
           break
         case Qt.Key_Down:
-          completionsBox.visible = completions.model.length > 0 ? true : false
+          if (completions.model.length > 0) {
+            completionsBox.visible = true
+            completions.currentIndex = -1
+          }
           event.accepted = true
           break
       }
