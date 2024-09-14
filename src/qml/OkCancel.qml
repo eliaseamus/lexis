@@ -5,7 +5,7 @@ import QtQuick.Controls
 RowLayout {
   id: buttonBox
   property var okay: function () {}
-  Layout.alignment: Qt.AlignHCenter
+  Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
   Button {
     id: ok
     text: "Ok"

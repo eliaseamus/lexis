@@ -69,7 +69,7 @@ Rectangle {
     }
 
     Item {
-      id: spacer
+      id: topSpacer
       Layout.fillHeight: true
     }
 
@@ -78,11 +78,16 @@ Rectangle {
       text: "Pick an image"
       Material.background: Material.accentColor
       Layout.alignment: Qt.AlignHCenter
-      onClicked: stackView.push(imagePicker)
+      onClicked: {
+        if (imagePicker.hasQuery)
+          stackView.push(imagePicker)
+      }
+      ToolTip.visible: hovered && !imagePicker.hasQuery
+      ToolTip.text: qsTr("Insert title")
     }
 
     Item {
-      id: spacer2
+      id: bottomSpacer
       Layout.fillHeight: true
     }
 
@@ -96,6 +101,8 @@ Rectangle {
 
   ImagePicker {
     id: imagePicker
+    query: "%1 %2".arg(title.text).arg(author.text)
+    property bool hasQuery: query.trim().length > 0
     visible: false
   }
 

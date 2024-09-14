@@ -5,7 +5,7 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
-             Qml Quick QuickControls2 REQUIRED)
+             Qml Quick QuickControls2 WebView REQUIRED)
 
 include_directories(src src/db src/gui src/lang)
 
@@ -61,6 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Qml
   Qt6::Quick
   Qt6::QuickControls2
+  Qt6::WebView
 )
 
 qt_add_qml_module(${PROJECT_NAME}

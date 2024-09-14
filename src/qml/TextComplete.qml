@@ -6,6 +6,7 @@ import QLexis
 Item {
   id: textComplete
   property string placeholder: ""
+  property string text: textField.text
   Layout.preferredHeight: textField.height
 
   TextField {
