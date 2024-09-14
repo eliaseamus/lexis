@@ -4,8 +4,10 @@ import QtQuick.Layouts
 import QtWebView
 
 SplitView {
+  id: imagePicker
   orientation: Qt.Horizontal
   property string query
+  signal imagePicked(url: string)
 
   Item {
     SplitView.fillWidth: true
@@ -61,8 +63,9 @@ SplitView {
 
     Rectangle {
       id: dropBackground
+      property color defaultColor: "#efefef"
       anchors.fill: parent
-      color: palette.window
+      color: defaultColor
     }
 
     ColumnLayout {
@@ -88,16 +91,21 @@ SplitView {
       }
 
       OkCancel {
-
+        okay: function () {
+          if (image.visible) {
+            imagePicked(image.source)
+          }
+          stackView.pop()
+        }
       }
     }
 
     onEntered: {
-      dropBackground.color = Qt.darker(palette.window, 1.25)
+      dropBackground.color = Qt.darker(dropBackground.defaultColor, 1.25)
     }
 
     onExited: {
-      dropBackground.color = palette.window
+      dropBackground.color = dropBackground.defaultColor
     }
 
     onDropped: (drop) => {
@@ -106,7 +114,7 @@ SplitView {
       }
       image.source = drop.urls[0]
       image.visible = true
-      dropBackground.color = palette.window
+      dropBackground.color = dropBackground.defaultColor
     }
   }
 

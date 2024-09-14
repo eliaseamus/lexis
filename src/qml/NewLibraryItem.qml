@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Rectangle {
   id: newItem
@@ -52,43 +53,80 @@ Rectangle {
       Layout.alignment: Qt.AlignHCenter
       Layout.fillWidth: true
       Layout.topMargin: 20
-      spacing: 30
+      spacing: 20
       Repeater {
         id: backgroundColors
         model: ["#ffffff", "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
-                "#ff8b94", "#1b85b8", "#c3cb71", "#ffd4e5",
-                "#d4ffea", "#eecbff", "#feffa3", "#dbdcff"]
+                "#ff8b94", "#1b85b8", "#c3cb71", "#ffd4e5", "#e4ddd7",
+                "#d4ffea", "#eecbff", "#feffa3", "#dbdcff", "#e3dfa4"]
         RoundButton {
           required property string modelData
           Material.background: modelData
-          onClicked: {
-            backgroundColor = modelData
+          onClicked: backgroundColor = modelData
+        }
+      }
+
+      RoundButton {
+        id: customColor
+        text: "+"
+        Material.background: "white"
+        onClicked: colorDialog.open()
+
+        ColorDialog {
+          id: colorDialog
+          onAccepted: {
+            customColor.Material.background = selectedColor
+            backgroundColor = selectedColor
           }
         }
       }
     }
 
-    Item {
-      id: topSpacer
+    Image {
+      id: image
+      visible: false
+      width: main.width / 2
+      fillMode: Image.PreserveAspectFit
       Layout.fillHeight: true
-    }
+      Layout.topMargin: 20
+      Layout.alignment: Qt.AlignCenter
 
-    Button {
-      id: pickImage
-      text: "Pick an image"
-      Material.background: Material.accentColor
-      Layout.alignment: Qt.AlignHCenter
-      onClicked: {
-        if (imagePicker.hasQuery)
-          stackView.push(imagePicker)
+      MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: (mouse) => {
+          if (mouse.button === Qt.LeftButton) {
+            stackView.push(imagePicker)
+          }
+        }
       }
-      ToolTip.visible: hovered && !imagePicker.hasQuery
-      ToolTip.text: qsTr("Insert title")
     }
 
-    Item {
-      id: bottomSpacer
-      Layout.fillHeight: true
+    ColumnLayout {
+      Layout.alignment: Qt.AlignCenter
+      visible: !image.visible
+      Item {
+        id: topSpacer
+        Layout.fillHeight: true
+      }
+
+      Button {
+        id: pickImage
+        text: "Pick an image"
+        Material.background: Material.accentColor
+        Layout.alignment: Qt.AlignHCenter
+        onClicked: {
+          if (imagePicker.hasQuery)
+            stackView.push(imagePicker)
+        }
+        ToolTip.visible: hovered && !imagePicker.hasQuery
+        ToolTip.text: qsTr("Insert title")
+      }
+
+      Item {
+        id: bottomSpacer
+        Layout.fillHeight: true
+      }
     }
 
     OkCancel {
@@ -104,6 +142,15 @@ Rectangle {
     query: "%1 %2".arg(title.text).arg(author.text)
     property bool hasQuery: query.trim().length > 0
     visible: false
+  }
+
+  Connections {
+    target: imagePicker
+
+    function onImagePicked(url) {
+      image.source = url
+      image.visible = true
+    }
   }
 
 }
