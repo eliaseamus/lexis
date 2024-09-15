@@ -5,8 +5,6 @@ import QtQuick.Dialogs
 
 Rectangle {
   id: newItem
-  property color backgroundColor: "white"
-  color: backgroundColor
 
   ColumnLayout {
     id: metaData
@@ -62,7 +60,7 @@ Rectangle {
         RoundButton {
           required property string modelData
           Material.background: modelData
-          onClicked: backgroundColor = modelData
+          onClicked: cover.color = modelData
         }
       }
 
@@ -76,45 +74,46 @@ Rectangle {
           id: colorDialog
           onAccepted: {
             customColor.Material.background = selectedColor
-            backgroundColor = selectedColor
+            cover.color = selectedColor
           }
         }
       }
     }
 
-    Image {
-      id: image
-      visible: false
-      width: main.width / 2
-      fillMode: Image.PreserveAspectFit
+    Rectangle {
+      id: cover
       Layout.fillHeight: true
+      Layout.fillWidth: true
       Layout.topMargin: 20
-      Layout.alignment: Qt.AlignCenter
+      Layout.bottomMargin: 20
 
-      MouseArea {
+      Image {
+        id: image
+        visible: false
+        fillMode: Image.PreserveAspectFit
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onClicked: (mouse) => {
-          if (mouse.button === Qt.LeftButton) {
-            stackView.push(imagePicker)
+        anchors.centerIn: parent
+        anchors.topMargin: 20
+        anchors.bottomMargin: 20
+
+        MouseArea {
+          anchors.fill: parent
+          cursorShape: Qt.PointingHandCursor
+          onClicked: (mouse) => {
+            if (mouse.button === Qt.LeftButton) {
+              stackView.push(imagePicker)
+            }
           }
         }
-      }
-    }
-
-    ColumnLayout {
-      Layout.alignment: Qt.AlignCenter
-      visible: !image.visible
-      Item {
-        id: topSpacer
-        Layout.fillHeight: true
       }
 
       Button {
         id: pickImage
+        visible: !image.visible
         text: "Pick an image"
         Material.background: Material.accentColor
-        Layout.alignment: Qt.AlignHCenter
+        anchors.centerIn: parent
+
         onClicked: {
           if (imagePicker.hasQuery)
             stackView.push(imagePicker)
@@ -123,10 +122,6 @@ Rectangle {
         ToolTip.text: qsTr("Insert title")
       }
 
-      Item {
-        id: bottomSpacer
-        Layout.fillHeight: true
-      }
     }
 
     OkCancel {

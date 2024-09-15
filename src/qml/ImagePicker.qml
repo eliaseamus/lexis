@@ -11,6 +11,7 @@ SplitView {
 
   Item {
     SplitView.fillWidth: true
+    SplitView.preferredWidth: main.width / 2
     WebView {
       id: searchResults
       visible: false
@@ -59,7 +60,7 @@ SplitView {
   DropArea {
     id: dropArea
     SplitView.fillWidth: true
-    SplitView.minimumWidth: main.width / 2
+    SplitView.preferredWidth: main.width / 2
 
     Rectangle {
       id: dropBackground
@@ -74,7 +75,6 @@ SplitView {
       Image {
         id: image
         visible: false
-        width: dropArea.width / 2
         fillMode: Image.PreserveAspectFit
         Layout.fillWidth: true
         Layout.fillHeight: true
