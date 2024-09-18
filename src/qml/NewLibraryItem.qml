@@ -118,6 +118,7 @@ Rectangle {
           if (imagePicker.hasQuery)
             stackView.push(imagePicker)
         }
+
         ToolTip.visible: hovered && !imagePicker.hasQuery
         ToolTip.text: qsTr("Insert title")
       }
