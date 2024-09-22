@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
+import QLexis
 
 Window {
   id: main
@@ -12,6 +13,10 @@ Window {
     id: stackView
     anchors.fill: parent
     initialItem: StartPage {}
+  }
+
+  Library {
+    id: library
   }
 
 }

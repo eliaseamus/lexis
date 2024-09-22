@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import QLexis
 
 Rectangle {
   id: newItem
@@ -24,6 +25,7 @@ Rectangle {
     }
 
     RowLayout {
+      id: mediaData
       visible: type.currentText !== "Subject group"
 
       TextComplete {
@@ -126,11 +128,26 @@ Rectangle {
     }
 
     OkCancel {
+      okTooltipVisible: title.text.trim().length == 0
+      okTooltipText: "Insert title"
       okay: function () {
-        stackView.pop()
+        if (!okTooltipVisible) {
+          library.addItem(newDbRecord)
+          stackView.pop()
+        }
       }
     }
+  }
 
+  LibraryItem {
+    id: newDbRecord
+    title: title.text
+    type: type.currentText
+    author: author.text
+    year: mediaData.visible ? parseInt(year.text) : -1
+    bc: bc.checked
+    imageUrl: image.source
+    color: cover.color
   }
 
   ImagePicker {

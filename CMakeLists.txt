@@ -15,8 +15,6 @@ qt_add_executable(${PROJECT_NAME}
   src/web_service.hpp
   # src/file_downloader.cpp
   # src/file_downloader.hpp
-  # src/db/library.cpp
-  # src/db/library.hpp
   # src/gui/pronunciation_player.cpp
   # src/gui/pronunciation_player.hpp
   # src/gui/word_card.cpp
@@ -54,6 +52,8 @@ qt_add_qml_module(${PROJECT_NAME}
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
+    src/db/library.cpp
+    src/db/library.hpp
   RESOURCES
     icons/au.png
     icons/audio.png
