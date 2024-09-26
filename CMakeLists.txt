@@ -13,6 +13,8 @@ qt_add_executable(${PROJECT_NAME}
   src/main.cpp
   src/web_service.cpp
   src/web_service.hpp
+  src/utils.hpp
+  src/utils.cpp
   # src/file_downloader.cpp
   # src/file_downloader.hpp
   # src/gui/pronunciation_player.cpp
@@ -49,11 +51,15 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
+    src/qml/LibraryView.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
     src/db/library.cpp
     src/db/library.hpp
+    src/db/library_item.hpp
+    src/db/library_item_model.hpp
+    src/db/library_item_model.cpp
   RESOURCES
     icons/au.png
     icons/audio.png

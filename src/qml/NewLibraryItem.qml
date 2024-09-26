@@ -144,7 +144,7 @@ Rectangle {
     title: title.text
     type: type.currentText
     author: author.text
-    year: mediaData.visible ? parseInt(year.text) : -1
+    year: year.text
     bc: bc.checked
     imageUrl: image.source
     color: cover.color
