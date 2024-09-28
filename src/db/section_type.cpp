@@ -2,6 +2,8 @@
 
 #include <QHash>
 
+#include "utils.hpp"
+
 namespace lexis {
 
 static QHash<LibrarySectionType, QString> librarySectionTypeNames() {
@@ -19,9 +21,13 @@ static QHash<LibrarySectionType, QString> librarySectionTypeNames() {
 }
 
 QStringList SectionTypeManager::librarySectionNames() {
-  static const auto typeNames = librarySectionTypeNames();
-  auto res = QStringList{typeNames.values()};
-  res.sort();
+  using enum LibrarySectionType;
+
+  QStringList res;
+  for (const auto e : enumRange(kSubjectGroup, kSong)) {
+    res << librarySectionTypeName(e);
+  }
+
   return res;
 }
 
@@ -29,8 +35,8 @@ QString SectionTypeManager::librarySectionTypeName(LibrarySectionType type) {
   static const auto typeNames = librarySectionTypeNames();
 
   if (typeNames.find(type) == typeNames.end()) {
-      return QString("Unknown section: %1").arg(static_cast<int>(type));
-    }
+    return QString("Unknown section: %1").arg(static_cast<int>(type));
+  }
 
   return typeNames[type];
 }
