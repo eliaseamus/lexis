@@ -14,7 +14,7 @@ class LibraryItemModel : public QAbstractListModel {
  QML_ELEMENT
 
  private:
-  QList<LibraryItem*> _items;
+  QVector<LibraryItem*> _items;
 
  public:
   enum LibraryItemRoles {
@@ -27,7 +27,7 @@ class LibraryItemModel : public QAbstractListModel {
     ColorRole
   };
 
-  LibraryItemModel(QObject* parent = nullptr);
+  explicit LibraryItemModel(QObject* parent = nullptr);
   void addItem(LibraryItem* item);
   int rowCount(const QModelIndex& parent = {}) const override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

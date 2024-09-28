@@ -15,7 +15,7 @@ Rectangle {
     ComboBox {
       id: type
       Layout.fillWidth: true
-      model: ["Subject group", "Book", "Article", "Movie", "Series", "Album", "Song"]
+      model: sectionTypeManager.librarySectionNames()
     }
 
     TextComplete {

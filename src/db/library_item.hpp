@@ -6,6 +6,10 @@
 #include <QUrl>
 #include <QColor>
 
+#include "section_type.hpp"
+
+namespace lexis {
+
 class LibraryItem : public QObject {
   Q_OBJECT
   QML_ELEMENT
@@ -18,7 +22,7 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
 
-private:
+ private:
   QString _title;
   QString _type;
   QString _author;
@@ -27,7 +31,8 @@ private:
   QUrl _imageUrl;
   QColor _color;
 
-public:
+ public:
+  explicit LibraryItem(QObject* parent = nullptr) : QObject(parent) {}
   QString title() const {return _title;}
   QString type() const {return _type;}
   QString author() const {return _author;}
@@ -44,7 +49,8 @@ public:
   void setImageUrl(const QUrl& imageUrl) {_imageUrl = imageUrl;}
   void setColor(const QColor& color) {_color = color;}
 
-signals:
+ signals:
   void dummy();
 };
 
+}

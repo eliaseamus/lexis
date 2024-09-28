@@ -19,4 +19,7 @@ Window {
     id: library
   }
 
+  SectionTypeManager {
+    id: sectionTypeManager
+  }
 }

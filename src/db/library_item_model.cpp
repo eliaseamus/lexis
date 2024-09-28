@@ -23,7 +23,7 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
     return {};
   }
 
-  const auto& item = _items[index.row()];
+  const auto* item = _items[index.row()];
   switch (role) {
     case TitleRole:
       return item->title();

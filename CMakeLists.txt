@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(Lexis LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_CXX_STANDARD 23)
 
 find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
@@ -51,7 +52,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
-    src/qml/LibraryView.qml
+    src/qml/LibrarySectionView.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
@@ -60,6 +61,10 @@ qt_add_qml_module(${PROJECT_NAME}
     src/db/library_item.hpp
     src/db/library_item_model.hpp
     src/db/library_item_model.cpp
+    src/db/library_section.hpp
+    src/db/library_section.cpp
+    src/db/section_type.hpp
+    src/db/section_type.cpp
   RESOURCES
     icons/au.png
     icons/audio.png
