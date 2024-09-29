@@ -28,7 +28,7 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
     case TitleRole:
       return item->title();
     case TypeRole:
-      return item->type();
+      return SectionTypeManager::librarySectionTypeName(item->type());
     case AuthorRole:
       return item->author();
     case YearRole:

@@ -7,7 +7,7 @@ namespace lexis {
 LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) :
   QObject(parent),
   _type(type),
-  _name(_typeManager.librarySectionTypeName(type)),
+  _name(SectionTypeManager::librarySectionTypeName(type)),
   _model(new LibraryItemModel(this))
 {
 }

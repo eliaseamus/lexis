@@ -23,11 +23,13 @@ class Library : public QObject {
  public:
   explicit Library(QObject* parent = nullptr);
   Q_INVOKABLE void addItem(LibraryItem* item);
-  Q_INVOKABLE QVector<QStringList> getItemsOfType(const QString& type) const;
   QVector<LibrarySection*> sections() const {return _sections;}
 
  private:
   void createTable();
+  LibrarySection* getSection(LibrarySectionType type);
+  void populateSections();
+  void updateSections(LibraryItem* item);
 
  signals:
   void dummy();

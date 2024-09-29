@@ -27,9 +27,11 @@ class SectionTypeManager : public QObject {
 
  public:
   explicit SectionTypeManager(QObject* parent = nullptr) : QObject(parent) {}
-  Q_INVOKABLE QStringList librarySectionNames();
-  Q_INVOKABLE QString librarySectionTypeName(LibrarySectionType type);
-  Q_INVOKABLE LibrarySectionType librarySectionType(const QString& name);
+
+  Q_INVOKABLE static QStringList librarySectionNames();
+  Q_INVOKABLE static QString librarySectionTypeName(LibrarySectionType type);
+  Q_INVOKABLE static LibrarySectionType librarySectionType(const QString& name);
+  static LibrarySectionType librarySectionType(int type);
 
 };
 

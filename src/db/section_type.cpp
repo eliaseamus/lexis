@@ -46,4 +46,14 @@ LibrarySectionType SectionTypeManager::librarySectionType(const QString& name) {
   return typeNames.key(name, LibrarySectionType::kUnknown);
 }
 
+LibrarySectionType SectionTypeManager::librarySectionType(int type) {
+  using enum LibrarySectionType;
+  int bottom = std::to_underlying(kSubjectGroup);
+  int top = std::to_underlying(kSong);
+  if (type < bottom || type > top) {
+    return kUnknown;
+  }
+  return static_cast<LibrarySectionType>(type);
+}
+
 }

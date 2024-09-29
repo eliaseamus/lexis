@@ -142,9 +142,9 @@ Rectangle {
   LibraryItem {
     id: newDbRecord
     title: title.text
-    type: type.currentText
+    type: sectionTypeManager.librarySectionType(type.currentText)
     author: author.text
-    year: year.text
+    year: mediaData.visible ? parseInt(year.text) : -1
     bc: bc.checked
     imageUrl: image.source
     color: cover.color

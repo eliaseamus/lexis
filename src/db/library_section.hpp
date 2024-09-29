@@ -18,10 +18,9 @@ class LibrarySection : public QObject {
  Q_PROPERTY(LibraryItemModel* model READ model NOTIFY dummy);
 
  private:
-  SectionTypeManager _typeManager;
   LibrarySectionType _type;
   QString _name;
-  LibraryItemModel* _model;
+  LibraryItemModel* _model = nullptr;
 
  public:
   LibrarySection(LibrarySectionType type, QObject* parent = nullptr);
