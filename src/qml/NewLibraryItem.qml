@@ -7,6 +7,17 @@ import QLexis
 Rectangle {
   id: newItem
 
+  function clear() {
+    type.currentIndex = 0
+    title.clear()
+    author.clear()
+    year.text = ""
+    bc.checked = false
+    image.source = ""
+    image.visible = false
+    cover.color = "white"
+  }
+
   ColumnLayout {
     id: metaData
     anchors.fill: parent
@@ -132,17 +143,14 @@ Rectangle {
       okTooltipText: "Insert title"
       okay: function () {
         if (!okTooltipVisible) {
-          library.addItem(newDbRecord)
-          stackView.pop()
-          type.currentIndex = 0
-          title.clear()
-          author.clear()
-          year.text = ""
-          bc.checked = false
-          image.source = ""
-          image.visible = false
-          cover.color = "white"
+          library.addItem(newDbRecord);
+          popStack();
+          newItem.clear();
         }
+      }
+      cancel: function () {
+        popStack();
+        newItem.clear();
       }
     }
   }

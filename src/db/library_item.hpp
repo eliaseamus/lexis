@@ -35,6 +35,7 @@ class LibraryItem : public QObject {
 
  public:
   explicit LibraryItem(QObject* parent = nullptr) : QObject(parent) {}
+  void init(LibraryItem* item);
   QString title() const {return _title;}
   LibrarySectionType type() const {return _type;}
   QString author() const {return _author;}

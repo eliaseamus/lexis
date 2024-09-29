@@ -4,6 +4,16 @@
 
 namespace lexis {
 
+void LibraryItem::init(LibraryItem* item) {
+  _title = item->title();
+  _type = item->type();
+  _author = item->author();
+  _year = item->year();
+  _bc = item->bc();
+  _color = item->color();
+  setImage(item->image());
+}
+
 QByteArray LibraryItem::image() const {
   if (_imageUrl.isEmpty()) {
       qWarning() << "url is empty";

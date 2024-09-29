@@ -93,9 +93,12 @@ SplitView {
       OkCancel {
         okay: function () {
           if (image.visible) {
-            imagePicked(image.source)
+            imagePicked(image.source);
           }
-          stackView.pop()
+          popStack();
+        }
+        cancel: function () {
+          popStack();
         }
       }
     }

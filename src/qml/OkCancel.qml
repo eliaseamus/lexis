@@ -5,12 +5,12 @@ import QtQuick.Controls
 RowLayout {
   id: buttonBox
   property var okay: function () {}
+  property var cancel: function () {}
   property bool okTooltipVisible
   property string okTooltipText
 
   Layout.alignment: Qt.AlignCenter
   Button {
-    id: ok
     text: "Ok"
     Material.background: Material.accentColor
     onClicked: okay()
@@ -20,8 +20,7 @@ RowLayout {
   }
 
   Button {
-    id: cancel
     text: "Cancel"
-    onClicked: stackView.pop()
+    onClicked: cancel()
   }
 }

@@ -18,6 +18,7 @@ Pane {
     TextComplete {
       id: searchLine
       Layout.fillWidth: true
+      Layout.bottomMargin: 50
       placeholder: qsTr("Search")
     }
 

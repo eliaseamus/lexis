@@ -13,4 +13,8 @@ Window {
     anchors.fill: parent
     initialItem: StartPage {}
   }
+
+  function popStack() {
+    stackView.pop()
+  }
 }

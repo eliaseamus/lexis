@@ -34,7 +34,9 @@ void Library::addItem(LibraryItem* item) {
     return;
   }
 
-  updateSections(item);
+  auto* newItem = new LibraryItem(this);
+  newItem->init(item);
+  updateSections(newItem);
 }
 
 void Library::createTable() {

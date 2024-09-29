@@ -12,9 +12,17 @@ Item {
 
   ColumnLayout {
     anchors.fill: parent
-    Text {
+    Label {
       text: title
+      color: "white"
       Layout.bottomMargin: 10
+      Layout.leftMargin: 5
+      background: Rectangle {
+        anchors.fill: parent
+        anchors.margins: -5
+        color: Material.accentColor
+        radius: 10
+      }
     }
 
     GridView {
