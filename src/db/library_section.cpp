@@ -4,12 +4,21 @@
 
 namespace lexis {
 
-LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) :
+LibrarySection::LibrarySection(QObject* parent) :
   QObject(parent),
-  _type(type),
-  _name(SectionTypeManager::librarySectionTypeName(type)),
   _model(new LibraryItemModel(this))
 {
+}
+
+LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) :
+  LibrarySection(parent)
+{
+  setType(type);
+}
+
+void LibrarySection::setType(LibrarySectionType type) {
+  _type = type;
+  _name = SectionTypeManager::librarySectionTypeName(type);
 }
 
 void LibrarySection::addItem(LibraryItem* item) {

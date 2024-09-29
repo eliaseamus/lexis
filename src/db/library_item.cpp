@@ -14,7 +14,7 @@ QByteArray LibraryItem::image() const {
   QFile image(path);
 
   if (!image.open(QIODevice::ReadOnly)) {
-      qWarning() << "Failed to open image:" << path;
+      qWarning() << "fail to open image:" << path;
       return {};
     }
 
@@ -22,8 +22,13 @@ QByteArray LibraryItem::image() const {
 }
 
 void LibraryItem::setImage(QByteArray&& data) {
+  if (!_image.open()) {
+    qWarning() << "fail to open temporary file" << _image.fileName();
+    return;
+  }
   _image.write(qUncompress(data));
-  _imageUrl = _image.fileName();
+  _image.close();
+  _imageUrl = QUrl::fromLocalFile(_image.fileName());
 }
 
 }

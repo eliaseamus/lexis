@@ -51,7 +51,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
-    src/qml/LibrarySectionView.qml
+    src/qml/SectionView.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp

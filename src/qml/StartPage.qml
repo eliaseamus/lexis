@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QLexis
 
 Pane {
   id: startPage
@@ -20,6 +21,21 @@ Pane {
       placeholder: qsTr("Search")
     }
 
+    Column {
+
+      Repeater {
+        id: librarySections
+        model: library.sections
+
+        SectionView {
+          required property LibrarySection modelData
+          title: modelData.name
+          model: modelData.model
+        }
+      }
+
+    }
+
     RoundButton {
       id: addLibraryItem
       text: "+"
@@ -32,6 +48,14 @@ Pane {
   NewLibraryItem {
     id: newItem
     visible: false
+  }
+
+  Library {
+    id: library
+  }
+
+  SectionTypeManager {
+    id: sectionTypeManager
   }
 
 }

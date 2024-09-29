@@ -33,6 +33,8 @@ void Library::addItem(LibraryItem* item) {
     qWarning() << "Failed to insert item into database:" << query.lastError();
     return;
   }
+
+  updateSections(item);
 }
 
 void Library::createTable() {

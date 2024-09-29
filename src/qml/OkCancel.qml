@@ -8,7 +8,7 @@ RowLayout {
   property bool okTooltipVisible
   property string okTooltipText
 
-  Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+  Layout.alignment: Qt.AlignCenter
   Button {
     id: ok
     text: "Ok"

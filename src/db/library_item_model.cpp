@@ -52,7 +52,7 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[YearRole] = "year";
   roles[BcRole] = "bc";
   roles[ImageUrlRole] = "imageUrl";
-  roles[ColorRole] = "color";
+  roles[ColorRole] = "itemColor";
   return roles;
 }
 
