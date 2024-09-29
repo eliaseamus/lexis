@@ -21,19 +21,17 @@ Pane {
       placeholder: qsTr("Search")
     }
 
-    Column {
+    Repeater {
+      id: librarySections
+      model: library.sections
+      Layout.fillWidth: true
+      Layout.fillHeight: true
 
-      Repeater {
-        id: librarySections
-        model: library.sections
-
-        SectionView {
-          required property LibrarySection modelData
-          title: modelData.name
-          model: modelData.model
-        }
+      SectionView {
+        required property LibrarySection modelData
+        title: modelData.name
+        model: modelData.model
       }
-
     }
 
     RoundButton {

@@ -134,6 +134,14 @@ Rectangle {
         if (!okTooltipVisible) {
           library.addItem(newDbRecord)
           stackView.pop()
+          type.currentIndex = 0
+          title.clear()
+          author.clear()
+          year.text = ""
+          bc.checked = false
+          image.source = ""
+          image.visible = false
+          cover.color = "white"
         }
       }
     }

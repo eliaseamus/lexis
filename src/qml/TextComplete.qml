@@ -9,6 +9,10 @@ Item {
   property string text: textField.text
   Layout.preferredHeight: textField.height
 
+  function clear() {
+    textField.text = ""
+  }
+
   TextField {
     id: textField
     placeholderText: placeholder
