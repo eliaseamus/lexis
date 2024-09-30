@@ -18,20 +18,28 @@ Pane {
     TextComplete {
       id: searchLine
       Layout.fillWidth: true
-      Layout.bottomMargin: 50
       placeholder: qsTr("Search")
     }
 
-    Repeater {
-      id: librarySections
-      model: library.sections
+    ScrollView {
       Layout.fillWidth: true
       Layout.fillHeight: true
+      Layout.leftMargin: 20
 
-      SectionView {
-        required property LibrarySection modelData
-        title: modelData.name
-        model: modelData.model
+      ColumnLayout {
+        anchors.fill: parent
+        Repeater {
+          id: librarySections
+          model: library.sections
+          Layout.fillWidth: true
+          Layout.fillHeight: true
+
+          SectionView {
+            required property LibrarySection modelData
+            title: modelData.name
+            model: modelData.model
+          }
+        }
       }
     }
 

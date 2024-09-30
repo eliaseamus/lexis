@@ -8,13 +8,16 @@ Item {
   property string title
   property LibraryItemModel model
   Layout.fillWidth: true
-  Layout.fillHeight: true
+  Layout.topMargin: 30
+  Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
 
   ColumnLayout {
     anchors.fill: parent
     Label {
+      id: titleShelf
       text: title
       color: "white"
+      Layout.topMargin: 10
       Layout.bottomMargin: 10
       Layout.leftMargin: 5
       background: Rectangle {
@@ -26,12 +29,22 @@ Item {
     }
 
     GridView {
+      id: grid
       Layout.fillWidth: true
       Layout.fillHeight: true
-      width: 800
-      height: 400
-      cellWidth: 220
-      cellHeight: 220
+      interactive: false
+      property int rowCount: {
+        var totalCellWidth = count * cellWidth;
+        var rows = totalCellWidth / width + 0.5;
+
+        if (width < 2 * cellWidth)
+          rows = count
+
+        return Math.round(rows);
+      }
+
+      cellWidth: 215
+      cellHeight: 215
       model: librarySection.model
 
       delegate: Rectangle {
