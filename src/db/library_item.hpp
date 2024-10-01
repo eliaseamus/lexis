@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QColor>
 #include <QTemporaryFile>
+#include <QTemporaryDir>
 
 #include "section_type.hpp"
 
@@ -23,6 +24,8 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
 
+  static QTemporaryDir dir;
+
  private:
   QString _title;
   LibrarySectionType _type;
@@ -34,7 +37,7 @@ class LibraryItem : public QObject {
   QTemporaryFile _image;
 
  public:
-  explicit LibraryItem(QObject* parent = nullptr) : QObject(parent) {}
+  explicit LibraryItem(QObject* parent = nullptr);
   void init(LibraryItem* item);
   QString title() const {return _title;}
   LibrarySectionType type() const {return _type;}

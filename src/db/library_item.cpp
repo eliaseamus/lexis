@@ -4,6 +4,14 @@
 
 namespace lexis {
 
+QTemporaryDir LibraryItem::dir;
+
+LibraryItem::LibraryItem(QObject* parent) :
+  QObject(parent)
+{
+  _image.setFileTemplate(dir.path() + "/" + "Lexis.XXXXXX");
+}
+
 void LibraryItem::init(LibraryItem* item) {
   _title = item->title();
   _type = item->type();
