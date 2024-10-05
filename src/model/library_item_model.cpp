@@ -29,6 +29,10 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->title();
     case TypeRole:
       return SectionTypeManager::librarySectionTypeName(item->type());
+    case CreationTimeRole:
+      return item->creationTime();
+    case ModificationTimeRole:
+      return item->modificationTime();
     case AuthorRole:
       return item->author();
     case YearRole:
@@ -47,6 +51,8 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
 QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   QHash<int, QByteArray> roles;
   roles[TitleRole] = "title";
+  roles[CreationTimeRole] = "creationTime";
+  roles[ModificationTimeRole] = "modificationTime";
   roles[TypeRole] = "type";
   roles[AuthorRole] = "author";
   roles[YearRole] = "year";

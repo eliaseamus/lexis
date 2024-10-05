@@ -158,6 +158,8 @@ Rectangle {
   LibraryItem {
     id: newDbRecord
     title: title.text
+    creationTime: new Date(Date.now())
+    modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(type.currentText)
     author: author.text
     year: mediaData.visible ? parseInt(year.text) : -1

@@ -14,6 +14,8 @@ LibraryItem::LibraryItem(QObject* parent) :
 
 void LibraryItem::init(LibraryItem* item) {
   _title = item->title();
+  _creationTime = item->creationTime();
+  _modificationTime = item->modificationTime();
   _type = item->type();
   _author = item->author();
   _year = item->year();

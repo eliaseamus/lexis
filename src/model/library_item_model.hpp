@@ -17,8 +17,10 @@ class LibraryItemModel : public QAbstractListModel {
   QVector<LibraryItem*> _items;
 
  public:
-  enum LibraryItemRoles {
+  enum LibraryItemRole {
     TitleRole = Qt::UserRole + 1,
+    CreationTimeRole,
+    ModificationTimeRole,
     TypeRole,
     AuthorRole,
     YearRole,

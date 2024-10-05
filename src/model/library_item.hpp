@@ -17,6 +17,8 @@ class LibraryItem : public QObject {
   QML_ELEMENT
 
   Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY dummy);
+  Q_PROPERTY(QDateTime creationTime READ creationTime WRITE setCreationTime NOTIFY dummy);
+  Q_PROPERTY(QDateTime modificationTime READ modificationTime WRITE setModificationTime NOTIFY dummy);
   Q_PROPERTY(LibrarySectionType type READ type WRITE setType NOTIFY dummy);
   Q_PROPERTY(QString author READ author WRITE setAuthor NOTIFY dummy);
   Q_PROPERTY(int year READ year WRITE setYear NOTIFY dummy);
@@ -28,6 +30,8 @@ class LibraryItem : public QObject {
 
  private:
   QString _title;
+  QDateTime _creationTime;
+  QDateTime _modificationTime;
   LibrarySectionType _type;
   QString _author;
   int _year;
@@ -40,6 +44,8 @@ class LibraryItem : public QObject {
   explicit LibraryItem(QObject* parent = nullptr);
   void init(LibraryItem* item);
   QString title() const {return _title;}
+  QDateTime creationTime() const {return _creationTime;}
+  QDateTime modificationTime() const {return _modificationTime;}
   LibrarySectionType type() const {return _type;}
   QString author() const {return _author;}
   int year() const {return _year;}
@@ -49,6 +55,8 @@ class LibraryItem : public QObject {
   QColor color() const {return _color;}
 
   void setTitle(const QString& title) {_title = title;}
+  void setCreationTime(const QDateTime& time) {_creationTime = time;}
+  void setModificationTime(const QDateTime& time) {_modificationTime = time;}
   void setType(LibrarySectionType type) {_type = type;}
   void setType(const QString& typeName) {_type = SectionTypeManager::librarySectionType(typeName);}
   void setAuthor(const QString& author) {_author = author;}

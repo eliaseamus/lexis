@@ -6,25 +6,49 @@ import QLexis
 Item {
   id: librarySection
   property string title
-  property LibraryItemModel model
+  property LibraryItemProxyModel model
   Layout.fillWidth: true
   Layout.topMargin: 30
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
 
   ColumnLayout {
     anchors.fill: parent
-    Label {
-      id: titleShelf
-      text: title
-      color: "white"
-      Layout.topMargin: 10
-      Layout.bottomMargin: 10
-      Layout.leftMargin: 5
-      background: Rectangle {
-        anchors.fill: parent
-        anchors.margins: -5
-        color: Material.accentColor
-        radius: 10
+    RowLayout {
+      Layout.fillWidth: true
+      Label {
+        id: titleShelf
+        text: title
+        color: "white"
+        Layout.topMargin: 10
+        Layout.bottomMargin: 10
+        Layout.leftMargin: 5
+        background: Rectangle {
+          anchors.fill: parent
+          anchors.margins: -5
+          color: Material.accentColor
+          radius: 10
+        }
+      }
+      Item {
+        Layout.fillWidth: true
+      }
+
+      RoundButton {
+        Layout.alignment: Qt.AlignRight
+        flat: true
+        property url iconSource: getIconSource()
+        icon.source: iconSource
+        onClicked: {
+          librarySection.model.toggleSort();
+          iconSource = getIconSource();
+        }
+
+        function getIconSource() {
+          var order = librarySection.model.sortOrder;
+          return order === Qt.AscendingOrder ?
+                "icons/sort-ascending.png" :
+                "icons/sort-descending.png";
+        }
       }
     }
 

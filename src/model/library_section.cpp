@@ -6,7 +6,7 @@ namespace lexis {
 
 LibrarySection::LibrarySection(QObject* parent) :
   QObject(parent),
-  _model(new LibraryItemModel(this))
+  _model(new LibraryItemProxyModel(this))
 {
 }
 

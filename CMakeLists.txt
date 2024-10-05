@@ -68,11 +68,13 @@ qt_add_qml_module(${PROJECT_NAME}
     src/model/section_type.cpp
     src/model/library_item.cpp
   RESOURCES
-    icons/au.png
-    icons/audio.png
-    icons/audio-mute.png
-    icons/uk.png
-    icons/us.png
+    src/qml/icons/au.png
+    src/qml/icons/audio.png
+    src/qml/icons/audio-mute.png
+    src/qml/icons/sort-ascending.png
+    src/qml/icons/sort-descending.png
+    src/qml/icons/uk.png
+    src/qml/icons/us.png
     qtquickcontrols2.conf
 )
 

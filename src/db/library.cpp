@@ -17,11 +17,15 @@ Library::Library(QObject* parent) :
 
 void Library::addItem(LibraryItem* item) {
   QSqlQuery query;
-  query.prepare("INSERT INTO library"
-                "(title, type, author, year, bc, image, color)"
-                "VALUES (:title, :type, :author, :year, :bc, :image, :color)");
+  query.prepare(
+    "INSERT INTO library"
+    "(title, creation_time, modification_time, type, author, year, bc, image, color)"
+    "VALUES (:title, :creation, :modification, :type, :author, :year, :bc, :image, :color)"
+  );
 
   query.bindValue(":title", item->title());
+  query.bindValue(":creation", item->creationTime().toString());
+  query.bindValue(":modification", item->modificationTime().toString());
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":author", item->author());
   query.bindValue(":year", item->year());
@@ -41,15 +45,17 @@ void Library::addItem(LibraryItem* item) {
 
 void Library::createTable() {
   QSqlQuery query;
-  auto createTableQuery = "CREATE TABLE IF NOT EXISTS library        \
-                          (id     INTEGER PRIMARY KEY AUTOINCREMENT, \
-                           title  TEXT,                              \
-                           type   INTEGER,                           \
-                           author TEXT,                              \
-                           year   INTEGER,                           \
-                           bc     INTEGER,                           \
-                           image  BLOB,                              \
-                           color  TEXT)";
+  auto createTableQuery = "CREATE TABLE IF NOT EXISTS library                   \
+                          (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
+                           creation_time     TEXT,                              \
+                           modification_time TEXT,                              \
+                           title             TEXT,                              \
+                           type              INTEGER,                           \
+                           author            TEXT,                              \
+                           year              INTEGER,                           \
+                           bc                INTEGER,                           \
+                           image             BLOB,                              \
+                           color             TEXT)";
   if (!query.exec(createTableQuery)) {
     qDebug() << "failed to create library table:" << query.lastError();
   }
@@ -61,7 +67,7 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
   });
 
   if (pos != _sections.end()) {
-      return *pos;
+    return *pos;
   }
 
   auto* section = new LibrarySection(type, this);
@@ -70,12 +76,17 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 }
 
 void Library::populateSections() {
-  QSqlQuery query("SELECT title, type, author, year, bc, image, color FROM library");
+  QSqlQuery query(
+    "SELECT title, creation_time, modification_time, type,"
+    "       author, year, bc, image, color FROM library"
+  );
 
   while (query.next()) {
     auto* item = new LibraryItem(this);
 
     item->setTitle(query.value("title").toString());
+    item->setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
+    item->setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
     item->setType(SectionTypeManager::librarySectionType(query.value("type").toInt()));
     item->setAuthor(query.value("author").toString());
     item->setYear(query.value("year").toInt());
