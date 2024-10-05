@@ -8,7 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
              Qml Quick QuickControls2 WebView REQUIRED)
 
-include_directories(src src/db src/gui src/lang)
+include_directories(src src/db src/gui src/lang src/model)
 
 qt_add_executable(${PROJECT_NAME}
   src/main.cpp
@@ -57,14 +57,16 @@ qt_add_qml_module(${PROJECT_NAME}
     src/lang/predictor.hpp
     src/db/library.cpp
     src/db/library.hpp
-    src/db/library_item.hpp
-    src/db/library_item_model.hpp
-    src/db/library_item_model.cpp
-    src/db/library_section.hpp
-    src/db/library_section.cpp
-    src/db/section_type.hpp
-    src/db/section_type.cpp
-    src/db/library_item.cpp
+    src/model/library_item.hpp
+    src/model/library_item_model.hpp
+    src/model/library_item_model.cpp
+    src/model/library_item_proxy_model.hpp
+    src/model/library_item_proxy_model.cpp
+    src/model/library_section.hpp
+    src/model/library_section.cpp
+    src/model/section_type.hpp
+    src/model/section_type.cpp
+    src/model/library_item.cpp
   RESOURCES
     icons/au.png
     icons/audio.png
