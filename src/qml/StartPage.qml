@@ -15,10 +15,10 @@ Pane {
     anchors.leftMargin: 50
     anchors.rightMargin: 50
 
-    TextComplete {
+    TextField {
       id: searchLine
       Layout.fillWidth: true
-      placeholder: qsTr("Search")
+      placeholderText: qsTr("Search")
     }
 
     ScrollView {
@@ -38,6 +38,14 @@ Pane {
             required property LibrarySection modelData
             title: modelData.name
             model: modelData.model
+
+            Connections {
+              target: searchLine
+              function onTextChanged() {
+                model.setFilterFixedString(searchLine.text)
+                visible = model.rowCount() > 0
+              }
+            }
           }
         }
       }

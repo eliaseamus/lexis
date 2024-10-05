@@ -14,6 +14,11 @@ Window {
     initialItem: StartPage {}
   }
 
+  Shortcut {
+    sequence: StandardKey.Quit
+    onActivated: Qt.quit()
+  }
+
   function popStack() {
     stackView.pop()
   }

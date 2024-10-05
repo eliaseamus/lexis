@@ -8,10 +8,16 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
 {
   setSourceModel(_source);
   setSortRole(LibraryItemModel::ModificationTimeRole);
+  setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 void LibraryItemProxyModel::addItem(LibraryItem* item) {
   _source->addItem(item);
+  sort(0, _sortOrder);
+}
+
+void LibraryItemProxyModel::toggleSort() {
+  _sortOrder = _sortOrder == Qt::AscendingOrder ? Qt::DescendingOrder : Qt::AscendingOrder;
   sort(0, _sortOrder);
 }
 
@@ -24,15 +30,18 @@ bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& 
       return leftData.toDateTime() < rightData.toDateTime();
     case QMetaType::QString:
       return QString::localeAwareCompare(leftData.toString(), rightData.toString()) < 0;
-  }
+    }
 
   qWarning() << "Unknown type for sorting";
   return false;
 }
 
-void LibraryItemProxyModel::toggleSort() {
-  _sortOrder = _sortOrder == Qt::AscendingOrder ? Qt::DescendingOrder : Qt::AscendingOrder;
-  sort(0, _sortOrder);
+bool LibraryItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const {
+  QModelIndex index = _source->index(sourceRow, 0, sourceParent);
+  QString title = index.data(LibraryItemModel::TitleRole).toString();
+  QString author = index.data(LibraryItemModel::AuthorRole).toString();
+  auto filter = filterRegularExpression();
+  return title.contains(filter) || author.contains(filter);
 }
 
 }

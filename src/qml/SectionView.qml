@@ -46,8 +46,8 @@ Item {
         function getIconSource() {
           var order = librarySection.model.sortOrder;
           return order === Qt.AscendingOrder ?
-                "icons/sort-ascending.png" :
-                "icons/sort-descending.png";
+            "icons/sort-ascending.png" :
+            "icons/sort-descending.png";
         }
       }
     }
@@ -89,7 +89,10 @@ Item {
           }
           Text {
             Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: 180
+            horizontalAlignment: Qt.AlignHCenter
             text: title
+            elide: Text.ElideRight
           }
         }
         MouseArea {
