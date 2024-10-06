@@ -11,12 +11,27 @@ Window {
   StackView {
     id: stackView
     anchors.fill: parent
-    initialItem: StartPage {}
+    initialItem: startPage
+  }
+
+  Shortcut {
+    sequence: "Esc"
+    onActivated: {
+      if (stackView.currentItem == startPage) {
+        startPage.hideSearchLine()
+      } else {
+        popStack()
+      }
+    }
   }
 
   Shortcut {
     sequence: StandardKey.Quit
     onActivated: Qt.quit()
+  }
+
+  StartPage {
+    id: startPage
   }
 
   function popStack() {

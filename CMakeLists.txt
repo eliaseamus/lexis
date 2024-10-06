@@ -71,6 +71,8 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/icons/au.png
     src/qml/icons/audio.png
     src/qml/icons/audio-mute.png
+    src/qml/icons/plus.png
+    src/qml/icons/search.png
     src/qml/icons/sort-ascending.png
     src/qml/icons/sort-descending.png
     src/qml/icons/uk.png

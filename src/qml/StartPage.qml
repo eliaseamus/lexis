@@ -11,15 +11,9 @@ Pane {
   ColumnLayout {
     id: layout
     anchors.fill: parent
-    anchors.topMargin: 50
-    anchors.leftMargin: 50
-    anchors.rightMargin: 50
-
-    TextField {
-      id: searchLine
-      Layout.fillWidth: true
-      placeholderText: qsTr("Search")
-    }
+    anchors.topMargin: 20
+    anchors.leftMargin: 20
+    anchors.rightMargin: 20
 
     ScrollView {
       Layout.fillWidth: true
@@ -51,12 +45,82 @@ Pane {
       }
     }
 
-    RoundButton {
-      id: addLibraryItem
-      text: "+"
-      Layout.alignment: Qt.AlignRight | Qt.AlignBottom
-      Material.background: Material.accentColor
-      onClicked: stackView.push(newItem)
+    RowLayout {
+      id: toolBar
+      RoundButton {
+        id: search
+        icon.source: "icons/search.png"
+        Layout.alignment: Qt.AlignLeft | Qt.AlignBottom | Qt.AlignVCenter
+        Material.background: Material.accentColor
+        onClicked: toolBar.toggleSearchLine()
+
+        ToolTip {
+          visible: search.hovered
+          text: qsTr("Search")
+        }
+      }
+
+      TextField {
+        id: searchLine
+        property int length: 0
+        property bool display: false
+        visible: false
+        Layout.preferredWidth: length
+        Layout.preferredHeight: 40
+        placeholderText: qsTr("Search")
+
+        PropertyAnimation {
+          id: searchShow
+          target: searchLine
+          property: "length"
+          to: 200
+          duration: 300
+          onRunningChanged: {
+            if (!running) {
+              searchLine.forceActiveFocus()
+            }
+          }
+        }
+        PropertyAnimation {
+          id: searchHide
+          target: searchLine
+          property: "length"
+          to: 0
+          duration: 300
+          onRunningChanged: {
+            if (!running) {
+              searchLine.visible = false
+            }
+          }
+        }
+      }
+
+      Item {
+        Layout.fillWidth: true
+      }
+
+      RoundButton {
+        id: addLibraryItem
+        icon.source: "icons/plus.png"
+        Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
+        Material.background: Material.accentColor
+        onClicked: stackView.push(newItem)
+
+        ToolTip {
+          visible: addLibraryItem.hovered
+          text: qsTr("Add new item")
+        }
+      }
+      function toggleSearchLine() {
+        if (searchLine.display) {
+          searchLine.display = false
+          searchHide.running = true
+        } else {
+          searchLine.display = true
+          searchLine.visible = true
+          searchShow.running = true
+        }
+      }
     }
   }
 
@@ -71,6 +135,21 @@ Pane {
 
   SectionTypeManager {
     id: sectionTypeManager
+  }
+
+  Shortcut {
+    sequence: StandardKey.Find
+    onActivated: toolBar.toggleSearchLine()
+  }
+
+  Shortcut {
+    sequence: StandardKey.New
+    onActivated: stackView.push(newItem)
+  }
+
+  function hideSearchLine() {
+    searchLine.display = false
+    searchHide.running = true
   }
 
 }

@@ -55,8 +55,10 @@ Rectangle {
         id: bc
         visible: type.currentText === "Book"
         text: qsTr("BC")
-        ToolTip.visible: hovered
-        ToolTip.text: qsTr("Before Christ")
+        ToolTip {
+          visible: bc.hovered
+          text: qsTr("Before Christ")
+        }
       }
     }
 
@@ -132,8 +134,10 @@ Rectangle {
             stackView.push(imagePicker)
         }
 
-        ToolTip.visible: hovered && !imagePicker.hasQuery
-        ToolTip.text: qsTr("Insert title")
+        ToolTip {
+          visible: pickImage.hovered && !imagePicker.hasQuery
+          text: qsTr("Insert title")
+        }
       }
 
     }
@@ -144,6 +148,7 @@ Rectangle {
       okay: function () {
         if (!okTooltipVisible) {
           library.addItem(newDbRecord);
+          librarySections.model = library.sections
           popStack();
           newItem.clear();
         }
@@ -183,5 +188,4 @@ Rectangle {
       image.visible = true
     }
   }
-
 }
