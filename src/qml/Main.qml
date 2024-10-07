@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Window {
   id: main
@@ -8,10 +9,18 @@ Window {
   height: 800
   visible: true
 
-  StackView {
-    id: stackView
+  RowLayout {
     anchors.fill: parent
-    initialItem: startPage
+    SideBar {
+      Layout.fillHeight: true
+    }
+
+    StackView {
+      Layout.fillHeight: true
+      Layout.fillWidth: true
+      id: stackView
+      initialItem: startPage
+    }
   }
 
   Shortcut {

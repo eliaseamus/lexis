@@ -90,6 +90,8 @@ Pane {
           onRunningChanged: {
             if (!running) {
               searchLine.visible = false
+              searchLine.text = ""
+              search.forceActiveFocus()
             }
           }
         }

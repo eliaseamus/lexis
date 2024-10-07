@@ -75,8 +75,8 @@ Item {
         width: 200
         height: 200
         color: mouseArea.containsPress ? itemColor.darker(1.3) : itemColor
-        border.color: Material.accentColor
-        border.width: mouseArea.containsMouse ? 2 : 0
+        border.color: mouseArea.containsMouse ? Material.accentColor : palette.base
+        border.width: 2
         radius: 10
         ColumnLayout {
           anchors.fill: parent

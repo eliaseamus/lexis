@@ -51,7 +51,9 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
+    src/qml/InterfaceLanguage.qml
     src/qml/SectionView.qml
+    src/qml/SideBar.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp
@@ -71,8 +73,12 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/icons/au.png
     src/qml/icons/audio.png
     src/qml/icons/audio-mute.png
+    src/qml/icons/color.png
+    src/qml/icons/language.png
     src/qml/icons/plus.png
+    src/qml/icons/rus.png
     src/qml/icons/search.png
+    src/qml/icons/sort.png
     src/qml/icons/sort-ascending.png
     src/qml/icons/sort-descending.png
     src/qml/icons/uk.png
