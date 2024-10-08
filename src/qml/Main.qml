@@ -1,4 +1,5 @@
 import QtQuick
+import QtCore
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -21,6 +22,13 @@ Window {
       id: stackView
       initialItem: startPage
     }
+  }
+
+  Settings {
+    id: settings
+    property string language: "en"
+    property string sortPrinciple: "modTime"
+    property color accentColor: Material.accentColor
   }
 
   Shortcut {

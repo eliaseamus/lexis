@@ -15,19 +15,11 @@ Item {
     anchors.fill: parent
     RowLayout {
       Layout.fillWidth: true
-      Label {
+      PrettyLabel {
         id: titleShelf
-        text: title
-        color: "white"
+        title: librarySection.title
         Layout.topMargin: 10
         Layout.bottomMargin: 10
-        Layout.leftMargin: 5
-        background: Rectangle {
-          anchors.fill: parent
-          anchors.margins: -5
-          color: Material.accentColor
-          radius: 10
-        }
       }
       Item {
         Layout.fillWidth: true
@@ -75,7 +67,7 @@ Item {
         width: 200
         height: 200
         color: mouseArea.containsPress ? itemColor.darker(1.3) : itemColor
-        border.color: mouseArea.containsMouse ? Material.accentColor : palette.base
+        border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
         border.width: 2
         radius: 10
         ColumnLayout {

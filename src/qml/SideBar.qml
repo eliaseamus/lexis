@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Item {
   id: sideBar
@@ -21,13 +22,14 @@ Item {
         onClicked: languageDialog.open()
       }
       RoundButton {
-        id: sortOrder
+        id: sortPrinciple
         flat: true
         icon.source: "icons/sort.png"
         ToolTip {
-          visible: sortOrder.hovered
-          text: qsTr("Sort order")
+          visible: sortPrinciple.hovered
+          text: qsTr("Sort principle")
         }
+        onClicked: sortPrincipleDialog.open()
       }
       RoundButton {
         id: appColor
@@ -37,6 +39,7 @@ Item {
           visible: appColor.hovered
           text: qsTr("Color")
         }
+        onClicked: colorDialog.open()
       }
       Item {
         Layout.fillHeight: true
@@ -44,11 +47,25 @@ Item {
     }
   }
 
-  InterfaceLanguage {
+  InterfaceLanguageDialog {
     id: languageDialog
-    modal: true
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
+  }
+
+  SortPrincipleDialog {
+    id: sortPrincipleDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
+  ColorDialog {
+    id: colorDialog
+    selectedColor: settings.accentColor
+    onAccepted: {
+      settings.accentColor = selectedColor
+    }
   }
 }

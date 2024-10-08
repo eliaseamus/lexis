@@ -8,6 +8,8 @@
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
+  app.setOrganizationName("Lexis");
+  app.setOrganizationDomain("https://github.com/eliaseamus/lexis");
   QtWebView::initialize();
   QQmlApplicationEngine engine;
   auto halt = [](){QCoreApplication::exit(-1);};

@@ -51,7 +51,7 @@ Item {
           highlighted: index == completions.currentIndex
           background: Rectangle {
             visible: highlighted
-            color: Material.accentColor
+            color: settings.accentColor
           }
           onHoveredChanged: {
             if (hovered)

@@ -53,7 +53,7 @@ Rectangle {
 
       CheckBox {
         id: bc
-        visible: type.currentText === "Book"
+        visible: type.currentText === qsTr("Book")
         text: qsTr("BC")
         ToolTip {
           visible: bc.hovered
@@ -125,8 +125,8 @@ Rectangle {
       Button {
         id: pickImage
         visible: !image.visible
-        text: "Pick an image"
-        Material.background: Material.accentColor
+        text: qsTr("Pick an image")
+        Material.background: settings.accentColor
         anchors.centerIn: parent
 
         onClicked: {
@@ -144,7 +144,7 @@ Rectangle {
 
     OkCancel {
       okTooltipVisible: title.text.trim().length == 0
-      okTooltipText: "Insert title"
+      okTooltipText: qsTr("Insert title")
       okay: function () {
         if (!okTooltipVisible) {
           library.addItem(newDbRecord);

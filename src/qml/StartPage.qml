@@ -52,7 +52,7 @@ Pane {
         icon.source: "icons/search.png"
         visible: library.sections.length > 0
         Layout.alignment: Qt.AlignLeft | Qt.AlignBottom | Qt.AlignVCenter
-        Material.background: Material.accentColor
+        Material.background: settings.accentColor
         onClicked: toolBar.toggleSearchLine()
 
         ToolTip {
@@ -106,7 +106,7 @@ Pane {
         id: addLibraryItem
         icon.source: "icons/plus.png"
         Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
-        Material.background: Material.accentColor
+        Material.background: settings.accentColor
         onClicked: stackView.push(newItem)
 
         ToolTip {

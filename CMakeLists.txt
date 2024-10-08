@@ -51,9 +51,11 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
-    src/qml/InterfaceLanguage.qml
+    src/qml/InterfaceLanguageDialog.qml
+    src/qml/PrettyLabel.qml
     src/qml/SectionView.qml
     src/qml/SideBar.qml
+    src/qml/SortPrincipleDialog.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp

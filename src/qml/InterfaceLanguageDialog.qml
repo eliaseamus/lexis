@@ -10,7 +10,25 @@ Dialog {
   }
 
   ColumnLayout {
+    PrettyLabel {
+      title: "Interface language"
+      Layout.alignment: Qt.AlignHCenter
+    }
+
     RowLayout {
+      RadioButton {
+        id: en
+        Layout.alignment: Qt.AlignVCenter
+        ButtonGroup.group: options
+        onCheckedChanged: {
+          if (checked) {
+            settings.language = "en"
+          }
+        }
+      }
+      Item {
+        Layout.fillWidth: true
+      }
       Image {
         Layout.preferredWidth: 220
         Layout.preferredHeight: 200
@@ -24,15 +42,21 @@ Dialog {
           border.color: palette.base
         }
       }
+    }
+    RowLayout {
+      RadioButton {
+        id: ru
+        Layout.alignment: Qt.AlignVCenter
+        ButtonGroup.group: options
+        onCheckedChanged: {
+          if (checked) {
+            settings.language = "ru"
+          }
+        }
+      }
       Item {
         Layout.fillWidth: true
       }
-      RadioButton {
-        Layout.alignment: Qt.AlignHCenter
-        ButtonGroup.group: options
-      }
-    }
-    RowLayout {
       Image {
         Layout.preferredWidth: 220
         Layout.maximumHeight: 200
@@ -46,12 +70,13 @@ Dialog {
           border.color: "lightGrey"
         }
       }
-      Item {
-        Layout.fillWidth: true
-      }
-      RadioButton {
-        Layout.alignment: Qt.AlignHCenter
-        ButtonGroup.group: options
+    }
+
+    Component.onCompleted: {
+      if (settings.language === "en") {
+        en.checked = true
+      } else if (settings.language === "ru") {
+        ru.checked = true
       }
     }
   }

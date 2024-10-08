@@ -11,8 +11,8 @@ RowLayout {
 
   Layout.alignment: Qt.AlignCenter
   Button {
-    text: "Ok"
-    Material.background: Material.accentColor
+    text: qsTr("Ok")
+    Material.background: settings.accentColor
     onClicked: okay()
 
     ToolTip.visible: hovered && okTooltipVisible
@@ -20,7 +20,7 @@ RowLayout {
   }
 
   Button {
-    text: "Cancel"
+    text: qsTr("Cancel")
     onClicked: cancel()
   }
 }
