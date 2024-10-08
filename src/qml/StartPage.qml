@@ -50,6 +50,7 @@ Pane {
       RoundButton {
         id: search
         icon.source: "icons/search.png"
+        visible: library.sections.length > 0
         Layout.alignment: Qt.AlignLeft | Qt.AlignBottom | Qt.AlignVCenter
         Material.background: Material.accentColor
         onClicked: toolBar.toggleSearchLine()
@@ -140,6 +141,7 @@ Pane {
   }
 
   Shortcut {
+    enabled: library.sections.length > 0
     sequence: StandardKey.Find
     onActivated: toolBar.toggleSearchLine()
   }
