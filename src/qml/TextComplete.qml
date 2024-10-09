@@ -53,6 +53,11 @@ Item {
             visible: highlighted
             color: settings.accentColor
           }
+          contentItem: Label {
+            text: modelData
+            color: highlighted ? settings.fgColor : "black"
+            verticalAlignment: Text.AlignVCenter
+          }
           onHoveredChanged: {
             if (hovered)
               completions.currentIndex = index

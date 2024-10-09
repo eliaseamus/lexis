@@ -50,6 +50,7 @@ Pane {
       RoundButton {
         id: search
         icon.source: "icons/search.png"
+        icon.color: settings.fgColor
         visible: library.sections.length > 0
         Layout.alignment: Qt.AlignLeft | Qt.AlignBottom | Qt.AlignVCenter
         Material.background: settings.accentColor
@@ -105,6 +106,7 @@ Pane {
       RoundButton {
         id: addLibraryItem
         icon.source: "icons/plus.png"
+        icon.color: settings.fgColor
         Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
         Material.background: settings.accentColor
         onClicked: stackView.push(newItem)

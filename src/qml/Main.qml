@@ -6,9 +6,10 @@ import QtQuick.Layouts
 
 Window {
   id: main
-  width: 1200
+  width: 1300
   height: 800
   visible: true
+  Material.accent: settings.accentColor
 
   RowLayout {
     anchors.fill: parent
@@ -29,6 +30,7 @@ Window {
     property string language: "en"
     property string sortPrinciple: "modTime"
     property color accentColor: Material.accentColor
+    property color fgColor: "white"
   }
 
   Shortcut {

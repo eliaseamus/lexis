@@ -5,7 +5,7 @@ import QtQuick.Layouts
 Label {
   property string title
   text: qsTr(title)
-  color: "white"
+  color: settings.fgColor
   Layout.leftMargin: 5
   background: Rectangle {
     anchors.fill: parent

@@ -66,6 +66,13 @@ Item {
     selectedColor: settings.accentColor
     onAccepted: {
       settings.accentColor = selectedColor
+      var colorSum = selectedColor.r + selectedColor.g + selectedColor.b
+      var threshold = 2 * 0.93
+      if (colorSum > threshold) {
+        settings.fgColor = "black"
+      } else {
+        settings.fgColor = "white"
+      }
     }
   }
 }

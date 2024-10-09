@@ -129,6 +129,12 @@ Rectangle {
         Material.background: settings.accentColor
         anchors.centerIn: parent
 
+        contentItem: Label {
+          text: pickImage.text
+          color: settings.fgColor
+          verticalAlignment: Text.AlignVCenter
+        }
+
         onClicked: {
           if (imagePicker.hasQuery)
             stackView.push(imagePicker)
