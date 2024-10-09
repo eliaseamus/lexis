@@ -134,10 +134,6 @@ Pane {
     visible: false
   }
 
-  Library {
-    id: library
-  }
-
   SectionTypeManager {
     id: sectionTypeManager
   }

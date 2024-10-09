@@ -3,6 +3,7 @@ import QtCore
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QLexis
 
 Window {
   id: main
@@ -25,10 +26,14 @@ Window {
     }
   }
 
+  Library {
+    id: library
+  }
+
   Settings {
     id: settings
     property string language: "en"
-    property string sortPrinciple: "modTime"
+    property string sortRole: "Modification time"
     property color accentColor: Material.accentColor
     property color fgColor: "white"
   }

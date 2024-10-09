@@ -55,7 +55,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/PrettyLabel.qml
     src/qml/SectionView.qml
     src/qml/SideBar.qml
-    src/qml/SortPrincipleDialog.qml
+    src/qml/SortRoleDialog.qml
   SOURCES
     src/lang/predictor.cpp
     src/lang/predictor.hpp

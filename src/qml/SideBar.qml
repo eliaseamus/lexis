@@ -22,14 +22,17 @@ Item {
         onClicked: languageDialog.open()
       }
       RoundButton {
-        id: sortPrinciple
+        id: sortRole
         flat: true
         icon.source: "icons/sort.png"
         ToolTip {
-          visible: sortPrinciple.hovered
-          text: qsTr("Sort principle")
+          visible: sortRole.hovered
+          text: qsTr("Sort rule")
         }
-        onClicked: sortPrincipleDialog.open()
+        onClicked: {
+          sortRoleDialog.init()
+          sortRoleDialog.open()
+        }
       }
       RoundButton {
         id: appColor
@@ -54,11 +57,16 @@ Item {
     parent: ApplicationWindow.overlay
   }
 
-  SortPrincipleDialog {
-    id: sortPrincipleDialog
+  SortRoleDialog {
+    id: sortRoleDialog
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
+    onAccepted: {
+      library.sections.forEach((section) => {
+        section.sort(settings.sortRole)
+      })
+    }
   }
 
   ColorDialog {

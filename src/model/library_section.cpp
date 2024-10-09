@@ -16,6 +16,10 @@ LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) :
   setType(type);
 }
 
+void LibrarySection::sort(const QString& sortRole) {
+  _model->reSort(sortRole);
+}
+
 void LibrarySection::setType(LibrarySectionType type) {
   _type = type;
   _name = SectionTypeManager::librarySectionTypeName(type);

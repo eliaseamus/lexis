@@ -29,6 +29,7 @@ class LibrarySection : public QObject {
   LibrarySectionType type() const {return _type;}
   QString name() const {return _name;}
   LibraryItemProxyModel* model() const {return _model;}
+  Q_INVOKABLE void sort(const QString& sortRole);
 
   void setType(LibrarySectionType type);
   void addItem(LibraryItem* item);

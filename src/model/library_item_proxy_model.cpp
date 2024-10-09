@@ -1,5 +1,7 @@
 #include "library_item_proxy_model.hpp"
 
+#include <QSettings>
+
 namespace lexis {
 
 LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
@@ -7,13 +9,34 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
   _source(new LibraryItemModel(this))
 {
   setSourceModel(_source);
-  setSortRole(LibraryItemModel::ModificationTimeRole);
+  setSortingRole(getSavedSortRole());
   setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
 void LibraryItemProxyModel::addItem(LibraryItem* item) {
   _source->addItem(item);
   sort(0, _sortOrder);
+}
+
+void LibraryItemProxyModel::reSort(const QString& role) {
+  setSortingRole(role);
+  sort(0, _sortOrder);
+}
+
+void LibraryItemProxyModel::setSortingRole(const QString& role) {
+  static QHash<QString, LibraryItemModel::LibraryItemRole> roles = {
+    {"Modification time", LibraryItemModel::ModificationTimeRole},
+    {"Creation time", LibraryItemModel::CreationTimeRole},
+    {"Title", LibraryItemModel::TitleRole}
+  };
+
+  if (!roles.contains(role)) {
+    qWarning() << "Unknown sort role:" << role;
+    setSortRole(LibraryItemModel::ModificationTimeRole);
+    return;
+  }
+
+  setSortRole(roles[role]);
 }
 
 void LibraryItemProxyModel::toggleSort() {
@@ -42,6 +65,11 @@ bool LibraryItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& s
   QString author = index.data(LibraryItemModel::AuthorRole).toString();
   auto filter = filterRegularExpression();
   return title.contains(filter) || author.contains(filter);
+}
+
+QString LibraryItemProxyModel::getSavedSortRole() const {
+  QSettings settings;
+  return settings.value("sortRole").toString();
 }
 
 }
