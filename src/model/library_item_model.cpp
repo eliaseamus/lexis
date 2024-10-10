@@ -24,11 +24,12 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
   }
 
   const auto* item = _items[index.row()];
+  SectionTypeManager typeManager;
   switch (role) {
     case TitleRole:
       return item->title();
     case TypeRole:
-      return SectionTypeManager::librarySectionTypeName(item->type());
+      return typeManager.librarySectionTypeName(item->type());
     case CreationTimeRole:
       return item->creationTime();
     case ModificationTimeRole:

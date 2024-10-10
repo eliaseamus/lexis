@@ -1,6 +1,6 @@
 #include "library_item_proxy_model.hpp"
 
-#include <QSettings>
+#include "app_settings.hpp"
 
 namespace lexis {
 
@@ -8,8 +8,9 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
   QSortFilterProxyModel(parent),
   _source(new LibraryItemModel(this))
 {
+  AppSettings settings;
   setSourceModel(_source);
-  setSortingRole(getSavedSortRole());
+  setSortingRole(settings.getSavedSortRole());
   setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
@@ -65,11 +66,6 @@ bool LibraryItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& s
   QString author = index.data(LibraryItemModel::AuthorRole).toString();
   auto filter = filterRegularExpression();
   return title.contains(filter) || author.contains(filter);
-}
-
-QString LibraryItemProxyModel::getSavedSortRole() const {
-  QSettings settings;
-  return settings.value("sortRole").toString();
 }
 
 }

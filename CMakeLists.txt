@@ -6,9 +6,10 @@ set(CMAKE_CXX_STANDARD 23)
 
 find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
-             Qml Quick QuickControls2 WebView REQUIRED)
+             Qml Quick QuickControls2 WebView LinguistTools REQUIRED)
 
 include_directories(src src/db src/gui src/lang src/model)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
 
 qt_add_executable(${PROJECT_NAME}
   src/main.cpp
@@ -57,11 +58,16 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
   SOURCES
+    src/app_manager.hpp
+    src/app_manager.cpp
+    src/app_settings.hpp
+    src/app_settings.cpp
     src/lang/predictor.cpp
     src/lang/predictor.hpp
     src/db/library.cpp
     src/db/library.hpp
     src/model/library_item.hpp
+    src/model/library_item.cpp
     src/model/library_item_model.hpp
     src/model/library_item_model.cpp
     src/model/library_item_proxy_model.hpp
@@ -70,7 +76,6 @@ qt_add_qml_module(${PROJECT_NAME}
     src/model/library_section.cpp
     src/model/section_type.hpp
     src/model/section_type.cpp
-    src/model/library_item.cpp
   RESOURCES
     src/qml/icons/au.png
     src/qml/icons/audio.png
@@ -92,6 +97,9 @@ qt_add_resources(${PROJECT_NAME} "configuration"
     PREFIX "/"
     FILES qtquickcontrols2.conf
 )
+
+qt_add_translations(${PROJECT_NAME}
+    TS_FILE_DIR tr)
 
 add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})

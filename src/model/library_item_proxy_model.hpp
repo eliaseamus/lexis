@@ -29,9 +29,6 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
   bool lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const override;
   bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
 
- private:
-  QString getSavedSortRole() const;
-
  signals:
   void dummy();
 };

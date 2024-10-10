@@ -11,20 +11,18 @@ Dialog {
 
   ColumnLayout {
     PrettyLabel {
-      title: "Interface language"
+      title: qsTr("Interface language")
       Layout.alignment: Qt.AlignHCenter
+      Layout.bottomMargin: 20
     }
 
     RowLayout {
       RadioButton {
         id: en
+        text: "en"
         Layout.alignment: Qt.AlignVCenter
         ButtonGroup.group: options
-        onCheckedChanged: {
-          if (checked) {
-            settings.language = "en"
-          }
-        }
+        contentItem: Label {}
       }
       Item {
         Layout.fillWidth: true
@@ -46,13 +44,10 @@ Dialog {
     RowLayout {
       RadioButton {
         id: ru
+        text: "ru"
         Layout.alignment: Qt.AlignVCenter
         ButtonGroup.group: options
-        onCheckedChanged: {
-          if (checked) {
-            settings.language = "ru"
-          }
-        }
+        contentItem: Label {}
       }
       Item {
         Layout.fillWidth: true
@@ -69,6 +64,18 @@ Dialog {
           height: 131
           border.color: "lightGrey"
         }
+      }
+    }
+
+    OkCancel {
+      Layout.topMargin: 30
+      okay: function () {
+        settings.language = options.checkedButton.text
+        appManager.changeLanguage(settings.language)
+        interfaceLanguage.accept()
+      }
+      cancel: function () {
+        interfaceLanguage.reject()
       }
     }
 

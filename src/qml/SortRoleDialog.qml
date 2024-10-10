@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QLexis
 
 Dialog {
   id: sortRole
@@ -11,16 +12,16 @@ Dialog {
 
   ColumnLayout {
     PrettyLabel {
-      title: "Sort by"
+      title: qsTr("Sort by")
       Layout.alignment: Qt.AlignHCenter
       Layout.bottomMargin: 40
     }
 
     Repeater {
-      model: ["Modification time", "Creation time", "Title"]
+      model: appSettings.sectionSortRoleKeys()
       RadioButton {
         required property string modelData
-        text: qsTr(modelData)
+        text: modelData
         ButtonGroup.group: options
       }
     }
@@ -43,5 +44,9 @@ Dialog {
         button.checked = true
       }
     })
+  }
+
+  AppSettings {
+    id: appSettings
   }
 }

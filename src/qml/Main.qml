@@ -24,6 +24,7 @@ Window {
       id: stackView
       initialItem: startPage
     }
+    Component.onCompleted: appManager.changeLanguage(settings.language)
   }
 
   Library {

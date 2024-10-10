@@ -58,7 +58,7 @@ class LibraryItem : public QObject {
   void setCreationTime(const QDateTime& time) {_creationTime = time;}
   void setModificationTime(const QDateTime& time) {_modificationTime = time;}
   void setType(LibrarySectionType type) {_type = type;}
-  void setType(const QString& typeName) {_type = SectionTypeManager::librarySectionType(typeName);}
+  void setType(const QString& typeName);
   void setAuthor(const QString& author) {_author = author;}
   void setYear(int year) {_year = year;}
   void setBc(int bc) {_bc = bc;}

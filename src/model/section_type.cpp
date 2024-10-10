@@ -6,16 +6,16 @@
 
 namespace lexis {
 
-static QHash<LibrarySectionType, QString> librarySectionTypeNames() {
+QHash<LibrarySectionType, QString> SectionTypeManager::librarySectionTypeNames() {
   using enum LibrarySectionType;
   static const QHash<LibrarySectionType, QString> names = {
-    {kSubjectGroup, "Subject group"},
-    {kBook,         "Book"},
-    {kArticle,      "Article"},
-    {kMovie,        "Movie"},
-    {kSeries,       "Series"},
-    {kAlbum,        "Album"},
-    {kSong,         "Song"}
+    {kSubjectGroup, tr("Subject group")},
+    {kBook,         tr("Book")},
+    {kArticle,      tr("Article")},
+    {kMovie,        tr("Movie")},
+    {kSeries,       tr("Series")},
+    {kAlbum,        tr("Album")},
+    {kSong,         tr("Song")}
   };
   return names;
 }

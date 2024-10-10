@@ -2,6 +2,8 @@
 
 #include <QHash>
 
+#include "section_type.hpp"
+
 namespace lexis {
 
 LibrarySection::LibrarySection(QObject* parent) :
@@ -21,8 +23,9 @@ void LibrarySection::sort(const QString& sortRole) {
 }
 
 void LibrarySection::setType(LibrarySectionType type) {
+  static SectionTypeManager typeManager;
   _type = type;
-  _name = SectionTypeManager::librarySectionTypeName(type);
+  _name = typeManager.librarySectionTypeName(type);
 }
 
 void LibrarySection::addItem(LibraryItem* item) {

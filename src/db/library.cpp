@@ -81,13 +81,14 @@ void Library::populateSections() {
     "       author, year, bc, image, color FROM library"
   );
 
+  SectionTypeManager typeManager;
   while (query.next()) {
     auto* item = new LibraryItem(this);
 
     item->setTitle(query.value("title").toString());
     item->setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
     item->setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
-    item->setType(SectionTypeManager::librarySectionType(query.value("type").toInt()));
+    item->setType(typeManager.librarySectionType(query.value("type").toInt()));
     item->setAuthor(query.value("author").toString());
     item->setYear(query.value("year").toInt());
     item->setBc(static_cast<bool>(query.value("bc").toInt()));
