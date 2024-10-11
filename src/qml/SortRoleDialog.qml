@@ -18,7 +18,7 @@ Dialog {
     }
 
     Repeater {
-      model: appSettings.sectionSortRoleKeys()
+      model: [qsTr("Modification time"), qsTr("Creation time"), qsTr("Title")]
       RadioButton {
         required property string modelData
         text: modelData

@@ -83,7 +83,7 @@ SplitView {
 
       Label {
         visible: image.status == Image.Null
-        text: "Pick an image\nand drop it in this area"
+        text: qsTr("Pick an image\nand drop it in this area")
         Layout.fillWidth: true
         Layout.fillHeight: true
         horizontalAlignment: Text.AlignHCenter

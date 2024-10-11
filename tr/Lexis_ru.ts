@@ -2,6 +2,16 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>ImagePicker</name>
+    <message>
+        <location filename="../src/qml/ImagePicker.qml" line="86"/>
+        <source>Pick an image
+and drop it in this area</source>
+        <translation>Выберите изображение
+и перетащите его в эту область</translation>
+    </message>
+</context>
+<context>
     <name>InterfaceLanguageDialog</name>
     <message>
         <location filename="../src/qml/InterfaceLanguageDialog.qml" line="14"/>
@@ -67,37 +77,6 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Subject group</source>
-        <translation type="vanished">Группа</translation>
-    </message>
-    <message>
-        <source>Book</source>
-        <translation type="vanished">Книга</translation>
-    </message>
-    <message>
-        <source>Article</source>
-        <translation type="vanished">Статья</translation>
-    </message>
-    <message>
-        <source>Movie</source>
-        <translation type="vanished">Фильм</translation>
-    </message>
-    <message>
-        <source>Series</source>
-        <translation type="vanished">Сериал</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">Альбом</translation>
-    </message>
-    <message>
-        <source>Song</source>
-        <translation type="vanished">Песня</translation>
-    </message>
-</context>
-<context>
     <name>SideBar</name>
     <message>
         <location filename="../src/qml/SideBar.qml" line="20"/>
@@ -122,75 +101,69 @@
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
-</context>
-<context>
-    <name>StartPage</name>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="61"/>
-        <location filename="../src/qml/StartPage.qml" line="72"/>
-        <source>Search</source>
-        <translation>Поиск</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/StartPage.qml" line="116"/>
-        <source>Add new item</source>
-        <translation>Добавить новый элемент</translation>
-    </message>
-</context>
-<context>
-    <name>lexis::AppSettings</name>
-    <message>
-        <location filename="../src/app_settings.cpp" line="9"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
         <source>Modification time</source>
         <translation>Времени изменения</translation>
     </message>
     <message>
-        <location filename="../src/app_settings.cpp" line="10"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
         <source>Creation time</source>
         <translation>Времени создания</translation>
     </message>
     <message>
-        <location filename="../src/app_settings.cpp" line="11"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
         <source>Title</source>
         <translation>Названию</translation>
     </message>
 </context>
 <context>
-    <name>lexis::SectionTypeManager</name>
+    <name>StartPage</name>
     <message>
-        <location filename="../src/model/section_type.cpp" line="12"/>
+        <location filename="../src/qml/StartPage.qml" line="11"/>
         <source>Subject group</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="13"/>
+        <location filename="../src/qml/StartPage.qml" line="12"/>
         <source>Book</source>
         <translation>Книга</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="14"/>
+        <location filename="../src/qml/StartPage.qml" line="13"/>
         <source>Article</source>
         <translation>Статья</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="15"/>
+        <location filename="../src/qml/StartPage.qml" line="14"/>
         <source>Movie</source>
         <translation>Фильм</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="16"/>
+        <location filename="../src/qml/StartPage.qml" line="15"/>
         <source>Series</source>
         <translation>Сериал</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="17"/>
+        <location filename="../src/qml/StartPage.qml" line="16"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../src/model/section_type.cpp" line="18"/>
+        <location filename="../src/qml/StartPage.qml" line="17"/>
         <source>Song</source>
         <translation>Песня</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StartPage.qml" line="70"/>
+        <location filename="../src/qml/StartPage.qml" line="81"/>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StartPage.qml" line="125"/>
+        <source>Add new item</source>
+        <translation>Добавить новый элемент</translation>
     </message>
 </context>
 </TS>

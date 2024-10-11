@@ -8,7 +8,6 @@ Item {
   property string title
   property LibraryItemProxyModel model
   Layout.fillWidth: true
-  // Layout.topMargin: 30
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
 
   ColumnLayout {

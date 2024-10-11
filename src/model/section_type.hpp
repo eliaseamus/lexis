@@ -34,7 +34,7 @@ class SectionTypeManager : public QObject {
   Q_INVOKABLE QStringList librarySectionNames();
   Q_INVOKABLE QString librarySectionTypeName(LibrarySectionType type);
   Q_INVOKABLE LibrarySectionType librarySectionType(const QString& name);
-  static LibrarySectionType librarySectionType(int type);
+  Q_INVOKABLE LibrarySectionType librarySectionType(int type);
 
 };
 

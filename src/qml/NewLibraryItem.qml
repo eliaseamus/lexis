@@ -26,7 +26,7 @@ Rectangle {
     ComboBox {
       id: type
       Layout.fillWidth: true
-      model: sectionTypeManager.librarySectionNames()
+      model: startPage.sectionNames
     }
 
     TextComplete {
@@ -37,7 +37,7 @@ Rectangle {
 
     RowLayout {
       id: mediaData
-      visible: type.currentText !== "Subject group"
+      visible: type.currentIndex !== 0
 
       TextComplete {
         id: author
@@ -171,7 +171,7 @@ Rectangle {
     title: title.text
     creationTime: new Date(Date.now())
     modificationTime: new Date(Date.now())
-    type: sectionTypeManager.librarySectionType(type.currentText)
+    type: sectionTypeManager.librarySectionType(type.currentIndex)
     author: author.text
     year: mediaData.visible ? parseInt(year.text) : -1
     bc: bc.checked

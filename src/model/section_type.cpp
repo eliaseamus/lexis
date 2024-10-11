@@ -9,13 +9,13 @@ namespace lexis {
 QHash<LibrarySectionType, QString> SectionTypeManager::librarySectionTypeNames() {
   using enum LibrarySectionType;
   static const QHash<LibrarySectionType, QString> names = {
-    {kSubjectGroup, tr("Subject group")},
-    {kBook,         tr("Book")},
-    {kArticle,      tr("Article")},
-    {kMovie,        tr("Movie")},
-    {kSeries,       tr("Series")},
-    {kAlbum,        tr("Album")},
-    {kSong,         tr("Song")}
+    {kSubjectGroup, "Subject group"},
+    {kBook,         "Book"},
+    {kArticle,      "Article"},
+    {kMovie,        "Movie"},
+    {kSeries,       "Series"},
+    {kAlbum,        "Album"},
+    {kSong,         "Song"}
   };
   return names;
 }

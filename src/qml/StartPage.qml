@@ -7,6 +7,15 @@ Pane {
   id: startPage
   leftPadding: 0
   rightPadding: 0
+  property var sectionNames: [
+    qsTr("Subject group"),
+    qsTr("Book"),
+    qsTr("Article"),
+    qsTr("Movie"),
+    qsTr("Series"),
+    qsTr("Album"),
+    qsTr("Song")
+  ]
 
   ColumnLayout {
     id: layout
@@ -30,7 +39,7 @@ Pane {
 
           SectionView {
             required property LibrarySection modelData
-            title: modelData.name
+            title: sectionNames[modelData.type]
             model: modelData.model
 
             Connections {
