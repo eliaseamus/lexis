@@ -14,9 +14,19 @@ and drop it in this area</source>
 <context>
     <name>InterfaceLanguageDialog</name>
     <message>
-        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="14"/>
+        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="11"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="55"/>
+        <source>Use as input language</source>
+        <translation>Использовать при вводе текста</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="58"/>
+        <source>Impacts on text autocomplete</source>
+        <translation>Влияет на автодополнение текста</translation>
     </message>
 </context>
 <context>
@@ -84,12 +94,12 @@ and drop it in this area</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="30"/>
+        <location filename="../src/qml/SideBar.qml" line="33"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="43"/>
+        <location filename="../src/qml/SideBar.qml" line="46"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>

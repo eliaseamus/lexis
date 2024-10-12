@@ -24,7 +24,7 @@ Window {
       id: stackView
       initialItem: startPage
     }
-    Component.onCompleted: appManager.changeLanguage(settings.language)
+    Component.onCompleted: appManager.changeLanguage(settings.interfaceLanguage)
   }
 
   Library {
@@ -33,7 +33,9 @@ Window {
 
   Settings {
     id: settings
-    property string language: "en"
+    property string interfaceLanguage: "en"
+    property string currentLanguage: "en"
+    property string inputLanguage: "en"
     property string sortRole: "Modification time"
     property color accentColor: Material.accentColor
     property color fgColor: "white"

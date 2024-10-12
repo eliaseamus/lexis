@@ -10,7 +10,7 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
 {
   AppSettings settings;
   setSourceModel(_source);
-  setSortingRole(settings.getSavedSortRole());
+  setSortingRole(settings.getSortRole());
   setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 

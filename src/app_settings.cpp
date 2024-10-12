@@ -20,8 +20,12 @@ QList<QString> AppSettings::sectionSortRoleKeys() {
   return keys;
 }
 
-QString AppSettings::getSavedSortRole() const {
+QString AppSettings::getSortRole() const {
   return _settings.value("sortRole").toString();
+}
+
+QString AppSettings::getInputLanguage() const {
+  return _settings.value("inputLanguage").toString();
 }
 
 }

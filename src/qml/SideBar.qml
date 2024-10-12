@@ -12,14 +12,17 @@ Item {
     ColumnLayout {
       anchors.fill: parent
       RoundButton {
-        id: language
+        id: interfaceLanguage
         flat: true
         icon.source: "icons/language.png"
         ToolTip {
-          visible: language.hovered
+          visible: interfaceLanguage.hovered
           text: qsTr("Interface language")
         }
-        onClicked: languageDialog.open()
+        onClicked: {
+          languageDialog.init()
+          languageDialog.open()
+        }
       }
       RoundButton {
         id: sortRole
@@ -82,5 +85,26 @@ Item {
         settings.fgColor = "white"
       }
     }
+  }
+
+  Shortcut {
+    sequence: "Alt+1"
+    onActivated: {
+      languageDialog.init()
+      languageDialog.open()
+    }
+  }
+
+  Shortcut {
+    sequence: "Alt+2"
+    onActivated: {
+      sortRoleDialog.init()
+      sortRoleDialog.open()
+    }
+  }
+
+  Shortcut {
+    sequence: "Alt+3"
+    onActivated: colorDialog.open()
   }
 }

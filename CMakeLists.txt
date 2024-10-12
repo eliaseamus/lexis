@@ -77,19 +77,17 @@ qt_add_qml_module(${PROJECT_NAME}
     src/model/section_type.hpp
     src/model/section_type.cpp
   RESOURCES
-    src/qml/icons/au.png
     src/qml/icons/audio.png
     src/qml/icons/audio-mute.png
     src/qml/icons/color.png
     src/qml/icons/language.png
     src/qml/icons/plus.png
-    src/qml/icons/rus.png
     src/qml/icons/search.png
     src/qml/icons/sort.png
     src/qml/icons/sort-ascending.png
     src/qml/icons/sort-descending.png
-    src/qml/icons/uk.png
-    src/qml/icons/us.png
+    src/qml/icons/flags/en.png
+    src/qml/icons/flags/ru.png
     qtquickcontrols2.conf
 )
 

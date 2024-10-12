@@ -4,87 +4,85 @@ import QtQuick.Layouts
 
 Dialog {
   id: interfaceLanguage
-
-  ButtonGroup {
-    id: options
-  }
+  property string selectedLanguage
 
   ColumnLayout {
     PrettyLabel {
       title: qsTr("Interface language")
       Layout.alignment: Qt.AlignHCenter
-      Layout.bottomMargin: 20
+      Layout.bottomMargin: 25
     }
 
     RowLayout {
-      RadioButton {
-        id: en
-        text: "en"
-        Layout.alignment: Qt.AlignVCenter
-        ButtonGroup.group: options
-        contentItem: Label {}
-      }
-      Item {
-        Layout.fillWidth: true
-      }
-      Image {
-        Layout.preferredWidth: 220
-        Layout.preferredHeight: 200
-        source: "icons/uk.png"
-        fillMode: Image.PreserveAspectFit
+      Repeater {
+        model: ["en", "ru"]
         Rectangle {
-          color: "#00000000"
-          anchors.centerIn: parent
-          width: 195
-          height: 100
-          border.color: palette.base
+          required property string modelData
+          width: 200
+          height: 200
+          color: selectedLanguage === modelData ? settings.accentColor : palette.base
+          border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
+          border.width: 2
+          radius: 10
+
+          ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 10
+            Image {
+              Layout.fillHeight: true
+              Layout.fillWidth: true
+              fillMode: Image.PreserveAspectFit
+              source: "icons/flags/%1.png".arg(modelData)
+            }
+          }
+          MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: (mouse) => {
+              if (mouse.button === Qt.LeftButton) {
+                selectedLanguage = modelData
+              }
+            }
+          }
         }
       }
     }
-    RowLayout {
-      RadioButton {
-        id: ru
-        text: "ru"
-        Layout.alignment: Qt.AlignVCenter
-        ButtonGroup.group: options
-        contentItem: Label {}
-      }
-      Item {
-        Layout.fillWidth: true
-      }
-      Image {
-        Layout.preferredWidth: 220
-        Layout.maximumHeight: 200
-        source: "icons/rus.png"
-        fillMode: Image.PreserveAspectFit
-        Rectangle {
-          color: "#00000000"
-          anchors.centerIn: parent
-          width: 195
-          height: 131
-          border.color: "lightGrey"
-        }
+
+    CheckBox {
+      id: inputLanguage
+      text: qsTr("Use as input language")
+      ToolTip {
+        visible: inputLanguage.hovered
+        text: qsTr("Impacts on text autocomplete")
       }
     }
 
     OkCancel {
-      Layout.topMargin: 30
+      Layout.topMargin: 20
       okay: function () {
-        settings.language = options.checkedButton.text
-        appManager.changeLanguage(settings.language)
+        if (settings.interfaceLanguage !== selectedLanguage) {
+          settings.interfaceLanguage = selectedLanguage
+          appManager.changeLanguage(settings.interfaceLanguage)
+        }
+
+        if (inputLanguage.checked) {
+          settings.inputLanguage = selectedLanguage
+        } else {
+          settings.inputLanguage = settings.currentLanguage
+        }
+
         interfaceLanguage.accept()
       }
       cancel: function () {
         interfaceLanguage.reject()
       }
     }
-
-    Component.onCompleted: {
-      if (settings.language === "en") {
-        en.checked = true
-      } else if (settings.language === "ru") {
-        ru.checked = true
-      }
-    }
   }
+
+  function init() {
+    interfaceLanguage.selectedLanguage = settings.interfaceLanguage
+  }
+
 }

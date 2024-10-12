@@ -3,6 +3,7 @@
 #include <qqml.h>
 
 #include "web_service.hpp"
+#include "app_settings.hpp"
 
 namespace lexis {
 
@@ -12,6 +13,7 @@ class Predictor : public WebService {
 
  private:
   QString _query;
+  AppSettings _settings;
 
  public:
   explicit Predictor(QObject* parent = nullptr) : WebService(parent) {}

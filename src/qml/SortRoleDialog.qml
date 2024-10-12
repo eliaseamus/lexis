@@ -46,7 +46,4 @@ Dialog {
     })
   }
 
-  AppSettings {
-    id: appSettings
-  }
 }

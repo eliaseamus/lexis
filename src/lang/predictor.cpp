@@ -4,6 +4,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QInputMethod>
+#include <QGuiApplication>
 
 namespace lexis {
 
@@ -11,11 +13,12 @@ void Predictor::request(const QString& query) {
   static const auto limit = 10;
   static const auto urlFormat = QString("https://predictor.yandex.net/api/v1/ \
                                          predict.json/complete?               \
-                                         key=%1&q=%2&lang=en&limit=%3").remove(' ');
+                                         key=%1&q=%2&lang=%3&limit=%4").remove(' ');
 
   _query = query;
   auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY),
                                       QString(query).replace(' ', '+'),
+                                      _settings.getInputLanguage(),
                                       QString::number(limit));
   WebService::request(url);
 }
