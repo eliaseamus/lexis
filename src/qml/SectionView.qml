@@ -63,9 +63,11 @@ Item {
       model: librarySection.model
 
       delegate: Rectangle {
+        id: gridItem
+        property bool isImage: imageUrl.toString().length > 0
         width: 200
         height: 200
-        color: mouseArea.containsPress ? itemColor.darker(1.3) : itemColor
+        color: mouseArea.containsPress ? itemColor.darker(1.1) : itemColor
         border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
         border.width: 2
         radius: 10
@@ -73,10 +75,30 @@ Item {
           anchors.fill: parent
           anchors.margins: 10
           Image {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            Layout.preferredHeight: 150
+            Layout.preferredWidth: 150
+            Layout.alignment: Qt.AlignCenter
             fillMode: Image.PreserveAspectFit
             source: imageUrl
+            visible: isImage
+          }
+          Rectangle {
+            Layout.preferredHeight: 150
+            Layout.preferredWidth: 150
+            Layout.alignment: Qt.AlignCenter
+            radius: 180
+            clip: true
+            color: itemColor.lighter(1.1)
+            border.color: itemColor.darker(1.1)
+            border.width: 2
+            visible: !isImage
+            Text {
+              anchors.centerIn: parent
+              text: title[0]
+              color: itemColor.darker(1.1)
+              font.capitalization: Font.AllUppercase
+              font.pointSize: 40
+            }
           }
           Text {
             Layout.alignment: Qt.AlignHCenter

@@ -26,7 +26,6 @@ void LibraryItem::init(LibraryItem* item) {
 
 QByteArray LibraryItem::image() const {
   if (_imageUrl.isEmpty()) {
-    qWarning() << "url is empty";
     return {};
   }
 
@@ -47,6 +46,10 @@ void LibraryItem::setType(const QString& typeName) {
 }
 
 void LibraryItem::setImage(QByteArray&& data) {
+  if (data.isEmpty()) {
+    return;
+  }
+
   if (!_image.open()) {
     qWarning() << "fail to open temporary file" << _image.fileName();
     return;

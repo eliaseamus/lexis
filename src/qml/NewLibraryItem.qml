@@ -69,7 +69,7 @@ Rectangle {
       spacing: 20
       Repeater {
         id: backgroundColors
-        model: ["#ffffff", "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
+        model: [palette.base, "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
                 "#ff8b94", "#1b85b8", "#c3cb71", "#ffd4e5", "#e4ddd7",
                 "#d4ffea", "#eecbff", "#feffa3", "#dbdcff", "#e3dfa4"]
         RoundButton {
@@ -97,6 +97,7 @@ Rectangle {
 
     Rectangle {
       id: cover
+      color: palette.base
       Layout.fillHeight: true
       Layout.fillWidth: true
       Layout.topMargin: 20
