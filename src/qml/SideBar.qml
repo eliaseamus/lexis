@@ -2,13 +2,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import QtQuick.Effects
 
 Item {
   id: sideBar
   width: 55
   Rectangle {
     anchors.fill: parent
-    color: palette.base
+    color: palette.base.darker(1.1)
     ColumnLayout {
       anchors.fill: parent
       RoundButton {
@@ -50,6 +51,69 @@ Item {
       Item {
         Layout.fillHeight: true
       }
+      RoundButton {
+        id: newLanguage
+        visible: settings.languages.length < 9
+        flat: true
+        icon.source: "icons/plus.png"
+        ToolTip {
+          visible: newLanguage.hovered
+          text: qsTr("Add a new language to learn")
+        }
+        onClicked: {
+          newLanguageDialog.init()
+          newLanguageDialog.open()
+        }
+      }
+      Repeater {
+        model: settings.languages
+        Rectangle {
+          Layout.leftMargin: 2
+          Layout.bottomMargin: 15
+          width: 50
+          height: 50
+          radius: 50
+          color: "transparent"
+          border.color: {
+            return settings.currentLanguage === modelData ?
+                   settings.accentColor :
+                   "transparent";
+          }
+          border.width: 20
+          Rectangle {
+            anchors.centerIn: parent
+            width: 40
+            height: 40
+            radius: 40
+            color: "transparent"
+            RoundImage {
+              anchors.centerIn: parent
+              anchors.fill: parent
+              source: "icons/flags/%1.png".arg(modelData)
+              MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                  if (mouse.button === Qt.LeftButton) {
+                    if (settings.currentLanguage !== modelData) {
+                      settings.currentLanguage = modelData
+                      library.changeLanguage(modelData)
+                      startPage.refresh()
+                    }
+                  } else if (mouse.button === Qt.RightButton) {
+                    contextMenu.popup()
+                  }
+                }
+                Menu {
+                  id: contextMenu
+                  MenuItem {text: qsTr("Delete")}
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -85,6 +149,13 @@ Item {
         settings.fgColor = "white"
       }
     }
+  }
+
+  NewLanguageDialog {
+    id: newLanguageDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
   }
 
   Shortcut {

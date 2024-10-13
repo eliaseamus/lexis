@@ -19,14 +19,12 @@ and drop it in this area</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="55"/>
         <source>Use as input language</source>
-        <translation>Использовать при вводе текста</translation>
+        <translation type="vanished">Использовать при вводе текста</translation>
     </message>
     <message>
-        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="58"/>
         <source>Impacts on text autocomplete</source>
-        <translation>Влияет на автодополнение текста</translation>
+        <translation type="vanished">Влияет на автодополнение текста</translation>
     </message>
 </context>
 <context>
@@ -62,13 +60,13 @@ and drop it in this area</source>
         <translation>До нашей эры</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="128"/>
+        <location filename="../src/qml/NewLibraryItem.qml" line="129"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="145"/>
-        <location filename="../src/qml/NewLibraryItem.qml" line="153"/>
+        <location filename="../src/qml/NewLibraryItem.qml" line="146"/>
+        <location filename="../src/qml/NewLibraryItem.qml" line="154"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -89,19 +87,29 @@ and drop it in this area</source>
 <context>
     <name>SideBar</name>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="20"/>
+        <location filename="../src/qml/SideBar.qml" line="21"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="33"/>
+        <location filename="../src/qml/SideBar.qml" line="34"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="46"/>
+        <location filename="../src/qml/SideBar.qml" line="47"/>
         <source>Color</source>
         <translation>Цвет</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="61"/>
+        <source>Add a new language to learn</source>
+        <translation>Добавить новый язык</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="110"/>
+        <source>Delete</source>
+        <translation>Удалить</translation>
     </message>
 </context>
 <context>
@@ -165,13 +173,22 @@ and drop it in this area</source>
         <translation>Песня</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="70"/>
-        <location filename="../src/qml/StartPage.qml" line="81"/>
+        <location filename="../src/qml/StartPage.qml" line="31"/>
+        <source>Select a language to learn</source>
+        <translation>Выбрать язык для изучения</translation>
+    </message>
+    <message>
+        <source>Pick a language to learn</source>
+        <translation type="vanished">Выбрать язык для изучения</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StartPage.qml" line="89"/>
+        <location filename="../src/qml/StartPage.qml" line="100"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="125"/>
+        <location filename="../src/qml/StartPage.qml" line="145"/>
         <source>Add new item</source>
         <translation>Добавить новый элемент</translation>
     </message>

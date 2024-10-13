@@ -20,7 +20,7 @@ class AppSettings : public QObject {
    Q_INVOKABLE QHash<QString, LibraryItemModel::LibraryItemRole> sectionSortRoles();
    Q_INVOKABLE QList<QString> sectionSortRoleKeys();
    QString getSortRole() const;
-   QString getInputLanguage() const;
+   QString getCurrentLanguage() const;
 };
 
 }

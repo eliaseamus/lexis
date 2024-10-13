@@ -1,26 +1,32 @@
 #include "library.hpp"
 
+#include "app_settings.hpp"
+
+#include <QtSql/QtSql>
+
 namespace lexis {
 
 Library::Library(QObject* parent) :
   QObject(parent)
 {
   static const auto dbName = "lexis_library.db";
-  _db = QSqlDatabase::addDatabase("QSQLITE");
-  _db.setDatabaseName(dbName);
-  if (!_db.open()) {
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(dbName);
+  if (!db.open()) {
     qDebug() << QString("Failed to open %1").arg(dbName).toStdString();
   }
-  createTable();
-  populateSections();
+  AppSettings settings;
+  changeLanguage(settings.getCurrentLanguage());
 }
 
 void Library::addItem(LibraryItem* item) {
   QSqlQuery query;
   query.prepare(
-    "INSERT INTO library"
-    "(title, creation_time, modification_time, type, author, year, bc, image, color)"
-    "VALUES (:title, :creation, :modification, :type, :author, :year, :bc, :image, :color)"
+    QString(
+      "INSERT INTO %1"
+      "(title, creation_time, modification_time, type, author, year, bc, image, color)"
+      "VALUES (:title, :creation, :modification, :type, :author, :year, :bc, :image, :color)"
+    ).arg(_language)
   );
 
   query.bindValue(":title", item->title());
@@ -45,20 +51,32 @@ void Library::addItem(LibraryItem* item) {
 
 void Library::createTable() {
   QSqlQuery query;
-  auto createTableQuery = "CREATE TABLE IF NOT EXISTS library                   \
-                          (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
-                           creation_time     TEXT,                              \
-                           modification_time TEXT,                              \
-                           title             TEXT,                              \
-                           type              INTEGER,                           \
-                           author            TEXT,                              \
-                           year              INTEGER,                           \
-                           bc                INTEGER,                           \
-                           image             BLOB,                              \
-                           color             TEXT)";
+  auto createTableQuery = QString(
+    "CREATE TABLE IF NOT EXISTS %1                        \
+    (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
+     creation_time     TEXT,                              \
+     modification_time TEXT,                              \
+     title             TEXT,                              \
+     type              INTEGER,                           \
+     author            TEXT,                              \
+     year              INTEGER,                           \
+     bc                INTEGER,                           \
+     image             BLOB,                              \
+     color             TEXT)"
+  ).arg(_language);
   if (!query.exec(createTableQuery)) {
     qDebug() << "failed to create library table:" << query.lastError();
   }
+}
+
+void Library::changeLanguage(const QString& language) {
+  if (language.isEmpty()) {
+    return;
+  }
+  _sections.clear();
+  _language = language;
+  createTable();
+  populateSections();
 }
 
 LibrarySection* Library::getSection(LibrarySectionType type) {
@@ -77,8 +95,10 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 
 void Library::populateSections() {
   QSqlQuery query(
-    "SELECT title, creation_time, modification_time, type,"
-    "       author, year, bc, image, color FROM library"
+    QString(
+      "SELECT title, creation_time, modification_time, type,"
+      "       author, year, bc, image, color FROM %1"
+    ).arg(_language)
   );
 
   SectionTypeManager typeManager;

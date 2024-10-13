@@ -46,26 +46,28 @@ qt_add_qml_module(${PROJECT_NAME}
   URI QLexis
   VERSION 1.0
   QML_FILES
-    src/qml/Main.qml
-    src/qml/StartPage.qml
-    src/qml/NewLibraryItem.qml
-    src/qml/OkCancel.qml
-    src/qml/TextComplete.qml
     src/qml/ImagePicker.qml
     src/qml/InterfaceLanguageDialog.qml
+    src/qml/Main.qml
+    src/qml/NewLanguageDialog.qml
+    src/qml/NewLibraryItem.qml
+    src/qml/OkCancel.qml
     src/qml/PrettyLabel.qml
+    src/qml/RoundImage.qml
     src/qml/SectionView.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
+    src/qml/StartPage.qml
+    src/qml/TextComplete.qml
   SOURCES
     src/app_manager.hpp
     src/app_manager.cpp
     src/app_settings.hpp
     src/app_settings.cpp
-    src/lang/predictor.cpp
-    src/lang/predictor.hpp
     src/db/library.cpp
     src/db/library.hpp
+    src/lang/predictor.cpp
+    src/lang/predictor.hpp
     src/model/library_item.hpp
     src/model/library_item.cpp
     src/model/library_item_model.hpp
@@ -86,8 +88,15 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/icons/sort.png
     src/qml/icons/sort-ascending.png
     src/qml/icons/sort-descending.png
+    src/qml/icons/flags/de.png
     src/qml/icons/flags/en.png
+    src/qml/icons/flags/es.png
+    src/qml/icons/flags/fr.png
+    src/qml/icons/flags/it.png
+    src/qml/icons/flags/pl.png
     src/qml/icons/flags/ru.png
+    src/qml/icons/flags/tr.png
+    src/qml/icons/flags/uk.png
     qtquickcontrols2.conf
 )
 

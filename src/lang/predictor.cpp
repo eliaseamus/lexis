@@ -18,7 +18,7 @@ void Predictor::request(const QString& query) {
   _query = query;
   auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY),
                                       QString(query).replace(' ', '+'),
-                                      _settings.getInputLanguage(),
+                                      _settings.getCurrentLanguage(),
                                       QString::number(limit));
   WebService::request(url);
 }

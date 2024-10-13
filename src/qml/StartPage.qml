@@ -24,7 +24,26 @@ Pane {
     anchors.leftMargin: 20
     anchors.rightMargin: 20
 
+    Button {
+      id: pickLanguage
+      Layout.alignment: Qt.AlignCenter
+      visible: settings.currentLanguage.length === 0
+      text: qsTr("Select a language to learn")
+      Material.background: settings.accentColor
+      onClicked: {
+        newLanguageDialog.init()
+        newLanguageDialog.open()
+      }
+
+      contentItem: Label {
+        text: pickLanguage.text
+        color: settings.fgColor
+        verticalAlignment: Text.AlignVCenter
+      }
+    }
+
     ScrollView {
+      visible: settings.currentLanguage.length > 0
       Layout.fillWidth: true
       Layout.fillHeight: true
       Layout.leftMargin: 20
@@ -114,6 +133,7 @@ Pane {
 
       RoundButton {
         id: addLibraryItem
+        visible: settings.currentLanguage.length > 0
         icon.source: "icons/plus.png"
         icon.color: settings.fgColor
         Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
@@ -138,6 +158,13 @@ Pane {
     }
   }
 
+  NewLanguageDialog {
+    id: newLanguageDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
   NewLibraryItem {
     id: newItem
     visible: false
@@ -154,8 +181,13 @@ Pane {
   }
 
   Shortcut {
+    enabled: settings.currentLanguage.length > 0
     sequence: StandardKey.New
     onActivated: stackView.push(newItem)
+  }
+
+  function refresh() {
+    librarySections.model = library.sections
   }
 
   function hideSearchLine() {

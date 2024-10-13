@@ -8,7 +8,7 @@ import QLexis
 Window {
   id: main
   width: 1300
-  height: 800
+  height: 900
   visible: true
   Material.accent: settings.accentColor
 
@@ -34,8 +34,8 @@ Window {
   Settings {
     id: settings
     property string interfaceLanguage: "en"
-    property string currentLanguage: "en"
-    property string inputLanguage: "en"
+    property string currentLanguage
+    property list<string> languages: []
     property string sortRole: "Modification time"
     property color accentColor: Material.accentColor
     property color fgColor: "white"

@@ -4,7 +4,6 @@
 
 #include <QObject>
 #include <QUrl>
-#include <QtSql/QtSql>
 
 #include "library_section.hpp"
 
@@ -17,13 +16,14 @@ class Library : public QObject {
  Q_PROPERTY(QVector<LibrarySection*> sections READ sections NOTIFY dummy);
 
  private:
-  QSqlDatabase _db;
   QVector<LibrarySection*> _sections;
+  QString _language;
 
  public:
   explicit Library(QObject* parent = nullptr);
-  Q_INVOKABLE void addItem(LibraryItem* item);
   QVector<LibrarySection*> sections() const {return _sections;}
+  Q_INVOKABLE void addItem(LibraryItem* item);
+  Q_INVOKABLE void changeLanguage(const QString& language);
 
  private:
   void createTable();

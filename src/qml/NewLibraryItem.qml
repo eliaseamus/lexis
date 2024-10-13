@@ -155,7 +155,7 @@ Rectangle {
       okay: function () {
         if (!okTooltipVisible) {
           library.addItem(newDbRecord);
-          librarySections.model = library.sections
+          startPage.refresh()
           popStack();
           newItem.clear();
         }

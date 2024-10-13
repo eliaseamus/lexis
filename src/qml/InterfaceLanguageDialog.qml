@@ -50,15 +50,6 @@ Dialog {
       }
     }
 
-    CheckBox {
-      id: inputLanguage
-      text: qsTr("Use as input language")
-      ToolTip {
-        visible: inputLanguage.hovered
-        text: qsTr("Impacts on text autocomplete")
-      }
-    }
-
     OkCancel {
       Layout.topMargin: 20
       okay: function () {
@@ -66,13 +57,6 @@ Dialog {
           settings.interfaceLanguage = selectedLanguage
           appManager.changeLanguage(settings.interfaceLanguage)
         }
-
-        if (inputLanguage.checked) {
-          settings.inputLanguage = selectedLanguage
-        } else {
-          settings.inputLanguage = settings.currentLanguage
-        }
-
         interfaceLanguage.accept()
       }
       cancel: function () {

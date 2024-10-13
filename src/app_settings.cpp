@@ -24,8 +24,8 @@ QString AppSettings::getSortRole() const {
   return _settings.value("sortRole").toString();
 }
 
-QString AppSettings::getInputLanguage() const {
-  return _settings.value("inputLanguage").toString();
+QString AppSettings::getCurrentLanguage() const {
+  return _settings.value("currentLanguage").toString();
 }
 
 }
