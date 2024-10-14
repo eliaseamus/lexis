@@ -46,15 +46,17 @@ qt_add_qml_module(${PROJECT_NAME}
   URI QLexis
   VERSION 1.0
   QML_FILES
+    src/qml/DeleteLanguageDialog.qml
     src/qml/ImagePicker.qml
+    src/qml/ImageWithEffect.qml
     src/qml/InterfaceLanguageDialog.qml
     src/qml/Main.qml
-    src/qml/NewLanguageDialog.qml
     src/qml/NewLibraryItem.qml
     src/qml/OkCancel.qml
     src/qml/PrettyLabel.qml
     src/qml/RoundImage.qml
     src/qml/SectionView.qml
+    src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
     src/qml/StartPage.qml

@@ -65,7 +65,7 @@ void Library::createTable() {
      color             TEXT)"
   ).arg(_language);
   if (!query.exec(createTableQuery)) {
-    qDebug() << "failed to create library table:" << query.lastError();
+    qDebug() << "failed to create language table" << _language << query.lastError();
   }
 }
 
@@ -77,6 +77,21 @@ void Library::changeLanguage(const QString& language) {
   _language = language;
   createTable();
   populateSections();
+}
+
+void Library::deleteLanguage(const QString& language) {
+  if (language.isEmpty()) {
+    return;
+  }
+  QSqlQuery query;
+  auto deleteTableQuery = QString("DROP TABLE %1").arg(language);
+  if (!query.exec(deleteTableQuery)) {
+    qDebug() << "failed to delete language table" << language << query.lastError();
+  }
+  if (language == _language) {
+    _sections.clear();
+    _language.clear();
+  }
 }
 
 LibrarySection* Library::getSection(LibrarySectionType type) {

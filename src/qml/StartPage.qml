@@ -31,8 +31,8 @@ Pane {
       text: qsTr("Select a language to learn")
       Material.background: settings.accentColor
       onClicked: {
-        newLanguageDialog.init()
-        newLanguageDialog.open()
+        selectLanguageDialog.init()
+        selectLanguageDialog.open()
       }
 
       contentItem: Label {
@@ -158,8 +158,8 @@ Pane {
     }
   }
 
-  NewLanguageDialog {
-    id: newLanguageDialog
+  SelectLanguageDialog {
+    id: selectLanguageDialog
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay

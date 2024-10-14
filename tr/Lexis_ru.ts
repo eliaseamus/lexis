@@ -2,6 +2,16 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>DeleteLanguageDialog</name>
+    <message>
+        <location filename="../src/qml/DeleteLanguageDialog.qml" line="11"/>
+        <source>Are you sure you want to
+delete this language from your library?</source>
+        <translation>Вы уверены что хотите
+удалить этот язык из своей библиотеки?</translation>
+    </message>
+</context>
+<context>
     <name>ImagePicker</name>
     <message>
         <location filename="../src/qml/ImagePicker.qml" line="86"/>
@@ -107,7 +117,7 @@ and drop it in this area</source>
         <translation>Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="110"/>
+        <location filename="../src/qml/SideBar.qml" line="111"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>

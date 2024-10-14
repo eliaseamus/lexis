@@ -24,6 +24,7 @@ class Library : public QObject {
   QVector<LibrarySection*> sections() const {return _sections;}
   Q_INVOKABLE void addItem(LibraryItem* item);
   Q_INVOKABLE void changeLanguage(const QString& language);
+  Q_INVOKABLE void deleteLanguage(const QString& language);
 
  private:
   void createTable();

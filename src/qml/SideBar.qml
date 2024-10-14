@@ -61,8 +61,8 @@ Item {
           text: qsTr("Add a new language to learn")
         }
         onClicked: {
-          newLanguageDialog.init()
-          newLanguageDialog.open()
+          selectLanguageDialog.init(true)
+          selectLanguageDialog.open()
         }
       }
       Repeater {
@@ -89,7 +89,7 @@ Item {
             RoundImage {
               anchors.centerIn: parent
               anchors.fill: parent
-              source: "icons/flags/%1.png".arg(modelData)
+              source: modelData ? "icons/flags/%1.png".arg(modelData) : ""
               MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
@@ -107,7 +107,13 @@ Item {
                 }
                 Menu {
                   id: contextMenu
-                  MenuItem {text: qsTr("Delete")}
+                  MenuItem {
+                    text: qsTr("Delete")
+                    onTriggered: {
+                      deleteLanguageDialog.language = modelData
+                      deleteLanguageDialog.open()
+                    }
+                  }
                 }
               }
             }
@@ -151,8 +157,15 @@ Item {
     }
   }
 
-  NewLanguageDialog {
-    id: newLanguageDialog
+  SelectLanguageDialog {
+    id: selectLanguageDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
+  DeleteLanguageDialog {
+    id: deleteLanguageDialog
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay

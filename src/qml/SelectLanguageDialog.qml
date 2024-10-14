@@ -1,11 +1,13 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Effects
 
 Dialog {
-  id: newLanguage
+  id: selectLanguage
   property string selectedLanguage
-  property var languages
+  property list<string> languages: ["en", "es", "de", "fr", "ru", "it", "pl", "uk", "tr"]
+  property list<string> disabledLanguages
 
   ColumnLayout {
     GridView {
@@ -21,6 +23,7 @@ Dialog {
       interactive: false
       delegate: Rectangle {
         required property string modelData
+        property bool isEnabled: disabledLanguages.indexOf(modelData) === -1
         width: 200
         height: 200
         color: selectedLanguage === modelData ? settings.accentColor : palette.base
@@ -31,18 +34,20 @@ Dialog {
         ColumnLayout {
           anchors.fill: parent
           anchors.margins: 10
-          Image {
+          ImageWithEffect {
             Layout.fillHeight: true
             Layout.fillWidth: true
             fillMode: Image.PreserveAspectFit
             source: "icons/flags/%1.png".arg(modelData)
+            isSaturated: isEnabled === false
           }
         }
         MouseArea {
           id: mouseArea
+          enabled: isEnabled
           anchors.fill: parent
           hoverEnabled: true
-          cursorShape: Qt.PointingHandCursor
+          cursorShape: isEnabled ? Qt.PointingHandCursor : Qt.ArrowCursor
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
               selectedLanguage = modelData
@@ -54,26 +59,32 @@ Dialog {
     OkCancel {
       okay: function () {
         settings.currentLanguage = selectedLanguage
-        settings.languages.push(selectedLanguage)
         library.changeLanguage(selectedLanguage)
-        newLanguage.accept()
+        var index = settings.languages.indexOf(selectedLanguage);
+        if (index === -1) {
+          settings.languages.push(selectedLanguage)
+        }
+        selectLanguage.accept()
       }
       cancel: function () {
-        newLanguage.reject()
+        selectLanguage.reject()
       }
     }
   }
 
-  function init() {
-    var langs = ["en", "es", "de", "fr", "ru", "it", "pl", "uk", "tr"];
-    settings.languages.forEach((lang) => {
-      var index = langs.indexOf(lang);
-      if (index !== -1) {
-       langs.splice(index, 1);
+  function init(disableAddedLanguages) {
+    if (disableAddedLanguages === true) {
+      disabledLanguages = settings.languages;
+      for (let i = 0; i < languages.length; i++) {
+        if (disabledLanguages.indexOf(languages[i]) === -1) {
+          selectedLanguage = languages[i];
+          break;
+        }
       }
-    })
-    languages = langs
-    selectedLanguage = newLanguage.languages[0]
+    } else {
+      disabledLanguages = [];
+      selectedLanguage = languages[0];
+    }
   }
 
 }
