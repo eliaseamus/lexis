@@ -5,6 +5,8 @@ import QLexis
 
 Dialog {
   id: sortRole
+  property list<string> sortRoles: appSettings.sectionSortRoleKeys()
+  property int selectedRoleIndex
 
   ButtonGroup {
     id: options
@@ -18,18 +20,22 @@ Dialog {
     }
 
     Repeater {
-      model: [qsTr("Modification time"), qsTr("Creation time"), qsTr("Title")]
+      model: [qsTr("Creation time"), qsTr("Modification time"), qsTr("Title")]
       RadioButton {
         required property string modelData
+        required property int index
         text: modelData
         ButtonGroup.group: options
+        onClicked: {
+          selectedRoleIndex = index
+        }
       }
     }
 
     OkCancel {
       Layout.topMargin: 30
       okay: function () {
-        settings.sortRole = options.checkedButton.text
+        settings.sortRole = sortRoles[selectedRoleIndex]
         sortRole.accept()
       }
       cancel: function () {
@@ -38,12 +44,15 @@ Dialog {
     }
   }
 
+  AppSettings {
+    id: appSettings
+  }
+
   function init() {
-    options.buttons.forEach((button) => {
-      if (button.text === settings.sortRole) {
-        button.checked = true
-      }
-    })
+    selectedRoleIndex = sortRoles.indexOf(settings.sortRole)
+    if (selectedRoleIndex != -1) {
+      options.buttons[selectedRoleIndex].checked = true
+    }
   }
 
 }

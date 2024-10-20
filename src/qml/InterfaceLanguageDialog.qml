@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "utils.js" as Utils
 
 Dialog {
   id: interfaceLanguage
@@ -33,6 +34,10 @@ Dialog {
               Layout.fillWidth: true
               fillMode: Image.PreserveAspectFit
               source: "icons/flags/%1.png".arg(modelData)
+            }
+            ToolTip {
+              visible: mouseArea.containsMouse
+              text: Utils.getFullLanguageName(modelData)
             }
           }
           MouseArea {
