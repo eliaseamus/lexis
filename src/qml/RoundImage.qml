@@ -30,7 +30,6 @@ Item {
       width: sourceItem.width
       height: sourceItem.height
       radius: width / 2
-      color: "black"
     }
   }
 

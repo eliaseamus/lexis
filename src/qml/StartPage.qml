@@ -142,7 +142,7 @@ Pane {
 
         ToolTip {
           visible: addLibraryItem.hovered
-          text: qsTr("Add new item")
+          text: qsTr("New item")
         }
       }
       function toggleSearchLine() {

@@ -95,29 +95,37 @@ and drop it in this area</source>
     </message>
 </context>
 <context>
+    <name>SectionView</name>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="41"/>
+        <source>Sort order</source>
+        <translation>Порядок сортировки</translation>
+    </message>
+</context>
+<context>
     <name>SideBar</name>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="21"/>
+        <location filename="../src/qml/SideBar.qml" line="22"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="34"/>
+        <location filename="../src/qml/SideBar.qml" line="35"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="47"/>
+        <location filename="../src/qml/SideBar.qml" line="48"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="61"/>
+        <location filename="../src/qml/SideBar.qml" line="62"/>
         <source>Add a new language to learn</source>
         <translation>Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="111"/>
+        <location filename="../src/qml/SideBar.qml" line="118"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -188,6 +196,11 @@ and drop it in this area</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
+        <location filename="../src/qml/StartPage.qml" line="145"/>
+        <source>New item</source>
+        <translation>Новый элемент</translation>
+    </message>
+    <message>
         <source>Pick a language to learn</source>
         <translation type="vanished">Выбрать язык для изучения</translation>
     </message>
@@ -198,9 +211,56 @@ and drop it in this area</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="145"/>
         <source>Add new item</source>
-        <translation>Добавить новый элемент</translation>
+        <translation type="vanished">Добавить новый элемент</translation>
+    </message>
+</context>
+<context>
+    <name>utils</name>
+    <message>
+        <location filename="../src/qml/utils.js" line="14"/>
+        <source>English</source>
+        <translation>Английский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="16"/>
+        <source>Spanish</source>
+        <translation>Испанский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="18"/>
+        <source>German</source>
+        <translation>Немецкий</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="20"/>
+        <source>French</source>
+        <translation>Французский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="22"/>
+        <source>Russian</source>
+        <translation>Русский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="24"/>
+        <source>Italian</source>
+        <translation>Итальянский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="26"/>
+        <source>Polish</source>
+        <translation>Польский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="28"/>
+        <source>Ukranian</source>
+        <translation>Украинский</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="30"/>
+        <source>Turkish</source>
+        <translation>Турецкий</translation>
     </message>
 </context>
 </TS>

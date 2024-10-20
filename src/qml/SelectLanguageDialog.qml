@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
+import "utils.js" as Utils
 
 Dialog {
   id: selectLanguage
@@ -40,6 +41,10 @@ Dialog {
             fillMode: Image.PreserveAspectFit
             source: "icons/flags/%1.png".arg(modelData)
             isSaturated: isEnabled === false
+            ToolTip {
+              visible: mouseArea.containsMouse
+              text: Utils.getFullLanguageName(modelData)
+            }
           }
         }
         MouseArea {

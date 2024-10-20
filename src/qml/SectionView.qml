@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QLexis
+import "utils.js" as Utils
 
 Item {
   id: librarySection
@@ -25,6 +26,8 @@ Item {
       }
 
       RoundButton {
+        id: sortOrder
+        hoverEnabled: true
         Layout.alignment: Qt.AlignRight
         flat: true
         property url iconSource: getIconSource()
@@ -32,6 +35,10 @@ Item {
         onClicked: {
           librarySection.model.toggleSort();
           iconSource = getIconSource();
+        }
+        ToolTip {
+          visible: sortOrder.hovered
+          text: qsTr("Sort order")
         }
 
         function getIconSource() {
@@ -106,6 +113,7 @@ Item {
             horizontalAlignment: Qt.AlignHCenter
             text: title
             elide: Text.ElideRight
+            color: Utils.getFgColor(itemColor)
           }
         }
         MouseArea {

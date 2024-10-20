@@ -61,6 +61,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SortRoleDialog.qml
     src/qml/StartPage.qml
     src/qml/TextComplete.qml
+    src/qml/utils.js
   SOURCES
     src/app_manager.hpp
     src/app_manager.cpp

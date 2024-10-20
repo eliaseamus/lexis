@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Effects
+import "utils.js" as Utils
 
 Item {
   id: sideBar
@@ -90,8 +91,14 @@ Item {
               anchors.centerIn: parent
               anchors.fill: parent
               source: modelData ? "icons/flags/%1.png".arg(modelData) : ""
+              ToolTip {
+                visible: mouseArea.containsMouse
+                text: Utils.getFullLanguageName(modelData)
+              }
               MouseArea {
+                id: mouseArea
                 anchors.fill: parent
+                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: (mouse) => {
@@ -147,13 +154,7 @@ Item {
     selectedColor: settings.accentColor
     onAccepted: {
       settings.accentColor = selectedColor
-      var colorSum = selectedColor.r + selectedColor.g + selectedColor.b
-      var threshold = 2 * 0.93
-      if (colorSum > threshold) {
-        settings.fgColor = "black"
-      } else {
-        settings.fgColor = "white"
-      }
+      settings.fgColor = Utils.getFgColor(selectedColor)
     }
   }
 
