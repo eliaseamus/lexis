@@ -69,6 +69,7 @@ Dialog {
         if (index === -1) {
           settings.languages.push(selectedLanguage)
         }
+        startPage.refresh()
         selectLanguage.accept()
       }
       cancel: function () {

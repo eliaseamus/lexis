@@ -37,8 +37,8 @@ Dialog {
          settings.languages.splice(index, 1);
         }
         if (language === settings.currentLanguage) {
-          startPage.refresh();
           settings.currentLanguage = ""
+          startPage.refresh();
         }
         deleteLanguageDialog.accept();
       }

@@ -15,6 +15,7 @@ Window {
   RowLayout {
     anchors.fill: parent
     SideBar {
+      id: sideBar
       Layout.fillHeight: true
     }
 

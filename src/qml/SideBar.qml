@@ -59,7 +59,7 @@ Item {
         icon.source: "icons/plus.png"
         ToolTip {
           visible: newLanguage.hovered
-          text: qsTr("Add a new language to learn")
+          text: qsTr("New language")
         }
         onClicked: {
           selectLanguageDialog.init(true)

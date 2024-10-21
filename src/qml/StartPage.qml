@@ -24,9 +24,11 @@ Pane {
     anchors.leftMargin: 20
     anchors.rightMargin: 20
 
+    // No language selected
     Button {
       id: pickLanguage
       Layout.alignment: Qt.AlignCenter
+      Layout.rightMargin: sideBar.width
       visible: settings.currentLanguage.length === 0
       text: qsTr("Select a language to learn")
       Material.background: settings.accentColor
@@ -42,6 +44,19 @@ Pane {
       }
     }
 
+    // Language is selected but its library has no entries
+    PrettyLabel {
+      id: prompt
+      visible: settings.currentLanguage.length > 0 && library.sections.length === 0
+      title: qsTr("Library is empty.\n" +
+                   "Add the first item using \"+\" button\n" +
+                   "in the right bottom corner.")
+      Layout.alignment: Qt.AlignCenter
+      Layout.topMargin: startPage.height / 2 - height
+      Layout.rightMargin: sideBar.width
+    }
+
+    // Library items
     ScrollView {
       visible: settings.currentLanguage.length > 0
       Layout.fillWidth: true
@@ -73,6 +88,7 @@ Pane {
       }
     }
 
+    // Footer
     RowLayout {
       id: toolBar
       RoundButton {
@@ -175,19 +191,28 @@ Pane {
   }
 
   Shortcut {
+    id: searchCmd
     enabled: library.sections.length > 0
     sequence: StandardKey.Find
     onActivated: toolBar.toggleSearchLine()
   }
 
   Shortcut {
+    id: newItemCmd
     enabled: settings.currentLanguage.length > 0
     sequence: StandardKey.New
     onActivated: stackView.push(newItem)
   }
 
   function refresh() {
-    librarySections.model = library.sections
+    librarySections.model = library.sections;
+    const isSearchEnabled = library.sections.length > 0;
+    const isNewItemEnabled = settings.currentLanguage.length > 0;
+    searchCmd.enabled = isSearchEnabled;
+    search.visible = isSearchEnabled;
+    newItemCmd.enabled = isNewItemEnabled;
+    addLibraryItem.visible = isNewItemEnabled;
+    prompt.visible = !isSearchEnabled && isNewItemEnabled;
   }
 
   function hideSearchLine() {

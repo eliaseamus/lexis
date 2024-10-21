@@ -24,7 +24,7 @@ and drop it in this area</source>
 <context>
     <name>InterfaceLanguageDialog</name>
     <message>
-        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="11"/>
+        <location filename="../src/qml/InterfaceLanguageDialog.qml" line="12"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
@@ -75,8 +75,8 @@ and drop it in this area</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="146"/>
-        <location filename="../src/qml/NewLibraryItem.qml" line="154"/>
+        <location filename="../src/qml/NewLibraryItem.qml" line="148"/>
+        <location filename="../src/qml/NewLibraryItem.qml" line="157"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -101,6 +101,16 @@ and drop it in this area</source>
         <source>Sort order</source>
         <translation>Порядок сортировки</translation>
     </message>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="135"/>
+        <source>Edit</source>
+        <translation>Редактировать</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="140"/>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
 </context>
 <context>
     <name>SideBar</name>
@@ -121,8 +131,12 @@ and drop it in this area</source>
     </message>
     <message>
         <location filename="../src/qml/SideBar.qml" line="62"/>
+        <source>New language</source>
+        <translation>Новый язык</translation>
+    </message>
+    <message>
         <source>Add a new language to learn</source>
-        <translation>Добавить новый язык</translation>
+        <translation type="vanished">Добавить новый язык</translation>
     </message>
     <message>
         <location filename="../src/qml/SideBar.qml" line="118"/>
@@ -133,22 +147,22 @@ and drop it in this area</source>
 <context>
     <name>SortRoleDialog</name>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="15"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="17"/>
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Modification time</source>
         <translation>Времени изменения</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Creation time</source>
         <translation>Времени создания</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="21"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Title</source>
         <translation>Названию</translation>
     </message>
@@ -191,12 +205,21 @@ and drop it in this area</source>
         <translation>Песня</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="31"/>
+        <location filename="../src/qml/StartPage.qml" line="33"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="145"/>
+        <location filename="../src/qml/StartPage.qml" line="51"/>
+        <source>Library is empty.
+Add the first item using &quot;+&quot; button
+in the right bottom corner.</source>
+        <translation>Библиотека пуста.
+Добавьте первый элемент с помощью кнопки &quot;+&quot;
+в правом нижнем углу.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StartPage.qml" line="161"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
@@ -205,8 +228,8 @@ and drop it in this area</source>
         <translation type="vanished">Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="89"/>
-        <location filename="../src/qml/StartPage.qml" line="100"/>
+        <location filename="../src/qml/StartPage.qml" line="105"/>
+        <location filename="../src/qml/StartPage.qml" line="116"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>

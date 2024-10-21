@@ -5,6 +5,7 @@ import QtQuick.Layouts
 Label {
   property string title
   text: qsTr(title)
+  horizontalAlignment: Qt.AlignHCenter
   color: settings.fgColor
   Layout.leftMargin: 5
   background: Rectangle {

@@ -15,7 +15,7 @@ Rectangle {
     bc.checked = false
     image.source = ""
     image.visible = false
-    cover.color = "white"
+    cover.color = palette.base
   }
 
   ColumnLayout {
@@ -128,7 +128,9 @@ Rectangle {
         visible: !image.visible
         text: qsTr("Pick an image")
         Material.background: settings.accentColor
-        anchors.centerIn: parent
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: -sideBar.width / 2
 
         contentItem: Label {
           text: pickImage.text
@@ -150,6 +152,7 @@ Rectangle {
     }
 
     OkCancel {
+      Layout.rightMargin: sideBar.width
       okTooltipVisible: title.text.trim().length == 0
       okTooltipText: qsTr("Insert title")
       okay: function () {

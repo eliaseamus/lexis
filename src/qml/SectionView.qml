@@ -90,6 +90,7 @@ Item {
             visible: isImage
           }
           Rectangle {
+            id: textIcon
             Layout.preferredHeight: 150
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignCenter
@@ -121,8 +122,24 @@ Item {
           anchors.fill: parent
           hoverEnabled: true
           cursorShape: Qt.PointingHandCursor
+          acceptedButtons: Qt.LeftButton | Qt.RightButton
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
+            } else if (mouse.button === Qt.RightButton) {
+              contextMenu.popup()
+            }
+          }
+          Menu {
+            id: contextMenu
+            MenuItem {
+              text: qsTr("Edit")
+              onTriggered: {
+              }
+            }
+            MenuItem {
+              text: qsTr("Delete")
+              onTriggered: {
+              }
             }
           }
         }
