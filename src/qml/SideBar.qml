@@ -8,6 +8,7 @@ import "utils.js" as Utils
 Item {
   id: sideBar
   width: 55
+  property string languageToDelete
   Rectangle {
     anchors.fill: parent
     color: palette.base.darker(1.1)
@@ -118,8 +119,12 @@ Item {
                   MenuItem {
                     text: qsTr("Delete")
                     onTriggered: {
-                      deleteLanguageDialog.language = modelData
-                      deleteLanguageDialog.open()
+                      languageToDelete = modelData;
+                      deleteLanguageDialog.target =
+                        "%1 ".arg(Utils.getFullLanguageName(modelData).toLowerCase()) +
+                        qsTr("language");
+                      deleteLanguageDialog.imageSource = "icons/flags/%1.png".arg(modelData);
+                      deleteLanguageDialog.open();
                     }
                   }
                 }
@@ -166,11 +171,28 @@ Item {
     parent: ApplicationWindow.overlay
   }
 
-  DeleteLanguageDialog {
+  DeleteDialog {
     id: deleteLanguageDialog
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
+  }
+
+  Connections {
+    target: deleteLanguageDialog
+
+    function onAccepted() {
+      var language = languageToDelete;
+      library.deleteLanguage(language);
+      var index = settings.languages.indexOf(language);
+      if (index !== -1) {
+       settings.languages.splice(index, 1);
+      }
+      if (language === settings.currentLanguage) {
+        settings.currentLanguage = ""
+        startPage.refresh();
+      }
+    }
   }
 
   Shortcut {

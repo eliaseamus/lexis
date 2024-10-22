@@ -2,6 +2,16 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>DeleteDialog</name>
+    <message>
+        <location filename="../src/qml/DeleteDialog.qml" line="12"/>
+        <source>Are you sure you want to
+delete %1 from your library?</source>
+        <translation>Вы уверены что хотите
+удалить %1 из своей библиотеки?</translation>
+    </message>
+</context>
+<context>
     <name>DeleteLanguageDialog</name>
     <message>
         <source>Are you sure you want to
@@ -10,10 +20,9 @@ delete this language from your library?</source>
 удалить этот язык из своей библиотеки?</translation>
     </message>
     <message>
-        <location filename="../src/qml/DeleteLanguageDialog.qml" line="12"/>
         <source>Are you sure you want to
 delete %1 language from your library?</source>
-        <translation>Вы уверены что хотите
+        <translation type="vanished">Вы уверены что хотите
 удалить %1 язык из своей библиотеки?</translation>
     </message>
 </context>
@@ -121,31 +130,36 @@ and drop it in this area</source>
 <context>
     <name>SideBar</name>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="22"/>
+        <location filename="../src/qml/SideBar.qml" line="23"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="35"/>
+        <location filename="../src/qml/SideBar.qml" line="36"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="48"/>
+        <location filename="../src/qml/SideBar.qml" line="49"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="62"/>
+        <location filename="../src/qml/SideBar.qml" line="63"/>
         <source>New language</source>
         <translation>Новый язык</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="125"/>
+        <source>language</source>
+        <translation>язык</translation>
     </message>
     <message>
         <source>Add a new language to learn</source>
         <translation type="vanished">Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="119"/>
+        <location filename="../src/qml/SideBar.qml" line="120"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>

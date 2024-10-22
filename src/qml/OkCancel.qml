@@ -4,8 +4,8 @@ import QtQuick.Controls
 
 RowLayout {
   id: buttonBox
-  property var okay: function () {}
-  property var cancel: function () {}
+  property var okay
+  property var cancel
   property bool okTooltipVisible
   property string okTooltipText
 

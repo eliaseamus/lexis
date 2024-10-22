@@ -46,7 +46,7 @@ qt_add_qml_module(${PROJECT_NAME}
   URI QLexis
   VERSION 1.0
   QML_FILES
-    src/qml/DeleteLanguageDialog.qml
+    src/qml/DeleteDialog.qml
     src/qml/ImagePicker.qml
     src/qml/ImageWithEffect.qml
     src/qml/InterfaceLanguageDialog.qml
@@ -61,6 +61,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SortRoleDialog.qml
     src/qml/StartPage.qml
     src/qml/TextComplete.qml
+    src/qml/TextIcon.qml
     src/qml/utils.js
   SOURCES
     src/app_manager.hpp

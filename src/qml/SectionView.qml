@@ -89,24 +89,15 @@ Item {
             source: imageUrl
             visible: isImage
           }
-          Rectangle {
+          TextIcon {
             id: textIcon
             Layout.preferredHeight: 150
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignCenter
-            radius: 180
-            clip: true
-            color: itemColor.lighter(1.1)
-            border.color: itemColor.darker(1.1)
-            border.width: 2
+            iconRadius: 180
+            iconColor: itemColor
+            iconTitle: title
             visible: !isImage
-            Text {
-              anchors.centerIn: parent
-              text: title[0]
-              color: itemColor.darker(1.1)
-              font.capitalization: Font.AllUppercase
-              font.pointSize: 40
-            }
           }
           Text {
             Layout.alignment: Qt.AlignHCenter
@@ -139,12 +130,23 @@ Item {
             MenuItem {
               text: qsTr("Delete")
               onTriggered: {
+                deleteLanguageDialog.target = "\"%1\"".arg(title);
+                deleteLanguageDialog.imageSource = imageUrl;
+                deleteLanguageDialog.backgroundColor = itemColor;
+                deleteLanguageDialog.open();
               }
             }
           }
         }
       }
     }
+  }
+
+  DeleteDialog {
+    id: deleteLanguageDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
   }
 
 }
