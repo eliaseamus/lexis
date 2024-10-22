@@ -32,5 +32,9 @@ void LibrarySection::addItem(LibraryItem* item) {
   _model->addItem(item);
 }
 
+void LibrarySection::removeItem(const QString& title) {
+  _model->removeItem(title);
+}
+
 }
 

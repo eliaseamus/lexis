@@ -49,6 +49,21 @@ void Library::addItem(LibraryItem* item) {
   updateSections(newItem);
 }
 
+void Library::deleteItem(LibrarySectionType sectionType, const QString& title) {
+  QSqlQuery query;
+  query.prepare(QString("DELETE FROM %1 WHERE title = \"%2\"").arg(_language, title));
+  if (!query.exec()) {
+    qWarning() << QString("Failed to delete \"%1\" item from \"%2\" database:")
+                  .arg(title, _language) << query.lastError();
+    return;
+  }
+  auto* section = getSection(sectionType);
+  section->removeItem(title);
+  if (section->isEmpty()) {
+    _sections.removeOne(section);
+  }
+}
+
 void Library::createTable() {
   QSqlQuery query;
   auto createTableQuery = QString(

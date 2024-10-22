@@ -8,6 +8,8 @@ Item {
   id: librarySection
   property string title
   property LibraryItemProxyModel model
+  property string itemToDelete
+  property string itemToDeleteType
   Layout.fillWidth: true
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
 
@@ -130,6 +132,8 @@ Item {
             MenuItem {
               text: qsTr("Delete")
               onTriggered: {
+                itemToDelete = title;
+                itemToDeleteType = type;
                 deleteLanguageDialog.target = "\"%1\"".arg(title);
                 deleteLanguageDialog.imageSource = imageUrl;
                 deleteLanguageDialog.backgroundColor = itemColor;
@@ -147,6 +151,15 @@ Item {
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
+  }
+
+  Connections {
+    target: deleteLanguageDialog
+
+    function onAccepted() {
+      library.deleteItem(sectionTypeManager.librarySectionType(itemToDeleteType), itemToDelete);
+      startPage.refresh()
+    }
   }
 
 }

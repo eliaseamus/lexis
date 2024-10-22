@@ -33,6 +33,8 @@ class LibrarySection : public QObject {
 
   void setType(LibrarySectionType type);
   void addItem(LibraryItem* item);
+  void removeItem(const QString& title);
+  bool isEmpty() const {return _model->isEmpty();}
 
  signals:
   void dummy();

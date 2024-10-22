@@ -20,6 +20,8 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
  public:
   explicit LibraryItemProxyModel(QObject* parent = nullptr);
   void addItem(LibraryItem* item);
+  void removeItem(const QString& title);
+  bool isEmpty() const {return _source->isEmpty();}
   Qt::SortOrder sortOrder() const {return _sortOrder;}
   void reSort(const QString& role);
   Q_INVOKABLE void setSortingRole(const QString& role);

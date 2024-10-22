@@ -13,6 +13,20 @@ void LibraryItemModel::addItem(LibraryItem* item) {
   endInsertRows();
 }
 
+void LibraryItemModel::removeItem(const QString& title) {
+  auto item = std::find_if(_items.begin(), _items.end(), [&title](auto* item){
+    return item->title() == title;
+  });
+  if (item == _items.end()) {
+    qWarning() << QString("Failed to delete %1: no item with such title").arg(title);
+    return;
+  }
+  auto index = std::distance(_items.begin(), item);
+  beginRemoveRows(QModelIndex(), index, index);
+  _items.removeAt(index);
+  endRemoveRows();
+}
+
 int LibraryItemModel::rowCount(const QModelIndex& parent) const {
   Q_UNUSED(parent);
   return _items.count();

@@ -31,6 +31,8 @@ class LibraryItemModel : public QAbstractListModel {
 
   explicit LibraryItemModel(QObject* parent = nullptr);
   void addItem(LibraryItem* item);
+  void removeItem(const QString& title);
+  bool isEmpty() const {return _items.isEmpty();}
   int rowCount(const QModelIndex& parent = {}) const override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
   QHash<int, QByteArray> roleNames() const override;
