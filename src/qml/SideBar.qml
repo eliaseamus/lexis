@@ -106,6 +106,7 @@ Item {
                     if (settings.currentLanguage !== modelData) {
                       settings.currentLanguage = modelData
                       library.changeLanguage(modelData)
+                      stackView.pop(null)
                       startPage.refresh()
                     }
                   } else if (mouse.button === Qt.RightButton) {

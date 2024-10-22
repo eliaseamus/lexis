@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import "utils.js" as Utils
 
 Dialog {
   id: deleteLanguageDialog
@@ -8,7 +9,9 @@ Dialog {
 
   ColumnLayout {
     PrettyLabel {
-      title: qsTr("Are you sure you want to\ndelete this language from your library?")
+      title: qsTr("Are you sure you want to\ndelete" +
+                  " %1 language from your library?")
+                  .arg(Utils.getFullLanguageName(language).toLowerCase())
       horizontalAlignment: Qt.AlignHCenter
       Layout.alignment: Qt.AlignHCenter
       Layout.topMargin: 10

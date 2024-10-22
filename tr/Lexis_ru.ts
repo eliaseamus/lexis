@@ -4,11 +4,17 @@
 <context>
     <name>DeleteLanguageDialog</name>
     <message>
-        <location filename="../src/qml/DeleteLanguageDialog.qml" line="11"/>
         <source>Are you sure you want to
 delete this language from your library?</source>
-        <translation>Вы уверены что хотите
+        <translation type="vanished">Вы уверены что хотите
 удалить этот язык из своей библиотеки?</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeleteLanguageDialog.qml" line="12"/>
+        <source>Are you sure you want to
+delete %1 language from your library?</source>
+        <translation>Вы уверены что хотите
+удалить %1 язык из своей библиотеки?</translation>
     </message>
 </context>
 <context>
@@ -139,7 +145,7 @@ and drop it in this area</source>
         <translation type="vanished">Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="118"/>
+        <location filename="../src/qml/SideBar.qml" line="119"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>

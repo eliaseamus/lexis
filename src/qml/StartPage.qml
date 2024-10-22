@@ -213,6 +213,7 @@ Pane {
     newItemCmd.enabled = isNewItemEnabled;
     addLibraryItem.visible = isNewItemEnabled;
     prompt.visible = !isSearchEnabled && isNewItemEnabled;
+    newItem.clear();
   }
 
   function hideSearchLine() {
