@@ -13,6 +13,20 @@ void LibraryItemModel::addItem(LibraryItem* item) {
   endInsertRows();
 }
 
+void LibraryItemModel::updateItem(const QString& title, LibraryItem* item) {
+  auto target = std::find_if(_items.begin(), _items.end(), [&title](auto* e){
+    return e->title() == title;
+  });
+  if (target == _items.end()) {
+    qWarning() << QString("Failed to update %1: no item with such title").arg(title);
+    return;
+  }
+  item->setCreationTime((*target)->creationTime());
+  emit layoutAboutToBeChanged();
+  (*target)->init(item);
+  emit layoutChanged();
+}
+
 void LibraryItemModel::removeItem(const QString& title) {
   auto item = std::find_if(_items.begin(), _items.end(), [&title](auto* item){
     return item->title() == title;

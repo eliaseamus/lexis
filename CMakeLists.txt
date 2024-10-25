@@ -51,7 +51,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/ImageWithEffect.qml
     src/qml/InterfaceLanguageDialog.qml
     src/qml/Main.qml
-    src/qml/NewLibraryItem.qml
+    src/qml/LibraryItemConfiguration.qml
     src/qml/OkCancel.qml
     src/qml/PrettyLabel.qml
     src/qml/RoundImage.qml

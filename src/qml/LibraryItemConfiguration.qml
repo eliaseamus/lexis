@@ -6,15 +6,37 @@ import QLexis
 
 Rectangle {
   id: newItem
+  property list<string> types
+  property bool editMode
+  property int currentType
+  property string title
+  property string author
+  property string year
+  property bool isBC
+  property string image
+  property color backgroundColor: palette.base
+
+  function init() {
+    editMode = true
+    type.currentIndex = currentType
+    titleItem.setText(title)
+    authorItem.setText(author)
+    yearItem.text = year
+    bcItem.checked = isBC
+    imageItem.source = image
+    imageItem.visible = image.length > 0
+    cover.color = backgroundColor
+  }
 
   function clear() {
+    editMode = false
     type.currentIndex = 0
-    title.clear()
-    author.clear()
-    year.text = ""
-    bc.checked = false
-    image.source = ""
-    image.visible = false
+    titleItem.clear()
+    authorItem.clear()
+    yearItem.text = ""
+    bcItem.checked = false
+    imageItem.source = ""
+    imageItem.visible = false
     cover.color = palette.base
   }
 
@@ -25,12 +47,14 @@ Rectangle {
 
     ComboBox {
       id: type
+      currentIndex: currentType
       Layout.fillWidth: true
-      model: startPage.sectionNames
+      model: types
     }
 
     TextComplete {
-      id: title
+      id: titleItem
+      text: title
       Layout.fillWidth: true
       placeholder: qsTr("Title")
     }
@@ -40,23 +64,26 @@ Rectangle {
       visible: type.currentIndex !== 0
 
       TextComplete {
-        id: author
+        id: authorItem
+        text: author
         Layout.fillWidth: true
         placeholder: qsTr("Author")
       }
 
       TextField {
-        id: year
+        id: yearItem
         placeholderText: qsTr("Year")
+        text: year
         validator: IntValidator {bottom: 0; top: 9999;}
       }
 
       CheckBox {
-        id: bc
+        id: bcItem
         visible: type.currentText === qsTr("Book")
-        text: qsTr("BC")
+        text: "BC"
+        checked: isBC
         ToolTip {
-          visible: bc.hovered
+          visible: bcItem.hovered
           text: qsTr("Before Christ")
         }
       }
@@ -97,15 +124,16 @@ Rectangle {
 
     Rectangle {
       id: cover
-      color: palette.base
+      color: backgroundColor
       Layout.fillHeight: true
       Layout.fillWidth: true
       Layout.topMargin: 20
       Layout.bottomMargin: 20
 
       Image {
-        id: image
-        visible: false
+        id: imageItem
+        visible: source.toString().length > 0
+        source: image
         fillMode: Image.PreserveAspectFit
         anchors.fill: parent
         anchors.centerIn: parent
@@ -125,7 +153,7 @@ Rectangle {
 
       Button {
         id: pickImage
-        visible: !image.visible
+        visible: !imageItem.visible
         text: qsTr("Pick an image")
         Material.background: settings.accentColor
         anchors.verticalCenter: parent.verticalCenter
@@ -153,11 +181,15 @@ Rectangle {
 
     OkCancel {
       Layout.rightMargin: sideBar.width
-      okTooltipVisible: title.text.trim().length == 0
+      okTooltipVisible: !imagePicker.hasQuery
       okTooltipText: qsTr("Insert title")
       okay: function () {
-        if (!okTooltipVisible) {
-          library.addItem(newDbRecord);
+        if (imagePicker.hasQuery) {
+          if (editMode) {
+            library.updateItem(title, newDbRecord);
+          } else {
+            library.addItem(newDbRecord);
+          }
           startPage.refresh()
           popStack();
           newItem.clear();
@@ -172,20 +204,19 @@ Rectangle {
 
   LibraryItem {
     id: newDbRecord
-    title: title.text
-    creationTime: new Date(Date.now())
+    title: titleItem.text
     modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(type.currentIndex)
-    author: author.text
-    year: mediaData.visible ? parseInt(year.text) : -1
-    bc: bc.checked
-    imageUrl: image.source
+    author: authorItem.text
+    year: parseInt(yearItem.text)
+    bc: bcItem.checked
+    imageUrl: imageItem.source
     color: cover.color
   }
 
   ImagePicker {
     id: imagePicker
-    query: "%1 %2".arg(title.text).arg(author.text)
+    query: "%1 %2".arg(titleItem.text).arg(authorItem.text)
     property bool hasQuery: query.trim().length > 0
     visible: false
   }
@@ -194,8 +225,8 @@ Rectangle {
     target: imagePicker
 
     function onImagePicked(url) {
-      image.source = url
-      image.visible = true
+      imageItem.source = url
+      imageItem.visible = true
     }
   }
 }

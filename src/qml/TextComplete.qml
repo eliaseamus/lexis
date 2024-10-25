@@ -6,8 +6,12 @@ import QLexis
 Item {
   id: textComplete
   property string placeholder: ""
-  property string text: textField.text
+  property alias text: textField.text
   Layout.preferredHeight: textField.height
+
+  function setText(newText) {
+    textField.text = newText
+  }
 
   function clear() {
     textField.text = ""

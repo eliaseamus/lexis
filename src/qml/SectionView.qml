@@ -127,6 +127,12 @@ Item {
             MenuItem {
               text: qsTr("Edit")
               onTriggered: {
+                // libraryItem.currentType = type
+                libraryItem.title = title
+                libraryItem.image = imageUrl
+                libraryItem.backgroundColor = itemColor
+                libraryItem.init()
+                stackView.push(libraryItem)
               }
             }
             MenuItem {
@@ -134,10 +140,10 @@ Item {
               onTriggered: {
                 itemToDelete = title;
                 itemToDeleteType = type;
-                deleteLanguageDialog.target = "\"%1\"".arg(title);
-                deleteLanguageDialog.imageSource = imageUrl;
-                deleteLanguageDialog.backgroundColor = itemColor;
-                deleteLanguageDialog.open();
+                deleteItemDialog.target = "\"%1\"".arg(title);
+                deleteItemDialog.imageSource = imageUrl;
+                deleteItemDialog.backgroundColor = itemColor;
+                deleteItemDialog.open();
               }
             }
           }
@@ -146,15 +152,8 @@ Item {
     }
   }
 
-  DeleteDialog {
-    id: deleteLanguageDialog
-    x: (main.width - width) / 2
-    y: (main.height - height) / 2
-    parent: ApplicationWindow.overlay
-  }
-
   Connections {
-    target: deleteLanguageDialog
+    target: deleteItemDialog
 
     function onAccepted() {
       library.deleteItem(sectionTypeManager.librarySectionType(itemToDeleteType), itemToDelete);

@@ -19,6 +19,10 @@ void LibraryItemProxyModel::addItem(LibraryItem* item) {
   sort(0, _sortOrder);
 }
 
+void LibraryItemProxyModel::updateItem(const QString& title, LibraryItem* item) {
+  _source->updateItem(title, item);
+}
+
 void LibraryItemProxyModel::removeItem(const QString& title) {
   _source->removeItem(title);
 }

@@ -20,6 +20,11 @@ Library::Library(QObject* parent) :
 }
 
 void Library::addItem(LibraryItem* item) {
+  if (!item) {
+    qWarning() << "no item was provided";
+    return;
+  }
+
   QSqlQuery query;
   query.prepare(
     QString(
@@ -29,6 +34,7 @@ void Library::addItem(LibraryItem* item) {
     ).arg(_language)
   );
 
+  item->setCreationTime(item->modificationTime());
   query.bindValue(":title", item->title());
   query.bindValue(":creation", item->creationTime().toString());
   query.bindValue(":modification", item->modificationTime().toString());
@@ -49,11 +55,45 @@ void Library::addItem(LibraryItem* item) {
   updateSections(newItem);
 }
 
+void Library::updateItem(const QString& title, LibraryItem* item) {
+  if (!item) {
+    qWarning() << "no item was provided";
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    QString(
+      "UPDATE %1 "
+      "SET title = :title, modification_time = :modification, type = :type, "
+          "author = :author, year = :year, bc = :bc, image = :image, color = :color "
+      "WHERE title = \"%2\"").arg(_language, title)
+  );
+
+  query.bindValue(":title", item->title());
+  query.bindValue(":modification", item->modificationTime().toString());
+  query.bindValue(":type", std::to_underlying(item->type()));
+  query.bindValue(":author", item->author());
+  query.bindValue(":year", item->year());
+  query.bindValue(":bc", item->bc() ? 1 : 0);
+  query.bindValue(":image", item->image());
+  query.bindValue(":color", item->color().name());
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update '%1' item in '%2' database:")
+                  .arg(title, _language) << query.lastError();
+    return;
+  }
+
+  auto* section = getSection(item->type());
+  section->updateItem(title, item);
+}
+
 void Library::deleteItem(LibrarySectionType sectionType, const QString& title) {
   QSqlQuery query;
   query.prepare(QString("DELETE FROM %1 WHERE title = \"%2\"").arg(_language, title));
   if (!query.exec()) {
-    qWarning() << QString("Failed to delete \"%1\" item from \"%2\" database:")
+    qWarning() << QString("Failed to delete '%1' item from '%2' database:")
                   .arg(title, _language) << query.lastError();
     return;
   }

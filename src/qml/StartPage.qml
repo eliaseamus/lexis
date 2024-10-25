@@ -154,7 +154,10 @@ Pane {
         icon.color: settings.fgColor
         Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
         Material.background: settings.accentColor
-        onClicked: stackView.push(newItem)
+        onClicked: {
+          libraryItem.clear()
+          stackView.push(libraryItem)
+        }
 
         ToolTip {
           visible: addLibraryItem.hovered
@@ -181,9 +184,17 @@ Pane {
     parent: ApplicationWindow.overlay
   }
 
-  NewLibraryItem {
-    id: newItem
+  LibraryItemConfiguration {
+    id: libraryItem
     visible: false
+    types: sectionNames
+  }
+
+  DeleteDialog {
+    id: deleteItemDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
   }
 
   SectionTypeManager {
@@ -201,7 +212,10 @@ Pane {
     id: newItemCmd
     enabled: settings.currentLanguage.length > 0
     sequence: StandardKey.New
-    onActivated: stackView.push(newItem)
+    onActivated: {
+      libraryItem.clear()
+      stackView.push(libraryItem)
+    }
   }
 
   function refresh() {
@@ -213,7 +227,7 @@ Pane {
     newItemCmd.enabled = isNewItemEnabled;
     addLibraryItem.visible = isNewItemEnabled;
     prompt.visible = !isSearchEnabled && isNewItemEnabled;
-    newItem.clear();
+    libraryItem.clear();
   }
 
   function hideSearchLine() {

@@ -4,26 +4,11 @@
 <context>
     <name>DeleteDialog</name>
     <message>
-        <location filename="../src/qml/DeleteDialog.qml" line="12"/>
+        <location filename="../src/qml/DeleteDialog.qml" line="13"/>
         <source>Are you sure you want to
 delete %1 from your library?</source>
         <translation>Вы уверены что хотите
 удалить %1 из своей библиотеки?</translation>
-    </message>
-</context>
-<context>
-    <name>DeleteLanguageDialog</name>
-    <message>
-        <source>Are you sure you want to
-delete this language from your library?</source>
-        <translation type="vanished">Вы уверены что хотите
-удалить этот язык из своей библиотеки?</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to
-delete %1 language from your library?</source>
-        <translation type="vanished">Вы уверены что хотите
-удалить %1 язык из своей библиотеки?</translation>
     </message>
 </context>
 <context>
@@ -53,45 +38,40 @@ and drop it in this area</source>
     </message>
 </context>
 <context>
-    <name>NewLibraryItem</name>
+    <name>LibraryItemConfiguration</name>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="35"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="42"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="45"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="52"/>
         <source>Author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="50"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="57"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="56"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="63"/>
         <source>Book</source>
         <translation>Книга</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="57"/>
-        <source>BC</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="60"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="67"/>
         <source>Before Christ</source>
         <translation>До нашей эры</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="129"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="136"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/NewLibraryItem.qml" line="148"/>
-        <location filename="../src/qml/NewLibraryItem.qml" line="157"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="155"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="164"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -112,17 +92,17 @@ and drop it in this area</source>
 <context>
     <name>SectionView</name>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="41"/>
+        <location filename="../src/qml/SectionView.qml" line="43"/>
         <source>Sort order</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="135"/>
+        <location filename="../src/qml/SectionView.qml" line="128"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="140"/>
+        <location filename="../src/qml/SectionView.qml" line="133"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
