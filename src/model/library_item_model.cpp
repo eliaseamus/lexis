@@ -7,23 +7,25 @@ LibraryItemModel::LibraryItemModel(QObject* parent) :
 {
 }
 
-void LibraryItemModel::addItem(LibraryItem* item) {
+void LibraryItemModel::addItem(LibraryItem&& item, QByteArray&& image) {
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
-  _items.append(item);
+  auto* newItem = new LibraryItem(this);
+  newItem->init(std::move(item), std::move(image));
+  _items.append(newItem);
   endInsertRows();
 }
 
-void LibraryItemModel::updateItem(const QString& title, LibraryItem* item) {
-  auto target = std::find_if(_items.begin(), _items.end(), [&title](auto* e){
+void LibraryItemModel::updateItem(const QString& title, LibraryItem&& item, QByteArray&& image) {
+  auto target = std::find_if(_items.begin(), _items.end(), [&title](auto* e) {
     return e->title() == title;
   });
   if (target == _items.end()) {
     qWarning() << QString("Failed to update %1: no item with such title").arg(title);
     return;
   }
-  item->setCreationTime((*target)->creationTime());
+  item.setCreationTime((*target)->creationTime());
   emit layoutAboutToBeChanged();
-  (*target)->init(item);
+  (*target)->init(std::move(item), std::move(image));
   emit layoutChanged();
 }
 

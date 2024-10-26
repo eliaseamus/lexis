@@ -4,11 +4,21 @@
 <context>
     <name>DeleteDialog</name>
     <message>
-        <location filename="../src/qml/DeleteDialog.qml" line="13"/>
         <source>Are you sure you want to
 delete %1 from your library?</source>
-        <translation>Вы уверены что хотите
+        <translation type="vanished">Вы уверены что хотите
 удалить %1 из своей библиотеки?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to
+delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
+        <translation type="vanished">Вы уверены что хотите
+удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeleteDialog.qml" line="13"/>
+        <source>Are you sure you want to&lt;br&gt;delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
+        <translation>Вы уверены что хотите&lt;br&gt;удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
     </message>
 </context>
 <context>
@@ -40,38 +50,38 @@ and drop it in this area</source>
 <context>
     <name>LibraryItemConfiguration</name>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="42"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="59"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="52"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="70"/>
         <source>Author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="57"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="75"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="63"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="82"/>
         <source>Book</source>
         <translation>Книга</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="67"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="87"/>
         <source>Before Christ</source>
         <translation>До нашей эры</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="136"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="157"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="155"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="164"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="176"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="185"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -102,7 +112,7 @@ and drop it in this area</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="133"/>
+        <location filename="../src/qml/SectionView.qml" line="142"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -219,7 +229,7 @@ in the right bottom corner.</source>
 в правом нижнем углу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/StartPage.qml" line="161"/>
+        <location filename="../src/qml/StartPage.qml" line="164"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>

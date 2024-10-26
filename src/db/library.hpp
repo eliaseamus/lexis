@@ -32,7 +32,7 @@ class Library : public QObject {
   void createTable();
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
-  void updateSections(LibraryItem* item);
+  void insertItem(LibraryItem&& item, QByteArray&& image);
 
  signals:
   void dummy();

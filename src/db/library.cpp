@@ -50,9 +50,7 @@ void Library::addItem(LibraryItem* item) {
     return;
   }
 
-  auto* newItem = new LibraryItem(this);
-  newItem->init(item);
-  updateSections(newItem);
+  insertItem(std::move(*item), item->image());
 }
 
 void Library::updateItem(const QString& title, LibraryItem* item) {
@@ -86,7 +84,7 @@ void Library::updateItem(const QString& title, LibraryItem* item) {
   }
 
   auto* section = getSection(item->type());
-  section->updateItem(title, item);
+  section->updateItem(title, std::move(*item), std::move(item->image()));
 }
 
 void Library::deleteItem(LibrarySectionType sectionType, const QString& title) {
@@ -127,6 +125,9 @@ void Library::createTable() {
 void Library::changeLanguage(const QString& language) {
   if (language.isEmpty()) {
     return;
+  }
+  for (auto* section : _sections) {
+    section->deleteLater();
   }
   _sections.clear();
   _language = language;
@@ -173,26 +174,25 @@ void Library::populateSections() {
 
   SectionTypeManager typeManager;
   while (query.next()) {
-    auto* item = new LibraryItem(this);
+    LibraryItem item;
 
-    item->setTitle(query.value("title").toString());
-    item->setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
-    item->setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
-    item->setType(typeManager.librarySectionType(query.value("type").toInt()));
-    item->setAuthor(query.value("author").toString());
-    item->setYear(query.value("year").toInt());
-    item->setBc(static_cast<bool>(query.value("bc").toInt()));
-    item->setImage(query.value("image").toByteArray());
-    item->setColor(query.value("color").toString());
+    item.setTitle(query.value("title").toString());
+    item.setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
+    item.setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
+    item.setType(typeManager.librarySectionType(query.value("type").toInt()));
+    item.setAuthor(query.value("author").toString());
+    item.setYear(query.value("year").toInt());
+    item.setBc(static_cast<bool>(query.value("bc").toInt()));
+    item.setColor(query.value("color").toString());
 
-    updateSections(item);
+    insertItem(std::move(item), query.value("image").toByteArray());
   }
 
 }
 
-void Library::updateSections(LibraryItem* item) {
-  auto* section = getSection(item->type());
-  section->addItem(item);
+void Library::insertItem(LibraryItem&& item, QByteArray&& image) {
+  auto* section = getSection(item.type());
+  section->addItem(std::move(item), std::move(image));
 }
 
 }

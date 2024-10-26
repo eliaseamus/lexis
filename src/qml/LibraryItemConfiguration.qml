@@ -137,8 +137,7 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         anchors.fill: parent
         anchors.centerIn: parent
-        anchors.topMargin: 20
-        anchors.bottomMargin: 20
+        anchors.margins: 20
 
         MouseArea {
           anchors.fill: parent

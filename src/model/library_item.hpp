@@ -26,8 +26,6 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
 
-  static QTemporaryDir dir;
-
  private:
   QString _title;
   QDateTime _creationTime;
@@ -42,7 +40,7 @@ class LibraryItem : public QObject {
 
  public:
   explicit LibraryItem(QObject* parent = nullptr);
-  void init(LibraryItem* item);
+  void init(LibraryItem&& item, QByteArray&& image);
   QString title() const {return _title;}
   QDateTime creationTime() const {return _creationTime;}
   QDateTime modificationTime() const {return _modificationTime;}

@@ -10,7 +10,9 @@ Dialog {
 
   ColumnLayout {
     PrettyLabel {
-      title: qsTr("Are you sure you want to\ndelete %1 from your library?").arg(target)
+      title: qsTr("Are you sure you want to<br>" +
+                  "delete <b>%1</b> from your library?").arg(target)
+      format: Text.RichText
       horizontalAlignment: Qt.AlignHCenter
       Layout.alignment: Qt.AlignHCenter
       Layout.topMargin: 10

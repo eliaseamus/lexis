@@ -32,8 +32,8 @@ class LibrarySection : public QObject {
   Q_INVOKABLE void sort(const QString& sortRole);
 
   void setType(LibrarySectionType type);
-  void addItem(LibraryItem* item);
-  void updateItem(const QString& title, LibraryItem* item);
+  void addItem(LibraryItem&& item, QByteArray&& image);
+  void updateItem(const QString& title, LibraryItem&& item, QByteArray&& image);
   void removeItem(const QString& title);
   bool isEmpty() const {return _model->isEmpty();}
 

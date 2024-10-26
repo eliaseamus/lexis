@@ -4,24 +4,25 @@
 
 namespace lexis {
 
-QTemporaryDir LibraryItem::dir;
+QString fileTemplate = "/Lexis-XXXXXX";
+QTemporaryDir dir(QDir::tempPath() + fileTemplate);
 
 LibraryItem::LibraryItem(QObject* parent) :
   QObject(parent)
 {
-  _image.setFileTemplate(dir.path() + "/" + "Lexis.XXXXXX");
+  _image.setFileTemplate(dir.path() + fileTemplate);
 }
 
-void LibraryItem::init(LibraryItem* item) {
-  _title = item->title();
-  _creationTime = item->creationTime();
-  _modificationTime = item->modificationTime();
-  _type = item->type();
-  _author = item->author();
-  _year = item->year();
-  _bc = item->bc();
-  _color = item->color();
-  setImage(item->image());
+void LibraryItem::init(LibraryItem&& item, QByteArray&& image) {
+  _title = std::move(item._title);
+  _creationTime = std::move(item._creationTime);
+  _modificationTime = std::move(item._modificationTime);
+  _type = std::move(item._type);
+  _author = std::move(item._author);
+  _year = item._year;
+  _bc = item._bc;
+  _color = std::move(item._color);
+  setImage(std::move(image));
 }
 
 QByteArray LibraryItem::image() const {
@@ -50,11 +51,24 @@ void LibraryItem::setImage(QByteArray&& data) {
     return;
   }
 
+  if (!_image.fileName().isEmpty()) {
+    QString newName;
+    {
+      QTemporaryFile file;
+      file.setFileTemplate(dir.path() + fileTemplate);
+      file.open();
+      newName = file.fileName();
+    }
+    _image.rename(newName);
+  }
   if (!_image.open()) {
     qWarning() << "fail to open temporary file" << _image.fileName();
     return;
   }
-  _image.write(qUncompress(data));
+  _image.resize(0);
+  if (-1 == _image.write(qUncompress(data))) {
+    qWarning() << "Failed to overwrite image:" << _image.errorString();
+  }
   _image.close();
   _imageUrl = QUrl::fromLocalFile(_image.fileName());
 }

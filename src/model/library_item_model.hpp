@@ -30,8 +30,8 @@ class LibraryItemModel : public QAbstractListModel {
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);
-  void addItem(LibraryItem* item);
-  void updateItem(const QString& title, LibraryItem* item);
+  void addItem(LibraryItem&& item, QByteArray&& image);
+  void updateItem(const QString& title, LibraryItem&& item, QByteArray&& image);
   void removeItem(const QString& title);
   bool isEmpty() const {return _items.isEmpty();}
   int rowCount(const QModelIndex& parent = {}) const override;

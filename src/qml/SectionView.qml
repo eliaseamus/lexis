@@ -127,8 +127,11 @@ Item {
             MenuItem {
               text: qsTr("Edit")
               onTriggered: {
-                // libraryItem.currentType = type
+                libraryItem.currentType = sectionTypeManager.librarySectionType(type)
                 libraryItem.title = title
+                libraryItem.author = author
+                libraryItem.year = year
+                libraryItem.isBC = bc
                 libraryItem.image = imageUrl
                 libraryItem.backgroundColor = itemColor
                 libraryItem.init()
@@ -140,7 +143,7 @@ Item {
               onTriggered: {
                 itemToDelete = title;
                 itemToDeleteType = type;
-                deleteItemDialog.target = "\"%1\"".arg(title);
+                deleteItemDialog.target = title;
                 deleteItemDialog.imageSource = imageUrl;
                 deleteItemDialog.backgroundColor = itemColor;
                 deleteItemDialog.open();

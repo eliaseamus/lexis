@@ -14,13 +14,13 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
   setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
-void LibraryItemProxyModel::addItem(LibraryItem* item) {
-  _source->addItem(item);
+void LibraryItemProxyModel::addItem(LibraryItem&& item, QByteArray&& image) {
+  _source->addItem(std::move(item), std::move(image));
   sort(0, _sortOrder);
 }
 
-void LibraryItemProxyModel::updateItem(const QString& title, LibraryItem* item) {
-  _source->updateItem(title, item);
+void LibraryItemProxyModel::updateItem(const QString& title, LibraryItem&& item, QByteArray&& image) {
+  _source->updateItem(title, std::move(item), std::move(image));
 }
 
 void LibraryItemProxyModel::removeItem(const QString& title) {

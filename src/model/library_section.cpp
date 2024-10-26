@@ -28,12 +28,12 @@ void LibrarySection::setType(LibrarySectionType type) {
   _name = typeManager.librarySectionTypeName(type);
 }
 
-void LibrarySection::addItem(LibraryItem* item) {
-  _model->addItem(item);
+void LibrarySection::addItem(LibraryItem&& item, QByteArray&& image) {
+  _model->addItem(std::move(item), std::move(image));
 }
 
-void LibrarySection::updateItem(const QString& title, LibraryItem* item) {
-  _model->updateItem(title, item);
+void LibrarySection::updateItem(const QString& title, LibraryItem&& item, QByteArray&& image) {
+  _model->updateItem(title, std::move(item), std::move(image));
 }
 
 void LibrarySection::removeItem(const QString& title) {
