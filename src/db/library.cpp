@@ -53,7 +53,7 @@ void Library::addItem(LibraryItem* item) {
   insertItem(std::move(*item), item->image());
 }
 
-void Library::updateItem(const QString& title, LibraryItem* item) {
+void Library::updateItem(const QString& oldTitle, LibrarySectionType oldType, LibraryItem* item) {
   if (!item) {
     qWarning() << "no item was provided";
     return;
@@ -65,7 +65,7 @@ void Library::updateItem(const QString& title, LibraryItem* item) {
       "UPDATE %1 "
       "SET title = :title, modification_time = :modification, type = :type, "
           "author = :author, year = :year, bc = :bc, image = :image, color = :color "
-      "WHERE title = \"%2\"").arg(_language, title)
+      "WHERE title = \"%2\"").arg(_language, oldTitle)
   );
 
   query.bindValue(":title", item->title());
@@ -79,12 +79,22 @@ void Library::updateItem(const QString& title, LibraryItem* item) {
 
   if (!query.exec()) {
     qWarning() << QString("Failed to update '%1' item in '%2' database:")
-                  .arg(title, _language) << query.lastError();
+                  .arg(oldTitle, _language) << query.lastError();
     return;
   }
 
-  auto* section = getSection(item->type());
-  section->updateItem(title, std::move(*item), std::move(item->image()));
+  if (oldType == item->type()) {
+    auto* section = getSection(item->type());
+    section->updateItem(oldTitle, std::move(*item), std::move(item->image()));
+  } else {
+    auto* section = getSection(oldType);
+    section->removeItem(oldTitle);
+    if (section->isEmpty()) {
+      _sections.removeOne(section);
+    }
+    insertItem(std::move(*item), item->image());
+  }
+
 }
 
 void Library::deleteItem(LibrarySectionType sectionType, const QString& title) {

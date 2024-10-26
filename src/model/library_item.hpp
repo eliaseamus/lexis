@@ -64,6 +64,9 @@ class LibraryItem : public QObject {
   void setImage(QByteArray&& data);
   void setColor(const QColor& color) {_color = color;}
 
+ private:
+  void rename();
+
  signals:
   void dummy();
 };

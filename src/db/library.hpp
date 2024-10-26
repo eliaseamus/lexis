@@ -23,7 +23,7 @@ class Library : public QObject {
   explicit Library(QObject* parent = nullptr);
   QVector<LibrarySection*> sections() const {return _sections;}
   Q_INVOKABLE void addItem(LibraryItem* item);
-  Q_INVOKABLE void updateItem(const QString& title, LibraryItem* item);
+  Q_INVOKABLE void updateItem(const QString& oldTitle, LibrarySectionType oldType, LibraryItem* item);
   Q_INVOKABLE void deleteItem(LibrarySectionType sectionType, const QString& title);
   Q_INVOKABLE void changeLanguage(const QString& language);
   Q_INVOKABLE void deleteLanguage(const QString& language);

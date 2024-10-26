@@ -185,7 +185,7 @@ Rectangle {
       okay: function () {
         if (imagePicker.hasQuery) {
           if (editMode) {
-            library.updateItem(title, newDbRecord);
+            library.updateItem(title, currentType, newDbRecord);
           } else {
             library.addItem(newDbRecord);
           }

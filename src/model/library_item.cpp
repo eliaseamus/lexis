@@ -52,14 +52,7 @@ void LibraryItem::setImage(QByteArray&& data) {
   }
 
   if (!_image.fileName().isEmpty()) {
-    QString newName;
-    {
-      QTemporaryFile file;
-      file.setFileTemplate(dir.path() + fileTemplate);
-      file.open();
-      newName = file.fileName();
-    }
-    _image.rename(newName);
+    rename(); // in order to QML reload image
   }
   if (!_image.open()) {
     qWarning() << "fail to open temporary file" << _image.fileName();
@@ -71,6 +64,17 @@ void LibraryItem::setImage(QByteArray&& data) {
   }
   _image.close();
   _imageUrl = QUrl::fromLocalFile(_image.fileName());
+}
+
+void LibraryItem::rename() {
+  QString newName;
+  {
+    QTemporaryFile file;
+    file.setFileTemplate(dir.path() + fileTemplate);
+    file.open();
+    newName = file.fileName();
+  }
+  _image.rename(newName);
 }
 
 }
