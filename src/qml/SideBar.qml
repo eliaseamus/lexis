@@ -72,6 +72,7 @@ Item {
         Rectangle {
           Layout.leftMargin: 2
           Layout.bottomMargin: 15
+          Layout.alignment: Qt.AlignCenter
           width: 50
           height: 50
           radius: 50
@@ -82,50 +83,44 @@ Item {
                    "transparent";
           }
           border.width: 20
-          Rectangle {
+          RoundImage {
             anchors.centerIn: parent
-            width: 40
-            height: 40
-            radius: 40
-            color: "transparent"
-            RoundImage {
-              anchors.centerIn: parent
+            anchors.fill: parent
+            anchors.margins: 5
+            source: modelData ? "icons/flags/%1.png".arg(modelData) : ""
+            ToolTip {
+              visible: mouseArea.containsMouse
+              text: Utils.getFullLanguageName(modelData)
+            }
+            MouseArea {
+              id: mouseArea
               anchors.fill: parent
-              source: modelData ? "icons/flags/%1.png".arg(modelData) : ""
-              ToolTip {
-                visible: mouseArea.containsMouse
-                text: Utils.getFullLanguageName(modelData)
-              }
-              MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: (mouse) => {
-                  if (mouse.button === Qt.LeftButton) {
-                    if (settings.currentLanguage !== modelData) {
-                      settings.currentLanguage = modelData
-                      library.changeLanguage(modelData)
-                      stackView.pop(null)
-                      startPage.refresh()
-                    }
-                  } else if (mouse.button === Qt.RightButton) {
-                    contextMenu.popup()
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              acceptedButtons: Qt.LeftButton | Qt.RightButton
+              onClicked: (mouse) => {
+                if (mouse.button === Qt.LeftButton) {
+                  if (settings.currentLanguage !== modelData) {
+                    settings.currentLanguage = modelData
+                    library.openTable(modelData)
+                    stackView.pop(null)
+                    libraryView.refresh()
                   }
+                } else if (mouse.button === Qt.RightButton) {
+                  contextMenu.popup()
                 }
-                Menu {
-                  id: contextMenu
-                  MenuItem {
-                    text: qsTr("Delete")
-                    onTriggered: {
-                      languageToDelete = modelData;
-                      deleteLanguageDialog.target =
-                        "%1 ".arg(Utils.getFullLanguageName(modelData).toLowerCase()) +
-                        qsTr("language");
-                      deleteLanguageDialog.imageSource = "icons/flags/%1.png".arg(modelData);
-                      deleteLanguageDialog.open();
-                    }
+              }
+              Menu {
+                id: contextMenu
+                MenuItem {
+                  text: qsTr("Delete")
+                  onTriggered: {
+                    languageToDelete = modelData;
+                    deleteLanguageDialog.target =
+                      "%1 ".arg(Utils.getFullLanguageName(modelData).toLowerCase()) +
+                      qsTr("language");
+                    deleteLanguageDialog.imageSource = "icons/flags/%1.png".arg(modelData);
+                    deleteLanguageDialog.open();
                   }
                 }
               }
@@ -183,14 +178,14 @@ Item {
 
     function onAccepted() {
       var language = languageToDelete;
-      library.deleteLanguage(language);
+      library.deleteTable(language);
       var index = settings.languages.indexOf(language);
       if (index !== -1) {
        settings.languages.splice(index, 1);
       }
       if (language === settings.currentLanguage) {
         settings.currentLanguage = ""
-        startPage.refresh();
+        libraryView.refresh();
       }
     }
   }

@@ -20,9 +20,6 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QDateTime creationTime READ creationTime WRITE setCreationTime NOTIFY dummy);
   Q_PROPERTY(QDateTime modificationTime READ modificationTime WRITE setModificationTime NOTIFY dummy);
   Q_PROPERTY(LibrarySectionType type READ type WRITE setType NOTIFY dummy);
-  Q_PROPERTY(QString author READ author WRITE setAuthor NOTIFY dummy);
-  Q_PROPERTY(int year READ year WRITE setYear NOTIFY dummy);
-  Q_PROPERTY(bool bc READ bc WRITE setBc NOTIFY dummy);
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
 
@@ -31,9 +28,6 @@ class LibraryItem : public QObject {
   QDateTime _creationTime;
   QDateTime _modificationTime;
   LibrarySectionType _type;
-  QString _author;
-  int _year;
-  bool _bc;
   QUrl _imageUrl;
   QColor _color;
   QTemporaryFile _image;
@@ -45,9 +39,6 @@ class LibraryItem : public QObject {
   QDateTime creationTime() const {return _creationTime;}
   QDateTime modificationTime() const {return _modificationTime;}
   LibrarySectionType type() const {return _type;}
-  QString author() const {return _author;}
-  int year() const {return _year;}
-  bool bc() const {return _bc;}
   QUrl imageUrl() const {return _imageUrl;}
   QByteArray image() const;
   QColor color() const {return _color;}
@@ -57,9 +48,6 @@ class LibraryItem : public QObject {
   void setModificationTime(const QDateTime& time) {_modificationTime = time;}
   void setType(LibrarySectionType type) {_type = type;}
   void setType(const QString& typeName);
-  void setAuthor(const QString& author) {_author = author;}
-  void setYear(int year) {_year = year;}
-  void setBc(int bc) {_bc = bc;}
   void setImageUrl(const QUrl& imageUrl) {_imageUrl = imageUrl;}
   void setImage(QByteArray&& data);
   void setColor(const QColor& color) {_color = color;}

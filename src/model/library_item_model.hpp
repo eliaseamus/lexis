@@ -22,9 +22,6 @@ class LibraryItemModel : public QAbstractListModel {
     CreationTimeRole,
     ModificationTimeRole,
     TypeRole,
-    AuthorRole,
-    YearRole,
-    BcRole,
     ImageUrlRole,
     ColorRole
   };

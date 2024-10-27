@@ -10,9 +10,6 @@ Rectangle {
   property bool editMode
   property int currentType
   property string title
-  property string author
-  property string year
-  property bool isBC
   property string image
   property color backgroundColor: palette.base
 
@@ -20,9 +17,6 @@ Rectangle {
     editMode = true
     type.currentIndex = currentType
     titleItem.setText(title)
-    authorItem.setText(author)
-    yearItem.text = year
-    bcItem.checked = isBC
     imageItem.source = image
     imageItem.visible = image.length > 0
     cover.color = backgroundColor
@@ -32,9 +26,6 @@ Rectangle {
     editMode = false
     type.currentIndex = 0
     titleItem.clear()
-    authorItem.clear()
-    yearItem.text = ""
-    bcItem.checked = false
     imageItem.source = ""
     imageItem.visible = false
     cover.color = palette.base
@@ -57,36 +48,6 @@ Rectangle {
       text: title
       Layout.fillWidth: true
       placeholder: qsTr("Title")
-    }
-
-    RowLayout {
-      id: mediaData
-      visible: type.currentIndex !== 0
-
-      TextComplete {
-        id: authorItem
-        text: author
-        Layout.fillWidth: true
-        placeholder: qsTr("Author")
-      }
-
-      TextField {
-        id: yearItem
-        placeholderText: qsTr("Year")
-        text: year
-        validator: IntValidator {bottom: 0; top: 9999;}
-      }
-
-      CheckBox {
-        id: bcItem
-        visible: type.currentText === qsTr("Book")
-        text: "BC"
-        checked: isBC
-        ToolTip {
-          visible: bcItem.hovered
-          text: qsTr("Before Christ")
-        }
-      }
     }
 
     RowLayout {
@@ -189,7 +150,7 @@ Rectangle {
           } else {
             library.addItem(newDbRecord);
           }
-          startPage.refresh()
+          libraryView.refresh()
           popStack();
           newItem.clear();
         }
@@ -206,16 +167,13 @@ Rectangle {
     title: titleItem.text
     modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(type.currentIndex)
-    author: authorItem.text
-    year: parseInt(yearItem.text)
-    bc: bcItem.checked
     imageUrl: imageItem.source
     color: cover.color
   }
 
   ImagePicker {
     id: imagePicker
-    query: "%1 %2".arg(titleItem.text).arg(authorItem.text)
+    query: titleItem.text
     property bool hasQuery: query.trim().length > 0
     visible: false
   }

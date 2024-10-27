@@ -17,19 +17,24 @@ class Library : public QObject {
 
  private:
   QVector<LibrarySection*> _sections;
-  QString _language;
+  QString _table;
 
  public:
   explicit Library(QObject* parent = nullptr);
-  QVector<LibrarySection*> sections() const {return _sections;}
+  Q_INVOKABLE void openDatabase(const QString& name);
   Q_INVOKABLE void addItem(LibraryItem* item);
   Q_INVOKABLE void updateItem(const QString& oldTitle, LibrarySectionType oldType, LibraryItem* item);
   Q_INVOKABLE void deleteItem(LibrarySectionType sectionType, const QString& title);
-  Q_INVOKABLE void changeLanguage(const QString& language);
-  Q_INVOKABLE void deleteLanguage(const QString& language);
+  Q_INVOKABLE void openTable(const QString& name);
+  Q_INVOKABLE void openTable(const QString& parentTable, int parentID);
+  Q_INVOKABLE void deleteTable(const QString& name);
+  QVector<LibrarySection*> sections() const {return _sections;}
+  Q_INVOKABLE int getID(const QString& title) const;
 
  private:
+  void clearSections();
   void createTable();
+  void createTable(const QString& parentTable, int parentID);
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
   void insertItem(LibraryItem&& item, QByteArray&& image);

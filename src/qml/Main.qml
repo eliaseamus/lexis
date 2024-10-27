@@ -23,9 +23,9 @@ Window {
       Layout.fillHeight: true
       Layout.fillWidth: true
       id: stackView
-      initialItem: startPage
+      initialItem: libraryView
     }
-    Component.onCompleted: appManager.changeLanguage(settings.interfaceLanguage)
+    Component.onCompleted: appManager.changeLanguage(settings.interfaceLanguage);
   }
 
   Library {
@@ -44,13 +44,7 @@ Window {
 
   Shortcut {
     sequence: "Esc"
-    onActivated: {
-      if (stackView.currentItem == startPage) {
-        startPage.hideSearchLine()
-      } else {
-        popStack()
-      }
-    }
+    onActivated: popStack()
   }
 
   Shortcut {
@@ -58,11 +52,15 @@ Window {
     onActivated: Qt.quit()
   }
 
-  StartPage {
-    id: startPage
+  LibraryView {
+    id: libraryView
   }
 
   function popStack() {
-    stackView.pop()
+    if (stackView.currentItem == libraryView) {
+      libraryView.pop()
+    } else {
+      stackView.pop()
+    }
   }
 }

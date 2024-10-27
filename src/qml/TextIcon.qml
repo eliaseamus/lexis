@@ -16,7 +16,7 @@ Item {
     border.width: 2
     Text {
       anchors.centerIn: parent
-      text: iconTitle.length > 0 ? iconTitle.replace("\"", "")[0] : ""
+      text: iconTitle.length > 0 ? iconTitle[0] : ""
       color: iconColor.darker(1.1)
       font.capitalization: Font.AllUppercase
       font.pointSize: 40

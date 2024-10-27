@@ -16,6 +16,7 @@ Item {
   MultiEffect {
     source: sourceItem
     anchors.fill: sourceItem
+    anchors.centerIn: sourceItem
     maskEnabled: true
     maskSource: mask
   }

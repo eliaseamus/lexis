@@ -7,6 +7,7 @@ import "utils.js" as Utils
 Item {
   id: librarySection
   property string title
+  property string parentTable
   property LibraryItemProxyModel model
   property string itemToDelete
   property string itemToDeleteType
@@ -118,6 +119,7 @@ Item {
           acceptedButtons: Qt.LeftButton | Qt.RightButton
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
+              libraryView.load(parentTable, library.getID(title))
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
             }
@@ -129,9 +131,6 @@ Item {
               onTriggered: {
                 libraryItem.currentType = sectionTypeManager.librarySectionType(type)
                 libraryItem.title = title
-                libraryItem.author = author
-                libraryItem.year = year
-                libraryItem.isBC = bc
                 libraryItem.image = imageUrl
                 libraryItem.backgroundColor = itemColor
                 libraryItem.init()
@@ -160,7 +159,7 @@ Item {
 
     function onAccepted() {
       library.deleteItem(sectionTypeManager.librarySectionType(itemToDeleteType), itemToDelete);
-      startPage.refresh()
+      libraryView.refresh()
     }
   }
 

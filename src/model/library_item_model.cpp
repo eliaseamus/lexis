@@ -64,12 +64,6 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->creationTime();
     case ModificationTimeRole:
       return item->modificationTime();
-    case AuthorRole:
-      return item->author();
-    case YearRole:
-      return item->year();
-    case BcRole:
-      return item->bc();
     case ImageUrlRole:
       return item->imageUrl();
     case ColorRole:
@@ -85,9 +79,6 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[CreationTimeRole] = "creationTime";
   roles[ModificationTimeRole] = "modificationTime";
   roles[TypeRole] = "type";
-  roles[AuthorRole] = "author";
-  roles[YearRole] = "year";
-  roles[BcRole] = "bc";
   roles[ImageUrlRole] = "imageUrl";
   roles[ColorRole] = "itemColor";
   return roles;

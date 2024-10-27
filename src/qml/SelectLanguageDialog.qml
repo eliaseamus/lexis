@@ -64,13 +64,13 @@ Dialog {
     OkCancel {
       okay: function () {
         settings.currentLanguage = selectedLanguage
-        library.changeLanguage(selectedLanguage)
+        library.openTable(selectedLanguage)
         var index = settings.languages.indexOf(selectedLanguage);
         if (index === -1) {
           settings.languages.push(selectedLanguage)
         }
         stackView.pop(null)
-        startPage.refresh()
+        libraryView.refresh()
         selectLanguage.accept()
       }
       cancel: function () {

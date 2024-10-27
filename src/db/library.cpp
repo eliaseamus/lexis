@@ -1,22 +1,28 @@
 #include "library.hpp"
 
-#include "app_settings.hpp"
-
 #include <QtSql/QtSql>
+
+#include "app_settings.hpp"
 
 namespace lexis {
 
 Library::Library(QObject* parent) :
   QObject(parent)
 {
-  static const auto dbName = "lexis_library.db";
-  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(dbName);
-  if (!db.open()) {
-    qDebug() << QString("Failed to open %1").arg(dbName).toStdString();
-  }
+  openDatabase("lexis.db");
   AppSettings settings;
-  changeLanguage(settings.getCurrentLanguage());
+  openTable(settings.getCurrentLanguage());
+}
+
+void Library::openDatabase(const QString& name) {
+  QFileInfo info(name);
+  QDir dir;
+  dir.mkpath(info.dir().path());
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(info.filePath());
+  if (!db.open()) {
+    qDebug() << QString("Failed to open %1").arg(info.filePath()).toStdString();
+  }
 }
 
 void Library::addItem(LibraryItem* item) {
@@ -29,9 +35,9 @@ void Library::addItem(LibraryItem* item) {
   query.prepare(
     QString(
       "INSERT INTO %1"
-      "(title, creation_time, modification_time, type, author, year, bc, image, color)"
-      "VALUES (:title, :creation, :modification, :type, :author, :year, :bc, :image, :color)"
-    ).arg(_language)
+      "(title, creation_time, modification_time, type, image, color)"
+      "VALUES (:title, :creation, :modification, :type, :image, :color)"
+    ).arg(_table)
   );
 
   item->setCreationTime(item->modificationTime());
@@ -39,9 +45,6 @@ void Library::addItem(LibraryItem* item) {
   query.bindValue(":creation", item->creationTime().toString());
   query.bindValue(":modification", item->modificationTime().toString());
   query.bindValue(":type", std::to_underlying(item->type()));
-  query.bindValue(":author", item->author());
-  query.bindValue(":year", item->year());
-  query.bindValue(":bc", item->bc() ? 1 : 0);
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
 
@@ -64,22 +67,19 @@ void Library::updateItem(const QString& oldTitle, LibrarySectionType oldType, Li
     QString(
       "UPDATE %1 "
       "SET title = :title, modification_time = :modification, type = :type, "
-          "author = :author, year = :year, bc = :bc, image = :image, color = :color "
-      "WHERE title = \"%2\"").arg(_language, oldTitle)
+          "image = :image, color = :color "
+      "WHERE title = \"%2\"").arg(_table, oldTitle)
   );
 
   query.bindValue(":title", item->title());
   query.bindValue(":modification", item->modificationTime().toString());
   query.bindValue(":type", std::to_underlying(item->type()));
-  query.bindValue(":author", item->author());
-  query.bindValue(":year", item->year());
-  query.bindValue(":bc", item->bc() ? 1 : 0);
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
 
   if (!query.exec()) {
     qWarning() << QString("Failed to update '%1' item in '%2' database:")
-                  .arg(oldTitle, _language) << query.lastError();
+                  .arg(oldTitle, _table) << query.lastError();
     return;
   }
 
@@ -99,10 +99,10 @@ void Library::updateItem(const QString& oldTitle, LibrarySectionType oldType, Li
 
 void Library::deleteItem(LibrarySectionType sectionType, const QString& title) {
   QSqlQuery query;
-  query.prepare(QString("DELETE FROM %1 WHERE title = \"%2\"").arg(_language, title));
+  query.prepare(QString("DELETE FROM %1 WHERE title = \"%2\"").arg(_table, title));
   if (!query.exec()) {
     qWarning() << QString("Failed to delete '%1' item from '%2' database:")
-                  .arg(title, _language) << query.lastError();
+                  .arg(title, _table) << query.lastError();
     return;
   }
   auto* section = getSection(sectionType);
@@ -121,43 +121,79 @@ void Library::createTable() {
      modification_time TEXT,                              \
      title             TEXT,                              \
      type              INTEGER,                           \
-     author            TEXT,                              \
-     year              INTEGER,                           \
-     bc                INTEGER,                           \
      image             BLOB,                              \
      color             TEXT)"
-  ).arg(_language);
+  ).arg(_table);
   if (!query.exec(createTableQuery)) {
-    qDebug() << "failed to create language table" << _language << query.lastError();
+    qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
   }
 }
 
-void Library::changeLanguage(const QString& language) {
-  if (language.isEmpty()) {
-    return;
+void Library::createTable(const QString& parentTable, int parentID) {
+  QSqlQuery query;
+  auto createTableQuery = QString(
+    "CREATE TABLE IF NOT EXISTS %1                        \
+    (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
+     parent_id         INTEGER DEFAULT %2,                \
+     creation_time     TEXT,                              \
+     modification_time TEXT,                              \
+     title             TEXT,                              \
+     type              INTEGER,                           \
+     image             BLOB,                              \
+     color             TEXT,                              \
+     FOREIGN KEY (parent_id) REFERENCES %3(parent_id) ON DELETE CASCADE)"
+  ).arg(_table, QString::number(parentID), parentTable);
+  if (!query.exec(createTableQuery)) {
+    qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
   }
-  for (auto* section : _sections) {
-    section->deleteLater();
-  }
-  _sections.clear();
-  _language = language;
+}
+
+void Library::openTable(const QString& name) {
+  _table = name;
+  clearSections();
   createTable();
   populateSections();
 }
 
-void Library::deleteLanguage(const QString& language) {
-  if (language.isEmpty()) {
+void Library::openTable(const QString& parentTable, int parentID) {
+  _table = QString("%1_%2").arg(parentTable, QString::number(parentID));
+  clearSections();
+  createTable(parentTable, parentID);
+  populateSections();
+}
+
+void Library::deleteTable(const QString& name) {
+  if (name.isEmpty()) {
     return;
   }
   QSqlQuery query;
-  auto deleteTableQuery = QString("DROP TABLE %1").arg(language);
+  auto deleteTableQuery = QString("DROP TABLE IF EXISTS %1").arg(name);
   if (!query.exec(deleteTableQuery)) {
-    qDebug() << "failed to delete language table" << language << query.lastError();
+    qDebug() << "failed to delete language table" << name << query.lastError();
   }
-  if (language == _language) {
+  if (name == _table) {
     _sections.clear();
-    _language.clear();
+    _table.clear();
   }
+}
+
+int Library::getID(const QString& title) const {
+  QSqlQuery query(
+    QString(
+      "SELECT id FROM %1 WHERE title = \"%2\""
+    ).arg(_table, title)
+  );
+  while (query.next()) {
+    return query.value("id").toInt();
+  }
+  return -1;
+}
+
+void Library::clearSections() {
+  for (auto* section : _sections) {
+      section->deleteLater();
+    }
+  _sections.clear();
 }
 
 LibrarySection* Library::getSection(LibrarySectionType type) {
@@ -177,9 +213,8 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 void Library::populateSections() {
   QSqlQuery query(
     QString(
-      "SELECT title, creation_time, modification_time, type,"
-      "       author, year, bc, image, color FROM %1"
-    ).arg(_language)
+      "SELECT title, creation_time, modification_time, type, image, color FROM %1 GROUP BY type"
+    ).arg(_table)
   );
 
   SectionTypeManager typeManager;
@@ -190,9 +225,6 @@ void Library::populateSections() {
     item.setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
     item.setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
     item.setType(typeManager.librarySectionType(query.value("type").toInt()));
-    item.setAuthor(query.value("author").toString());
-    item.setYear(query.value("year").toInt());
-    item.setBc(static_cast<bool>(query.value("bc").toInt()));
     item.setColor(query.value("color").toString());
 
     insertItem(std::move(item), query.value("image").toByteArray());

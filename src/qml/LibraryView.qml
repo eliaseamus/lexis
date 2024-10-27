@@ -4,10 +4,10 @@ import QtQuick.Layouts
 import QLexis
 
 Pane {
-  id: startPage
+  id: libraryView
   leftPadding: 0
   rightPadding: 0
-  property var sectionNames: [
+  property var startPageSectionNames: [
     qsTr("Subject group"),
     qsTr("Book"),
     qsTr("Article"),
@@ -16,6 +16,12 @@ Pane {
     qsTr("Album"),
     qsTr("Song")
   ]
+  property var itemContentSectionNames: [
+    qsTr("Subject group"),
+    qsTr("Word")
+  ]
+  property var sectionNames: startPageSectionNames
+  property var tables: []
 
   ColumnLayout {
     id: layout
@@ -52,7 +58,7 @@ Pane {
                    "Add the first item using \"+\" button\n" +
                    "in the right bottom corner.")
       Layout.alignment: Qt.AlignCenter
-      Layout.topMargin: startPage.height / 2 - height
+      Layout.topMargin: libraryView.height / 2 - height
       Layout.rightMargin: sideBar.width
     }
 
@@ -74,6 +80,7 @@ Pane {
           SectionView {
             required property LibrarySection modelData
             title: sectionNames[modelData.type]
+            parentTable: settings.currentLanguage
             model: modelData.model
 
             Connections {
@@ -218,6 +225,13 @@ Pane {
     }
   }
 
+  function load(parentTable, parentID) {
+    tables.push(`${parentTable}_${parentID}`);
+    sectionNames = itemContentSectionNames;
+    library.openTable(parentTable, parentID);
+    refresh();
+  }
+
   function refresh() {
     librarySections.model = library.sections;
     const isSearchEnabled = library.sections.length > 0;
@@ -228,6 +242,23 @@ Pane {
     addLibraryItem.visible = isNewItemEnabled;
     prompt.visible = !isSearchEnabled && isNewItemEnabled;
     libraryItem.clear();
+  }
+
+  function pop() {
+    if (search.visible && searchLine.visible) {
+      searchLine.display = false;
+      searchHide.running = true;
+    } else if (tables.length > 1) {
+      tables.pop();
+      var table = tables.pop();
+      library.openTable(table);
+      refresh();
+    } else if (tables.length > 0) {
+      tables = [];
+      sectionNames = startPageSectionNames;
+      library.openTable(settings.currentLanguage);
+      refresh();
+    }
   }
 
   function hideSearchLine() {

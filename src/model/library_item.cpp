@@ -18,9 +18,6 @@ void LibraryItem::init(LibraryItem&& item, QByteArray&& image) {
   _creationTime = std::move(item._creationTime);
   _modificationTime = std::move(item._modificationTime);
   _type = std::move(item._type);
-  _author = std::move(item._author);
-  _year = item._year;
-  _bc = item._bc;
   _color = std::move(item._color);
   setImage(std::move(image));
 }

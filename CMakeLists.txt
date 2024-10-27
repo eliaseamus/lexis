@@ -50,8 +50,10 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/ImagePicker.qml
     src/qml/ImageWithEffect.qml
     src/qml/InterfaceLanguageDialog.qml
-    src/qml/Main.qml
+    src/qml/ItemView.qml
     src/qml/LibraryItemConfiguration.qml
+    src/qml/LibraryView.qml
+    src/qml/Main.qml
     src/qml/OkCancel.qml
     src/qml/PrettyLabel.qml
     src/qml/RoundImage.qml
@@ -59,7 +61,6 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
-    src/qml/StartPage.qml
     src/qml/TextComplete.qml
     src/qml/TextIcon.qml
     src/qml/utils.js

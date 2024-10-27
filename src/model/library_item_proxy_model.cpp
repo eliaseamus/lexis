@@ -71,9 +71,8 @@ bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& 
 bool LibraryItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const {
   QModelIndex index = _source->index(sourceRow, 0, sourceParent);
   QString title = index.data(LibraryItemModel::TitleRole).toString();
-  QString author = index.data(LibraryItemModel::AuthorRole).toString();
   auto filter = filterRegularExpression();
-  return title.contains(filter) || author.contains(filter);
+  return title.contains(filter);
 }
 
 }
