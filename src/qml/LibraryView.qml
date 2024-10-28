@@ -27,6 +27,10 @@ Pane {
     anchors.leftMargin: 20
     anchors.rightMargin: 20
 
+    Item {
+      Layout.fillHeight: true
+    }
+
     // No language selected
     Button {
       id: pickLanguage
@@ -50,18 +54,22 @@ Pane {
     // Language is selected but its library has no entries
     PrettyLabel {
       id: prompt
-      visible: settings.currentLanguage.length > 0 && library.sections.length === 0
+      Layout.alignment: Qt.AlignCenter
+      Layout.rightMargin: sideBar.width
+      visible: library.sections.length === 0 && settings.currentLanguage.length > 0
       title: qsTr("Library is empty.\n" +
                    "Add the first item using \"+\" button\n" +
                    "in the right bottom corner.")
-      Layout.alignment: Qt.AlignCenter
-      Layout.topMargin: libraryView.height / 2 - height
-      Layout.rightMargin: sideBar.width
+    }
+
+    Item {
+      Layout.fillHeight: true
     }
 
     // Library items
     ScrollView {
-      visible: settings.currentLanguage.length > 0
+      id: itemsSection
+      visible: library.sections.length > 0
       Layout.fillWidth: true
       Layout.fillHeight: true
       Layout.leftMargin: 20
@@ -96,52 +104,72 @@ Pane {
     RowLayout {
       id: toolBar
       RoundButton {
-        id: search
-        icon.source: "icons/search.png"
+        id: back
+        icon.source: "icons/back.png"
         icon.color: settings.fgColor
-        visible: library.sections.length > 0
-        Layout.alignment: Qt.AlignLeft | Qt.AlignBottom | Qt.AlignVCenter
+        enabled: false
         Material.background: settings.accentColor
-        onClicked: toolBar.toggleSearchLine()
+        onClicked: pop()
 
         ToolTip {
-          visible: search.hovered
-          text: qsTr("Search")
+          visible: back.hovered
+          text: qsTr("Back")
         }
       }
 
-      TextField {
-        id: searchLine
-        property int length: 0
-        property bool display: false
-        visible: false
-        Layout.preferredWidth: length
-        Layout.preferredHeight: 40
-        placeholderText: qsTr("Search")
+      Item {
+        Layout.fillWidth: true
+      }
 
-        PropertyAnimation {
-          id: searchShow
-          target: searchLine
-          property: "length"
-          to: 200
-          duration: 300
-          onRunningChanged: {
-            if (!running) {
-              searchLine.forceActiveFocus()
-            }
+      RowLayout {
+        Layout.rightMargin: sideBar.width
+        RoundButton {
+          id: search
+          icon.source: "icons/search.png"
+          icon.color: settings.fgColor
+          enabled: library.sections.length > 0
+          Material.background: settings.accentColor
+          onClicked: toolBar.toggleSearchLine()
+
+          ToolTip {
+            visible: search.hovered
+            text: qsTr("Search")
           }
         }
-        PropertyAnimation {
-          id: searchHide
-          target: searchLine
-          property: "length"
-          to: 0
-          duration: 300
-          onRunningChanged: {
-            if (!running) {
-              searchLine.visible = false
-              searchLine.text = ""
-              search.forceActiveFocus()
+
+        TextField {
+          id: searchLine
+          property int length: 0
+          property bool display: false
+          visible: false
+          Layout.preferredWidth: length
+          Layout.preferredHeight: 40
+          placeholderText: qsTr("Search")
+
+          PropertyAnimation {
+            id: searchShow
+            target: searchLine
+            property: "length"
+            to: 200
+            duration: 300
+            onRunningChanged: {
+              if (!running) {
+                searchLine.forceActiveFocus()
+              }
+            }
+          }
+          PropertyAnimation {
+            id: searchHide
+            target: searchLine
+            property: "length"
+            to: 0
+            duration: 300
+            onRunningChanged: {
+              if (!running) {
+                searchLine.visible = false
+                searchLine.text = ""
+                search.forceActiveFocus()
+              }
             }
           }
         }
@@ -153,10 +181,9 @@ Pane {
 
       RoundButton {
         id: addLibraryItem
-        visible: settings.currentLanguage.length > 0
+        enabled: settings.currentLanguage.length > 0
         icon.source: "icons/plus.png"
         icon.color: settings.fgColor
-        Layout.alignment: Qt.AlignRight | Qt.AlignBottom | Qt.AlignVCenter
         Material.background: settings.accentColor
         onClicked: {
           libraryItem.clear()
@@ -243,10 +270,12 @@ Pane {
     librarySections.model = library.sections;
     const isSearchEnabled = library.sections.length > 0;
     const isNewItemEnabled = settings.currentLanguage.length > 0;
+    back.enabled = tables.length > 0;
+    itemsSection.visible = isSearchEnabled;
     searchCmd.enabled = isSearchEnabled;
-    search.visible = isSearchEnabled;
+    search.enabled = isSearchEnabled;
     newItemCmd.enabled = isNewItemEnabled;
-    addLibraryItem.visible = isNewItemEnabled;
+    addLibraryItem.enabled = isNewItemEnabled;
     prompt.visible = !isSearchEnabled && isNewItemEnabled;
     libraryItem.clear();
   }

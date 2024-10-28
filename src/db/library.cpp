@@ -153,6 +153,9 @@ void Library::createChildTable(const QString& parentTable, int parentID) {
 }
 
 void Library::openTable(const QString& name) {
+  if (name.isEmpty()) {
+    return;
+  }
   _table = name;
   clearSections();
   createTable();
