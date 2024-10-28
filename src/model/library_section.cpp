@@ -32,12 +32,12 @@ void LibrarySection::addItem(LibraryItem&& item, QByteArray&& image) {
   _model->addItem(std::move(item), std::move(image));
 }
 
-void LibrarySection::updateItem(const QString& title, LibraryItem&& item, QByteArray&& image) {
-  _model->updateItem(title, std::move(item), std::move(image));
+void LibrarySection::updateItem(LibraryItem&& item, QByteArray&& image) {
+  _model->updateItem(std::move(item), std::move(image));
 }
 
-void LibrarySection::removeItem(const QString& title) {
-  _model->removeItem(title);
+void LibrarySection::removeItem(int id) {
+  _model->removeItem(id);
 }
 
 }

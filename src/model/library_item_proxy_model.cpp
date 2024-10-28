@@ -19,12 +19,12 @@ void LibraryItemProxyModel::addItem(LibraryItem&& item, QByteArray&& image) {
   sort(0, _sortOrder);
 }
 
-void LibraryItemProxyModel::updateItem(const QString& title, LibraryItem&& item, QByteArray&& image) {
-  _source->updateItem(title, std::move(item), std::move(image));
+void LibraryItemProxyModel::updateItem(LibraryItem&& item, QByteArray&& image) {
+  _source->updateItem(std::move(item), std::move(image));
 }
 
-void LibraryItemProxyModel::removeItem(const QString& title) {
-  _source->removeItem(title);
+void LibraryItemProxyModel::removeItem(int id) {
+  _source->removeItem(id);
 }
 
 void LibraryItemProxyModel::reSort(const QString& role) {

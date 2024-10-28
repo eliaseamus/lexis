@@ -10,6 +10,7 @@ Rectangle {
   property list<string> types
   property int typesNum
   property bool editMode
+  property int itemID
   property int currentType
   property string title
   property string image
@@ -148,7 +149,7 @@ Rectangle {
       okay: function () {
         if (imagePicker.hasQuery) {
           if (editMode) {
-            library.updateItem(title, currentType, newDbRecord);
+            library.updateItem(newDbRecord, currentType);
           } else {
             library.addItem(newDbRecord);
           }
@@ -166,6 +167,7 @@ Rectangle {
 
   LibraryItem {
     id: newDbRecord
+    itemID: itemID
     title: titleItem.text
     modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(types[type.currentIndex])

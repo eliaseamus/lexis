@@ -20,13 +20,14 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
  public:
   explicit LibraryItemProxyModel(QObject* parent = nullptr);
   void addItem(LibraryItem&& item, QByteArray&& image);
-  void updateItem(const QString& title, LibraryItem&& item, QByteArray&& image);
-  void removeItem(const QString& title);
+  void updateItem(LibraryItem&& item, QByteArray&& image);
+  void removeItem(int id);
   bool isEmpty() const {return _source->isEmpty();}
   Qt::SortOrder sortOrder() const {return _sortOrder;}
   void reSort(const QString& role);
   Q_INVOKABLE void setSortingRole(const QString& role);
   Q_INVOKABLE void toggleSort();
+  Q_INVOKABLE int size() const {return _source->rowCount();}
 
  protected:
   bool lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const override;

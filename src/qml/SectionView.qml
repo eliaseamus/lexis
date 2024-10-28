@@ -9,7 +9,7 @@ Item {
   property string title
   property string parentTable
   property LibraryItemProxyModel model
-  property string itemToDelete
+  property int itemToDelete
   property string itemToDeleteType
   Layout.fillWidth: true
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
@@ -30,6 +30,7 @@ Item {
 
       RoundButton {
         id: sortOrder
+        visible: librarySection.model.size() > 1
         hoverEnabled: true
         Layout.alignment: Qt.AlignRight
         flat: true
@@ -122,7 +123,7 @@ Item {
               if (type == "Word") {
                 ; // TODO: Load dictionary page
               } else {
-                libraryView.load(parentTable, library.getID(title))
+                libraryView.load(parentTable, itemID)
               }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
@@ -133,6 +134,7 @@ Item {
             MenuItem {
               text: qsTr("Edit")
               onTriggered: {
+                libraryItem.itemID = itemID
                 libraryItem.currentType = sectionTypeManager.librarySectionType(type)
                 libraryItem.title = title
                 libraryItem.image = imageUrl
@@ -144,7 +146,7 @@ Item {
             MenuItem {
               text: qsTr("Delete")
               onTriggered: {
-                itemToDelete = title;
+                itemToDelete = itemID;
                 itemToDeleteType = type;
                 deleteItemDialog.target = title;
                 deleteItemDialog.imageSource = imageUrl;
@@ -162,7 +164,7 @@ Item {
     target: deleteItemDialog
 
     function onAccepted() {
-      library.deleteItem(sectionTypeManager.librarySectionType(itemToDeleteType), itemToDelete);
+      library.deleteItem(itemToDelete, sectionTypeManager.librarySectionType(itemToDeleteType));
       libraryView.refresh()
     }
   }

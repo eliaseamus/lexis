@@ -18,7 +18,8 @@ class LibraryItemModel : public QAbstractListModel {
 
  public:
   enum LibraryItemRole {
-    TitleRole = Qt::UserRole + 1,
+    IDRole = Qt::UserRole + 1,
+    TitleRole,
     CreationTimeRole,
     ModificationTimeRole,
     TypeRole,
@@ -28,8 +29,8 @@ class LibraryItemModel : public QAbstractListModel {
 
   explicit LibraryItemModel(QObject* parent = nullptr);
   void addItem(LibraryItem&& item, QByteArray&& image);
-  void updateItem(const QString& title, LibraryItem&& item, QByteArray&& image);
-  void removeItem(const QString& title);
+  void updateItem(LibraryItem&& item, QByteArray&& image);
+  void removeItem(int id);
   bool isEmpty() const {return _items.isEmpty();}
   int rowCount(const QModelIndex& parent = {}) const override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

@@ -14,6 +14,7 @@ LibraryItem::LibraryItem(QObject* parent) :
 }
 
 void LibraryItem::init(LibraryItem&& item, QByteArray&& image) {
+  _itemID = item._itemID;
   _title = std::move(item._title);
   _creationTime = std::move(item._creationTime);
   _modificationTime = std::move(item._modificationTime);

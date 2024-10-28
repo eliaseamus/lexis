@@ -16,6 +16,7 @@ class LibraryItem : public QObject {
   Q_OBJECT
   QML_ELEMENT
 
+  Q_PROPERTY(int itemID READ id WRITE setID NOTIFY dummy);
   Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY dummy);
   Q_PROPERTY(QDateTime creationTime READ creationTime WRITE setCreationTime NOTIFY dummy);
   Q_PROPERTY(QDateTime modificationTime READ modificationTime WRITE setModificationTime NOTIFY dummy);
@@ -24,6 +25,7 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
 
  private:
+  int _itemID;
   QString _title;
   QDateTime _creationTime;
   QDateTime _modificationTime;
@@ -35,6 +37,7 @@ class LibraryItem : public QObject {
  public:
   explicit LibraryItem(QObject* parent = nullptr);
   void init(LibraryItem&& item, QByteArray&& image);
+  int id() const {return _itemID;}
   QString title() const {return _title;}
   QDateTime creationTime() const {return _creationTime;}
   QDateTime modificationTime() const {return _modificationTime;}
@@ -43,6 +46,7 @@ class LibraryItem : public QObject {
   QByteArray image() const;
   QColor color() const {return _color;}
 
+  void setID(int id) {_itemID = id;}
   void setTitle(const QString& title) {_title = title;}
   void setCreationTime(const QDateTime& time) {_creationTime = time;}
   void setModificationTime(const QDateTime& time) {_modificationTime = time;}

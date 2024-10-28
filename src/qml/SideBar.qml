@@ -177,7 +177,7 @@ Item {
 
     function onAccepted() {
       var language = languageToDelete;
-      library.deleteTable(language);
+      library.dropTableRecursively(language);
       var index = settings.languages.indexOf(language);
       if (index !== -1) {
        settings.languages.splice(index, 1);

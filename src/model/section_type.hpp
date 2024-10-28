@@ -27,15 +27,14 @@ class SectionTypeManager : public QObject {
  QML_ELEMENT
 
  private:
-  static QHash<LibrarySectionType, QString> librarySectionTypeNames();
+  QHash<LibrarySectionType, QString> _typeNames;
 
  public:
-  explicit SectionTypeManager(QObject* parent = nullptr) : QObject(parent) {}
-
-  Q_INVOKABLE QStringList librarySectionNames();
-  Q_INVOKABLE QString librarySectionTypeName(LibrarySectionType type);
-  Q_INVOKABLE LibrarySectionType librarySectionType(const QString& name);
-  Q_INVOKABLE LibrarySectionType librarySectionType(int type);
+  explicit SectionTypeManager(QObject* parent = nullptr);
+  Q_INVOKABLE QStringList librarySectionNames() const;
+  Q_INVOKABLE QString librarySectionTypeName(LibrarySectionType type) const;
+  Q_INVOKABLE LibrarySectionType librarySectionType(const QString& name) const;
+  Q_INVOKABLE LibrarySectionType librarySectionType(int type) const;
 
 };
 

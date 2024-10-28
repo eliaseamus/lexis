@@ -6,9 +6,11 @@
 
 namespace lexis {
 
-QHash<LibrarySectionType, QString> SectionTypeManager::librarySectionTypeNames() {
+SectionTypeManager::SectionTypeManager(QObject* parent) :
+  QObject(parent)
+{
   using enum LibrarySectionType;
-  static const QHash<LibrarySectionType, QString> names = {
+  _typeNames = {
     {kWord,         "Word"},
     {kSubjectGroup, "Subject group"},
     {kBook,         "Book"},
@@ -18,10 +20,9 @@ QHash<LibrarySectionType, QString> SectionTypeManager::librarySectionTypeNames()
     {kAlbum,        "Album"},
     {kSong,         "Song"}
   };
-  return names;
 }
 
-QStringList SectionTypeManager::librarySectionNames() {
+QStringList SectionTypeManager::librarySectionNames() const {
   using enum LibrarySectionType;
 
   QStringList res;
@@ -32,22 +33,19 @@ QStringList SectionTypeManager::librarySectionNames() {
   return res;
 }
 
-QString SectionTypeManager::librarySectionTypeName(LibrarySectionType type) {
-  static const auto typeNames = librarySectionTypeNames();
-
-  if (typeNames.find(type) == typeNames.end()) {
+QString SectionTypeManager::librarySectionTypeName(LibrarySectionType type) const {
+  if (_typeNames.find(type) == _typeNames.end()) {
     return QString("Unknown section: %1").arg(static_cast<int>(type));
   }
 
-  return typeNames[type];
+  return _typeNames[type];
 }
 
-LibrarySectionType SectionTypeManager::librarySectionType(const QString& name) {
-  static const auto typeNames = librarySectionTypeNames();
-  return typeNames.key(name, LibrarySectionType::kUnknown);
+LibrarySectionType SectionTypeManager::librarySectionType(const QString& name) const {
+  return _typeNames.key(name, LibrarySectionType::kUnknown);
 }
 
-LibrarySectionType SectionTypeManager::librarySectionType(int type) {
+LibrarySectionType SectionTypeManager::librarySectionType(int type) const {
   using enum LibrarySectionType;
   int bottom = std::to_underlying(kWord);
   int top = std::to_underlying(kSong);

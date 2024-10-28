@@ -18,6 +18,7 @@ Pane {
     qsTr("Song")
   ]
   property var tables: []
+  property bool isStartPage: true
 
   ColumnLayout {
     id: layout
@@ -76,7 +77,7 @@ Pane {
           SectionView {
             required property LibrarySection modelData
             title: sectionNames[modelData.type]
-            parentTable: settings.currentLanguage
+            parentTable: tables.length == 0 ? settings.currentLanguage : tables[tables.length - 1]
             model: modelData.model
 
             Connections {
@@ -232,8 +233,9 @@ Pane {
 
   function load(parentTable, parentID) {
     tables.push(`${parentTable}_${parentID}`);
+    isStartPage = false;
     libraryItem.typesNum = 2;
-    library.openTable(parentTable, parentID);
+    library.openChildTable(parentID);
     refresh();
   }
 
@@ -258,7 +260,8 @@ Pane {
       var table = tables.pop();
       library.openTable(table);
       refresh();
-    } else if (tables.length > 0) {
+    } else if (!isStartPage) {
+      isStartPage = true;
       changeLanguage(settings.currentLanguage);
     }
   }
