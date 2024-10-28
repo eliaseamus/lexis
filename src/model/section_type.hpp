@@ -9,6 +9,7 @@ namespace lexis {
 Q_NAMESPACE
 
 enum class LibrarySectionType {
+  kWord,
   kSubjectGroup,
   kBook,
   kArticle,

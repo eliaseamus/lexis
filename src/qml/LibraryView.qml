@@ -7,7 +7,8 @@ Pane {
   id: libraryView
   leftPadding: 0
   rightPadding: 0
-  property var startPageSectionNames: [
+  property var sectionNames: [
+    qsTr("Word"),
     qsTr("Subject group"),
     qsTr("Book"),
     qsTr("Article"),
@@ -16,11 +17,6 @@ Pane {
     qsTr("Album"),
     qsTr("Song")
   ]
-  property var itemContentSectionNames: [
-    qsTr("Subject group"),
-    qsTr("Word")
-  ]
-  property var sectionNames: startPageSectionNames
   property var tables: []
 
   ColumnLayout {
@@ -194,7 +190,9 @@ Pane {
   LibraryItemConfiguration {
     id: libraryItem
     visible: false
-    types: sectionNames
+    displayedTypes: sectionNames
+    types: sectionTypeManager.librarySectionNames()
+    typesNum: 8
   }
 
   DeleteDialog {
@@ -225,9 +223,16 @@ Pane {
     }
   }
 
+  function changeLanguage(language) {
+    tables = [];
+    libraryItem.typesNum = 8;
+    library.openTable(language);
+    refresh();
+  }
+
   function load(parentTable, parentID) {
     tables.push(`${parentTable}_${parentID}`);
-    sectionNames = itemContentSectionNames;
+    libraryItem.typesNum = 2;
     library.openTable(parentTable, parentID);
     refresh();
   }
@@ -254,10 +259,7 @@ Pane {
       library.openTable(table);
       refresh();
     } else if (tables.length > 0) {
-      tables = [];
-      sectionNames = startPageSectionNames;
-      library.openTable(settings.currentLanguage);
-      refresh();
+      changeLanguage(settings.currentLanguage);
     }
   }
 

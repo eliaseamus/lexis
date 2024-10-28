@@ -6,7 +6,9 @@ import QLexis
 
 Rectangle {
   id: newItem
+  property list<string> displayedTypes // translated type names
   property list<string> types
+  property int typesNum
   property bool editMode
   property int currentType
   property string title
@@ -40,7 +42,7 @@ Rectangle {
       id: type
       currentIndex: currentType
       Layout.fillWidth: true
-      model: types
+      model: displayedTypes.slice(0, typesNum)
     }
 
     TextComplete {
@@ -166,7 +168,7 @@ Rectangle {
     id: newDbRecord
     title: titleItem.text
     modificationTime: new Date(Date.now())
-    type: sectionTypeManager.librarySectionType(type.currentIndex)
+    type: sectionTypeManager.librarySectionType(types[type.currentIndex])
     imageUrl: imageItem.source
     color: cover.color
   }

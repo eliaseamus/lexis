@@ -9,6 +9,7 @@ namespace lexis {
 QHash<LibrarySectionType, QString> SectionTypeManager::librarySectionTypeNames() {
   using enum LibrarySectionType;
   static const QHash<LibrarySectionType, QString> names = {
+    {kWord,         "Word"},
     {kSubjectGroup, "Subject group"},
     {kBook,         "Book"},
     {kArticle,      "Article"},
@@ -24,7 +25,7 @@ QStringList SectionTypeManager::librarySectionNames() {
   using enum LibrarySectionType;
 
   QStringList res;
-  for (const auto e : enumRange(kSubjectGroup, kSong)) {
+  for (const auto e : enumRange(kWord, kSong)) {
     res << librarySectionTypeName(e);
   }
 
@@ -48,7 +49,7 @@ LibrarySectionType SectionTypeManager::librarySectionType(const QString& name) {
 
 LibrarySectionType SectionTypeManager::librarySectionType(int type) {
   using enum LibrarySectionType;
-  int bottom = std::to_underlying(kSubjectGroup);
+  int bottom = std::to_underlying(kWord);
   int top = std::to_underlying(kSong);
   if (type < bottom || type > top) {
     return kUnknown;

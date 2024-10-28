@@ -102,9 +102,8 @@ Item {
                 if (mouse.button === Qt.LeftButton) {
                   if (settings.currentLanguage !== modelData) {
                     settings.currentLanguage = modelData
-                    library.openTable(modelData)
+                    libraryView.changeLanguage(modelData)
                     stackView.pop(null)
-                    libraryView.refresh()
                   }
                 } else if (mouse.button === Qt.RightButton) {
                   contextMenu.popup()

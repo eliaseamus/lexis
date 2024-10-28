@@ -119,7 +119,11 @@ Item {
           acceptedButtons: Qt.LeftButton | Qt.RightButton
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
-              libraryView.load(parentTable, library.getID(title))
+              if (type == "Word") {
+                ; // TODO: Load dictionary page
+              } else {
+                libraryView.load(parentTable, library.getID(title))
+              }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
             }

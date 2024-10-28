@@ -50,7 +50,7 @@ and drop it in this area</source>
 <context>
     <name>LibraryItemConfiguration</name>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="50"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="52"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
@@ -71,13 +71,13 @@ and drop it in this area</source>
         <translation type="vanished">До нашей эры</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="117"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="119"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="136"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="145"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="138"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="147"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -85,53 +85,52 @@ and drop it in this area</source>
 <context>
     <name>LibraryView</name>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="11"/>
-        <location filename="../src/qml/LibraryView.qml" line="20"/>
+        <location filename="../src/qml/LibraryView.qml" line="12"/>
         <source>Subject group</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="12"/>
+        <location filename="../src/qml/LibraryView.qml" line="13"/>
         <source>Book</source>
         <translation>Книга</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="13"/>
+        <location filename="../src/qml/LibraryView.qml" line="14"/>
         <source>Article</source>
         <translation>Статья</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="14"/>
+        <location filename="../src/qml/LibraryView.qml" line="15"/>
         <source>Movie</source>
         <translation>Фильм</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="15"/>
+        <location filename="../src/qml/LibraryView.qml" line="16"/>
         <source>Series</source>
         <translation>Сериал</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="16"/>
+        <location filename="../src/qml/LibraryView.qml" line="17"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="17"/>
+        <location filename="../src/qml/LibraryView.qml" line="18"/>
         <source>Song</source>
         <translation>Песня</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="21"/>
+        <location filename="../src/qml/LibraryView.qml" line="11"/>
         <source>Word</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="39"/>
+        <location filename="../src/qml/LibraryView.qml" line="35"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="57"/>
+        <location filename="../src/qml/LibraryView.qml" line="53"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -140,13 +139,13 @@ in the right bottom corner.</source>
 в правом нижнем углу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="112"/>
-        <location filename="../src/qml/LibraryView.qml" line="123"/>
+        <location filename="../src/qml/LibraryView.qml" line="108"/>
+        <location filename="../src/qml/LibraryView.qml" line="119"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="171"/>
+        <location filename="../src/qml/LibraryView.qml" line="167"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
@@ -172,12 +171,12 @@ in the right bottom corner.</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="130"/>
+        <location filename="../src/qml/SectionView.qml" line="134"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="141"/>
+        <location filename="../src/qml/SectionView.qml" line="145"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -205,7 +204,7 @@ in the right bottom corner.</source>
         <translation>Новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="121"/>
+        <location filename="../src/qml/SideBar.qml" line="120"/>
         <source>language</source>
         <translation>язык</translation>
     </message>
@@ -214,7 +213,7 @@ in the right bottom corner.</source>
         <translation type="vanished">Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="116"/>
+        <location filename="../src/qml/SideBar.qml" line="115"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
