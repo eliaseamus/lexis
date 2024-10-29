@@ -161,6 +161,14 @@ Item {
                 deleteItemDialog.open();
               }
             }
+            MenuItem {
+              text: qsTr("Time info")
+              onTriggered: {
+                timeInfoDialog.creationTime = creationTime;
+                timeInfoDialog.modificationTime = modificationTime;
+                timeInfoDialog.open();
+              }
+            }
           }
         }
       }

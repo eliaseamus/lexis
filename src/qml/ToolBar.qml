@@ -126,7 +126,7 @@ RowLayout {
   function refresh() {
     const isSearchEnabled = library.sections.length > 0;
     const isNewItemEnabled = settings.currentLanguage.length > 0;
-    back.enabled = libraryView.tables.length > 0;
+    back.enabled = !libraryView.isStartPage;
     searchCmd.enabled = isSearchEnabled;
     search.enabled = isSearchEnabled;
     newItemCmd.enabled = isNewItemEnabled;

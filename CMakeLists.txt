@@ -64,6 +64,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SortRoleDialog.qml
     src/qml/TextComplete.qml
     src/qml/TextIcon.qml
+    src/qml/TimeInfoDialog.qml
     src/qml/ToolBar.qml
     src/qml/utils.js
   SOURCES

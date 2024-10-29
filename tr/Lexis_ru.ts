@@ -125,12 +125,12 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="40"/>
+        <location filename="../src/qml/LibraryView.qml" line="46"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="54"/>
+        <location filename="../src/qml/LibraryView.qml" line="60"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -180,6 +180,11 @@ in the right bottom corner.</source>
         <location filename="../src/qml/SectionView.qml" line="154"/>
         <source>Delete</source>
         <translation>Удалить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="165"/>
+        <source>Time info</source>
+        <translation>Время</translation>
     </message>
 </context>
 <context>
@@ -240,6 +245,28 @@ in the right bottom corner.</source>
         <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Title</source>
         <translation>Названию</translation>
+    </message>
+</context>
+<context>
+    <name>TimeInfoDialog</name>
+    <message>
+        <source>Created:</source>
+        <translation type="vanished">Создание:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/TimeInfoDialog.qml" line="15"/>
+        <source>Creation:</source>
+        <translation>Создание:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/TimeInfoDialog.qml" line="25"/>
+        <source>Last edit:</source>
+        <translation>Изменение:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/TimeInfoDialog.qml" line="34"/>
+        <source>Ok</source>
+        <translation>Ок</translation>
     </message>
 </context>
 <context>

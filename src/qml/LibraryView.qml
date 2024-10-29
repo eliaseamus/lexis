@@ -111,7 +111,7 @@ Pane {
 
   SelectLanguageDialog {
     id: selectLanguageDialog
-    x: (main.width - width) / 2
+    x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
   }
@@ -126,7 +126,14 @@ Pane {
 
   DeleteDialog {
     id: deleteItemDialog
-    x: (main.width - width) / 2
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
+  TimeInfoDialog {
+    id: timeInfoDialog
+    x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
   }
