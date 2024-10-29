@@ -8,7 +8,7 @@ import QLexis
 Window {
   id: main
   width: 1300
-  height: 900
+  height: 950
   visible: true
   Material.accent: settings.accentColor
 

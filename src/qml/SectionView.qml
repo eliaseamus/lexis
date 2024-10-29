@@ -130,7 +130,7 @@ Item {
               if (type == "Word") {
                 ; // TODO: Load dictionary page
               } else {
-                libraryView.load(parentTable, itemID)
+                libraryView.load(parentTable, itemID, title)
               }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()

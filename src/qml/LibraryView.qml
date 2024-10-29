@@ -19,6 +19,7 @@ Pane {
   ]
   property var tables: []
   property bool isStartPage: true
+  property var pages: []
 
   ColumnLayout {
     id: layout
@@ -27,9 +28,14 @@ Pane {
     anchors.leftMargin: 20
     anchors.rightMargin: 20
 
-    Item {
-      Layout.fillHeight: true
+    PrettyLabel {
+      id: pageTitle
+      visible: false
+      Layout.alignment: Qt.AlignCenter
+      Layout.rightMargin: sideBar.width
     }
+
+    Item {Layout.fillHeight: true}
 
     // No language selected
     PrettyButton {
@@ -56,9 +62,7 @@ Pane {
                    "in the right bottom corner.")
     }
 
-    Item {
-      Layout.fillHeight: true
-    }
+    Item {Layout.fillHeight: true}
 
     // Library items
     ScrollView {
@@ -67,7 +71,6 @@ Pane {
       Layout.fillWidth: true
       Layout.fillHeight: true
       Layout.leftMargin: 20
-
       ColumnLayout {
         anchors.fill: parent
         Repeater {
@@ -149,11 +152,14 @@ Pane {
     refresh();
   }
 
-  function load(parentTable, parentID) {
+  function load(parentTable, parentID, page) {
     tables.push(`${parentTable}_${parentID}`);
     isStartPage = false;
     itemConfiguration.typesNum = 2;
     library.openChildTable(parentID);
+    pages.push(page);
+    pageTitle.title = page;
+    pageTitle.visible = true;
     refresh();
   }
 
@@ -172,10 +178,15 @@ Pane {
     } else if (tables.length > 1) {
       tables.pop();
       var table = tables.pop();
+      pages.pop();
+      pageTitle.title = pages.pop();
       library.openTable(table);
       refresh();
     } else if (!isStartPage) {
       isStartPage = true;
+      pages = [];
+      pageTitle.title = "";
+      pageTitle.visible = false;
       changeLanguage(settings.currentLanguage);
     }
   }
