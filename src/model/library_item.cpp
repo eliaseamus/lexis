@@ -39,6 +39,13 @@ QByteArray LibraryItem::image() const {
   return qCompress(image.readAll());
 }
 
+void LibraryItem::setTitle(const QString& title) {
+  _title = title;
+  if (!_title.isEmpty()) {
+    _title[0] = _title[0].toUpper();
+  }
+}
+
 void LibraryItem::setType(const QString& typeName) {
   static SectionTypeManager typeManager;
   _type = typeManager.librarySectionType(typeName);

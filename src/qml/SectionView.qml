@@ -141,13 +141,13 @@ Item {
             MenuItem {
               text: qsTr("Edit")
               onTriggered: {
-                libraryItem.itemID = itemID
-                libraryItem.currentType = sectionTypeManager.librarySectionType(type)
-                libraryItem.title = title
-                libraryItem.image = imageUrl
-                libraryItem.backgroundColor = itemColor
-                libraryItem.init()
-                stackView.push(libraryItem)
+                var item = [];
+                item["itemID"] = itemID;
+                item["title"] = title;
+                item["type"] = sectionTypeManager.librarySectionType(type);
+                item["imageUrl"] = imageUrl;
+                item["itemColor"] = itemColor;
+                libraryView.editItem(item);
               }
             }
             MenuItem {

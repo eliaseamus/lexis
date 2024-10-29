@@ -114,20 +114,13 @@ Rectangle {
         }
       }
 
-      Button {
+      PrettyButton {
         id: pickImage
         visible: !imageItem.visible
         text: qsTr("Pick an image")
-        Material.background: settings.accentColor
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: -sideBar.width / 2
-
-        contentItem: Label {
-          text: pickImage.text
-          color: settings.fgColor
-          verticalAlignment: Text.AlignVCenter
-        }
 
         onClicked: {
           if (imagePicker.hasQuery)
@@ -167,7 +160,7 @@ Rectangle {
 
   LibraryItem {
     id: newDbRecord
-    itemID: itemID
+    itemID: newItem.itemID
     title: titleItem.text
     modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(types[type.currentIndex])

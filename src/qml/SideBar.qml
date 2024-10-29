@@ -70,7 +70,6 @@ Item {
       Repeater {
         model: settings.languages
         Rectangle {
-          Layout.leftMargin: 2
           Layout.bottomMargin: 15
           Layout.alignment: Qt.AlignCenter
           width: 50

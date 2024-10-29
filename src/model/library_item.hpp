@@ -47,7 +47,7 @@ class LibraryItem : public QObject {
   QColor color() const {return _color;}
 
   void setID(int id) {_itemID = id;}
-  void setTitle(const QString& title) {_title = title;}
+  void setTitle(const QString& title);
   void setCreationTime(const QDateTime& time) {_creationTime = time;}
   void setModificationTime(const QDateTime& time) {_modificationTime = time;}
   void setType(LibrarySectionType type) {_type = type;}

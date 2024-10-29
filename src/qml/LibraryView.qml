@@ -32,22 +32,16 @@ Pane {
     }
 
     // No language selected
-    Button {
+    PrettyButton {
       id: pickLanguage
       Layout.alignment: Qt.AlignCenter
       Layout.rightMargin: sideBar.width
       visible: settings.currentLanguage.length === 0
       text: qsTr("Select a language to learn")
-      Material.background: settings.accentColor
+
       onClicked: {
         selectLanguageDialog.init()
         selectLanguageDialog.open()
-      }
-
-      contentItem: Label {
-        text: pickLanguage.text
-        color: settings.fgColor
-        verticalAlignment: Text.AlignVCenter
       }
     }
 
@@ -89,9 +83,9 @@ Pane {
             model: modelData.model
 
             Connections {
-              target: searchLine
-              function onTextChanged() {
-                model.setFilterFixedString(searchLine.text)
+              target: toolBar
+              function onSearchRequest(query) {
+                model.setFilterFixedString(query)
                 visible = model.rowCount() > 0
               }
             }
@@ -100,111 +94,15 @@ Pane {
       }
     }
 
-    // Footer
-    RowLayout {
-      id: toolBar
-      RoundButton {
-        id: back
-        icon.source: "icons/back.png"
-        icon.color: settings.fgColor
-        enabled: false
-        Material.background: settings.accentColor
-        onClicked: pop()
+    ToolBar {id: toolBar}
+  }
 
-        ToolTip {
-          visible: back.hovered
-          text: qsTr("Back")
-        }
-      }
+  Connections {
+    target: toolBar
 
-      Item {
-        Layout.fillWidth: true
-      }
-
-      RowLayout {
-        Layout.rightMargin: sideBar.width
-        RoundButton {
-          id: search
-          icon.source: "icons/search.png"
-          icon.color: settings.fgColor
-          enabled: library.sections.length > 0
-          Material.background: settings.accentColor
-          onClicked: toolBar.toggleSearchLine()
-
-          ToolTip {
-            visible: search.hovered
-            text: qsTr("Search")
-          }
-        }
-
-        TextField {
-          id: searchLine
-          property int length: 0
-          property bool display: false
-          visible: false
-          Layout.preferredWidth: length
-          Layout.preferredHeight: 40
-          placeholderText: qsTr("Search")
-
-          PropertyAnimation {
-            id: searchShow
-            target: searchLine
-            property: "length"
-            to: 200
-            duration: 300
-            onRunningChanged: {
-              if (!running) {
-                searchLine.forceActiveFocus()
-              }
-            }
-          }
-          PropertyAnimation {
-            id: searchHide
-            target: searchLine
-            property: "length"
-            to: 0
-            duration: 300
-            onRunningChanged: {
-              if (!running) {
-                searchLine.visible = false
-                searchLine.text = ""
-                search.forceActiveFocus()
-              }
-            }
-          }
-        }
-      }
-
-      Item {
-        Layout.fillWidth: true
-      }
-
-      RoundButton {
-        id: addLibraryItem
-        enabled: settings.currentLanguage.length > 0
-        icon.source: "icons/plus.png"
-        icon.color: settings.fgColor
-        Material.background: settings.accentColor
-        onClicked: {
-          libraryItem.clear()
-          stackView.push(libraryItem)
-        }
-
-        ToolTip {
-          visible: addLibraryItem.hovered
-          text: qsTr("New item")
-        }
-      }
-      function toggleSearchLine() {
-        if (searchLine.display) {
-          searchLine.display = false
-          searchHide.running = true
-        } else {
-          searchLine.display = true
-          searchLine.visible = true
-          searchShow.running = true
-        }
-      }
+    function onAddNewItem() {
+      itemConfiguration.clear()
+      stackView.push(itemConfiguration)
     }
   }
 
@@ -216,7 +114,7 @@ Pane {
   }
 
   LibraryItemConfiguration {
-    id: libraryItem
+    id: itemConfiguration
     visible: false
     displayedTypes: sectionNames
     types: sectionTypeManager.librarySectionNames()
@@ -234,26 +132,19 @@ Pane {
     id: sectionTypeManager
   }
 
-  Shortcut {
-    id: searchCmd
-    enabled: library.sections.length > 0
-    sequence: StandardKey.Find
-    onActivated: toolBar.toggleSearchLine()
-  }
-
-  Shortcut {
-    id: newItemCmd
-    enabled: settings.currentLanguage.length > 0
-    sequence: StandardKey.New
-    onActivated: {
-      libraryItem.clear()
-      stackView.push(libraryItem)
-    }
+  function editItem(item) {
+    itemConfiguration.itemID = Number(item["itemID"]);
+    itemConfiguration.currentType = Number(item["type"]);
+    itemConfiguration.title = String(item["title"]);
+    itemConfiguration.image = String(item["imageUrl"]);
+    itemConfiguration.backgroundColor = String(item["itemColor"]);
+    itemConfiguration.init()
+    stackView.push(itemConfiguration)
   }
 
   function changeLanguage(language) {
     tables = [];
-    libraryItem.typesNum = 8;
+    itemConfiguration.typesNum = 8;
     library.openTable(language);
     refresh();
   }
@@ -261,29 +152,23 @@ Pane {
   function load(parentTable, parentID) {
     tables.push(`${parentTable}_${parentID}`);
     isStartPage = false;
-    libraryItem.typesNum = 2;
+    itemConfiguration.typesNum = 2;
     library.openChildTable(parentID);
     refresh();
   }
 
   function refresh() {
     librarySections.model = library.sections;
-    const isSearchEnabled = library.sections.length > 0;
-    const isNewItemEnabled = settings.currentLanguage.length > 0;
-    back.enabled = tables.length > 0;
-    itemsSection.visible = isSearchEnabled;
-    searchCmd.enabled = isSearchEnabled;
-    search.enabled = isSearchEnabled;
-    newItemCmd.enabled = isNewItemEnabled;
-    addLibraryItem.enabled = isNewItemEnabled;
-    prompt.visible = isNewItemEnabled && !isSearchEnabled;
-    libraryItem.clear();
+    const sectionsLength = library.sections.length;
+    itemsSection.visible = sectionsLength > 0;
+    prompt.visible = settings.currentLanguage.length > 0 && sectionsLength === 0;
+    toolBar.refresh();
+    itemConfiguration.clear();
   }
 
   function pop() {
-    if (search.visible && searchLine.visible) {
-      searchLine.display = false;
-      searchHide.running = true;
+    if (toolBar.isSearchActive) {
+      toolBar.toggleSearchLine();
     } else if (tables.length > 1) {
       tables.pop();
       var table = tables.pop();

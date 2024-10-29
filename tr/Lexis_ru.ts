@@ -76,8 +76,8 @@ and drop it in this area</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="139"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="148"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="132"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="141"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -125,7 +125,7 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="36"/>
+        <location filename="../src/qml/LibraryView.qml" line="40"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
@@ -139,20 +139,16 @@ in the right bottom corner.</source>
 в правом нижнем углу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="109"/>
         <source>Back</source>
-        <translation>Назад</translation>
+        <translation type="vanished">Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="127"/>
-        <location filename="../src/qml/LibraryView.qml" line="138"/>
         <source>Search</source>
-        <translation>Поиск</translation>
+        <translation type="vanished">Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="185"/>
         <source>New item</source>
-        <translation>Новый элемент</translation>
+        <translation type="vanished">Новый элемент</translation>
     </message>
 </context>
 <context>
@@ -163,7 +159,7 @@ in the right bottom corner.</source>
         <translation>Ок</translation>
     </message>
     <message>
-        <location filename="../src/qml/OkCancel.qml" line="31"/>
+        <location filename="../src/qml/OkCancel.qml" line="24"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -176,12 +172,12 @@ in the right bottom corner.</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="135"/>
+        <location filename="../src/qml/SectionView.qml" line="142"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="147"/>
+        <location filename="../src/qml/SectionView.qml" line="154"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -209,7 +205,7 @@ in the right bottom corner.</source>
         <translation>Новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="120"/>
+        <location filename="../src/qml/SideBar.qml" line="119"/>
         <source>language</source>
         <translation>язык</translation>
     </message>
@@ -218,7 +214,7 @@ in the right bottom corner.</source>
         <translation type="vanished">Добавить новый язык</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="115"/>
+        <location filename="../src/qml/SideBar.qml" line="114"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -244,6 +240,25 @@ in the right bottom corner.</source>
         <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Title</source>
         <translation>Названию</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBar</name>
+    <message>
+        <location filename="../src/qml/ToolBar.qml" line="22"/>
+        <source>Back</source>
+        <translation>Назад</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ToolBar.qml" line="40"/>
+        <location filename="../src/qml/ToolBar.qml" line="51"/>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ToolBar.qml" line="97"/>
+        <source>New item</source>
+        <translation>Новый элемент</translation>
     </message>
 </context>
 <context>

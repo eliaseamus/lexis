@@ -55,6 +55,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/LibraryView.qml
     src/qml/Main.qml
     src/qml/OkCancel.qml
+    src/qml/PrettyButton.qml
     src/qml/PrettyLabel.qml
     src/qml/RoundImage.qml
     src/qml/SectionView.qml
@@ -63,6 +64,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SortRoleDialog.qml
     src/qml/TextComplete.qml
     src/qml/TextIcon.qml
+    src/qml/ToolBar.qml
     src/qml/utils.js
   SOURCES
     src/app_manager.hpp

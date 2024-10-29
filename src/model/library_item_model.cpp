@@ -21,7 +21,7 @@ void LibraryItemModel::updateItem(LibraryItem&& item, QByteArray&& image) {
   });
   if (target == _items.end()) {
     qWarning() << QString("Failed to update %1: no item with such id %2")
-                         .arg(item.title(), item.id());
+                         .arg(item.title(), QString::number(item.id()));
     return;
   }
   item.setCreationTime((*target)->creationTime());
