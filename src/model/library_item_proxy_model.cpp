@@ -17,19 +17,23 @@ LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
 void LibraryItemProxyModel::addItem(LibraryItem&& item, QByteArray&& image) {
   _source->addItem(std::move(item), std::move(image));
   sort(0, _sortOrder);
+  emit changed();
 }
 
 void LibraryItemProxyModel::updateItem(LibraryItem&& item, QByteArray&& image) {
   _source->updateItem(std::move(item), std::move(image));
+  emit changed();
 }
 
 void LibraryItemProxyModel::removeItem(int id) {
   _source->removeItem(id);
+  emit changed();
 }
 
 void LibraryItemProxyModel::reSort(const QString& role) {
   setSortingRole(role);
   sort(0, _sortOrder);
+  emit changed();
 }
 
 void LibraryItemProxyModel::setSortingRole(const QString& role) {
@@ -51,6 +55,7 @@ void LibraryItemProxyModel::setSortingRole(const QString& role) {
 void LibraryItemProxyModel::toggleSort() {
   _sortOrder = _sortOrder == Qt::AscendingOrder ? Qt::DescendingOrder : Qt::AscendingOrder;
   sort(0, _sortOrder);
+  emit changed();
 }
 
 bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const {

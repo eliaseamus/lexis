@@ -35,6 +35,7 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
 
  signals:
   void dummy();
+  void changed();
 };
 
 }

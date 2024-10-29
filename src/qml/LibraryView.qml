@@ -56,7 +56,7 @@ Pane {
       id: prompt
       Layout.alignment: Qt.AlignCenter
       Layout.rightMargin: sideBar.width
-      visible: library.sections.length === 0 && settings.currentLanguage.length > 0
+      visible: settings.currentLanguage.length > 0 && library.sections.length === 0
       title: qsTr("Library is empty.\n" +
                    "Add the first item using \"+\" button\n" +
                    "in the right bottom corner.")
@@ -276,7 +276,7 @@ Pane {
     search.enabled = isSearchEnabled;
     newItemCmd.enabled = isNewItemEnabled;
     addLibraryItem.enabled = isNewItemEnabled;
-    prompt.visible = !isSearchEnabled && isNewItemEnabled;
+    prompt.visible = isNewItemEnabled && !isSearchEnabled;
     libraryItem.clear();
   }
 

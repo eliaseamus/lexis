@@ -9,7 +9,7 @@ Item {
   property string title
   property string parentTable
   property LibraryItemProxyModel model
-  property int itemToDelete
+  property int itemToDelete: -1
   property string itemToDeleteType
   Layout.fillWidth: true
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
@@ -30,7 +30,7 @@ Item {
 
       RoundButton {
         id: sortOrder
-        visible: librarySection.model.size() > 1
+        enabled: librarySection.model.size() > 1
         hoverEnabled: true
         Layout.alignment: Qt.AlignRight
         flat: true
@@ -50,6 +50,13 @@ Item {
           return order === Qt.AscendingOrder ?
             "icons/sort-ascending.png" :
             "icons/sort-descending.png";
+        }
+      }
+      Connections {
+        target: librarySection.model
+
+        function onChanged() {
+          sortOrder.enabled = librarySection.model.size() > 1;
         }
       }
     }
@@ -164,6 +171,9 @@ Item {
     target: deleteItemDialog
 
     function onAccepted() {
+      if (itemToDelete == -1) {
+        return;
+      }
       library.deleteItem(itemToDelete, sectionTypeManager.librarySectionType(itemToDeleteType));
       libraryView.refresh()
     }
