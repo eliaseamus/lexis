@@ -6,6 +6,7 @@ RowLayout {
   id: toolBar
   property bool isSearchActive: searchLine.display
 
+  signal goBack
   signal searchRequest(query: string)
   signal addNewItem
 
@@ -15,7 +16,7 @@ RowLayout {
     icon.color: settings.fgColor
     enabled: false
     Material.background: settings.accentColor
-    onClicked: pop()
+    onClicked: goBack()
 
     ToolTip {
       visible: back.hovered

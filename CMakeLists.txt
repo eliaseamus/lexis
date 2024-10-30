@@ -16,14 +16,14 @@ qt_add_executable(${PROJECT_NAME}
   src/web_service.cpp
   src/web_service.hpp
   src/utils.hpp
+  src/lang/dictionary.cpp
+  src/lang/dictionary.hpp
   # src/file_downloader.cpp
   # src/file_downloader.hpp
   # src/gui/pronunciation_player.cpp
   # src/gui/pronunciation_player.hpp
   # src/gui/word_card.cpp
   # src/gui/word_card.hpp
-  # src/lang/dictionary.cpp
-  # src/lang/dictionary.hpp
   # src/lang/pronunciation_service.cpp
   # src/lang/pronunciation_service.hpp
 )
@@ -47,6 +47,7 @@ qt_add_qml_module(${PROJECT_NAME}
   VERSION 1.0
   QML_FILES
     src/qml/DeleteDialog.qml
+    src/qml/Icon.qml
     src/qml/ImagePicker.qml
     src/qml/ImageWithEffect.qml
     src/qml/InterfaceLanguageDialog.qml
@@ -63,7 +64,6 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
     src/qml/TextComplete.qml
-    src/qml/TextIcon.qml
     src/qml/TimeInfoDialog.qml
     src/qml/ToolBar.qml
     src/qml/utils.js

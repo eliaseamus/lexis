@@ -21,6 +21,7 @@ class AppSettings : public QObject {
    Q_INVOKABLE QList<QString> sectionSortRoleKeys();
    QString getSortRole() const;
    QString getCurrentLanguage() const;
+   QString getInterfaceLanguage() const;
 };
 
 }

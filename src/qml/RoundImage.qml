@@ -4,12 +4,15 @@ import QtQuick.Effects
 Item {
   id: roundImage
   property string source
+  property int imageRadius
+  property int imageFillMode: Image.PreserveAspectCrop
 
   Image {
     id: sourceItem
     source: roundImage.source
     anchors.fill: parent
     anchors.centerIn: parent
+    fillMode: imageFillMode
     visible: false
   }
 
@@ -30,7 +33,7 @@ Item {
     Rectangle {
       width: sourceItem.width
       height: sourceItem.height
-      radius: width / 2
+      radius: imageRadius ? imageRadius : width / 2
     }
   }
 

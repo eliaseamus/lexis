@@ -107,13 +107,10 @@ Pane {
       itemConfiguration.clear()
       stackView.push(itemConfiguration)
     }
-  }
 
-  SelectLanguageDialog {
-    id: selectLanguageDialog
-    x: (main.width - width) / 2 - sideBar.width
-    y: (main.height - height) / 2
-    parent: ApplicationWindow.overlay
+    function onGoBack() {
+      libraryView.pop()
+    }
   }
 
   LibraryItemConfiguration {
@@ -122,6 +119,18 @@ Pane {
     displayedTypes: sectionNames
     types: sectionTypeManager.librarySectionNames()
     typesNum: 8
+  }
+
+  ItemView {
+    id: itemView
+    visible: false
+  }
+
+  SelectLanguageDialog {
+    id: selectLanguageDialog
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
   }
 
   DeleteDialog {
@@ -142,24 +151,36 @@ Pane {
     id: sectionTypeManager
   }
 
+  function displayItem(title, image, color) {
+    itemView.title = title;
+    itemView.imageUrl = image;
+    itemView.itemColor = color;
+    itemView.init();
+    stackView.push(itemView);
+  }
+
   function editItem(item) {
     itemConfiguration.itemID = Number(item["itemID"]);
     itemConfiguration.currentType = Number(item["type"]);
     itemConfiguration.title = String(item["title"]);
     itemConfiguration.image = String(item["imageUrl"]);
     itemConfiguration.backgroundColor = String(item["itemColor"]);
-    itemConfiguration.init()
-    stackView.push(itemConfiguration)
+    itemConfiguration.init();
+    stackView.push(itemConfiguration);
   }
 
   function changeLanguage(language) {
+    isStartPage = true;
+    pages = [];
+    pageTitle.title = "";
+    pageTitle.visible = false;
     tables = [];
     itemConfiguration.typesNum = 8;
     library.openTable(language);
     refresh();
   }
 
-  function load(parentTable, parentID, page) {
+  function loadPage(parentTable, parentID, page) {
     tables.push(`${parentTable}_${parentID}`);
     isStartPage = false;
     itemConfiguration.typesNum = 2;
@@ -190,10 +211,6 @@ Pane {
       library.openTable(table);
       refresh();
     } else if (!isStartPage) {
-      isStartPage = true;
-      pages = [];
-      pageTitle.title = "";
-      pageTitle.visible = false;
       changeLanguage(settings.currentLanguage);
     }
   }

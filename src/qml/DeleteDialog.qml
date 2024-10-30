@@ -5,7 +5,7 @@ import QtQuick.Layouts
 Dialog {
   id: deleteLanguageDialog
   property string target
-  property string imageSource
+  property string imageUrl
   property color backgroundColor: palette.base
 
   ColumnLayout {
@@ -23,25 +23,15 @@ Dialog {
       Layout.preferredWidth: 300
       Layout.alignment: Qt.AlignCenter
       color: backgroundColor
-      Image {
-        id: image
-        anchors.fill: parent
+      radius: 10
+      Icon {
+        width: 200
+        height: 200
         anchors.centerIn: parent
-        anchors.margins: 30
-        fillMode: Image.PreserveAspectFit
-        source: imageSource
-        visible: imageSource.length > 0
-      }
-      TextIcon {
-        id: textIcon
-        width: 150
-        height: 150
-        anchors.centerIn: parent
-        anchors.margins: 30
-        iconRadius: 180
+        image: imageUrl
+        iconRadius: 170
         iconColor: backgroundColor
         iconTitle: target
-        visible: !image.visible
       }
     }
     OkCancel {

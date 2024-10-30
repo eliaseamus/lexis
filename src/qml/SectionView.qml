@@ -82,7 +82,6 @@ Item {
 
       delegate: Rectangle {
         id: gridItem
-        property bool isImage: imageUrl.toString().length > 0
         width: 200
         height: 200
         color: mouseArea.containsPress ? itemColor.darker(1.1) : itemColor
@@ -92,23 +91,14 @@ Item {
         ColumnLayout {
           anchors.fill: parent
           anchors.margins: 10
-          Image {
+          Icon {
             Layout.preferredHeight: 150
             Layout.preferredWidth: 150
             Layout.alignment: Qt.AlignCenter
-            fillMode: Image.PreserveAspectFit
-            source: imageUrl
-            visible: isImage
-          }
-          TextIcon {
-            id: textIcon
-            Layout.preferredHeight: 150
-            Layout.preferredWidth: 150
-            Layout.alignment: Qt.AlignCenter
-            iconRadius: 180
+            image: imageUrl
+            iconRadius: 150
             iconColor: itemColor
             iconTitle: title
-            visible: !isImage
           }
           Text {
             Layout.alignment: Qt.AlignHCenter
@@ -128,9 +118,9 @@ Item {
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
               if (type == "Word") {
-                ; // TODO: Load dictionary page
+                libraryView.displayItem(title, imageUrl, itemColor)
               } else {
-                libraryView.load(parentTable, itemID, title)
+                libraryView.loadPage(parentTable, itemID, title)
               }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
@@ -156,7 +146,7 @@ Item {
                 itemToDelete = itemID;
                 itemToDeleteType = type;
                 deleteItemDialog.target = title;
-                deleteItemDialog.imageSource = imageUrl;
+                deleteItemDialog.imageUrl = imageUrl;
                 deleteItemDialog.backgroundColor = itemColor;
                 deleteItemDialog.open();
               }

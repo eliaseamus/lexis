@@ -10,7 +10,7 @@
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
   app.setOrganizationName("Lexis");
-  app.setOrganizationDomain("https://github.com/eliaseamus/lexis");
+  app.setOrganizationDomain("");
   QtWebView::initialize();
   QQmlApplicationEngine engine;
   lexis::AppManager appManager(app, engine);

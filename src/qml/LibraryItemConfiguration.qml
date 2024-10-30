@@ -93,6 +93,7 @@ Rectangle {
       Layout.fillWidth: true
       Layout.topMargin: 20
       Layout.bottomMargin: 20
+      radius: 20
 
       Image {
         id: imageItem

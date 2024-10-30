@@ -10,9 +10,14 @@
 namespace lexis {
 
 void Dictionary::request(const QString& query) {
-  static const auto lang = "en-ru";
-  static const auto urlFormat = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=%1&lang=%2&text=%3";
-  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY), lang, QString(query).replace(' ', '+')));
+  static const auto urlFormat = QString("https://dictionary.yandex.net/api/v1/ \
+                                         dicservice.json/lookup?               \
+                                         key=%1&lang=%2&text=%3").remove(' ');
+  auto lang = QString("%1-%2").arg(_settings.getCurrentLanguage(),
+                                   _settings.getInterfaceLanguage());
+  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
+                                             lang,
+                                             QString(query).replace(' ', '+')));
 }
 
 void Dictionary::onFinished(QNetworkReply* reply) {
@@ -20,34 +25,34 @@ void Dictionary::onFinished(QNetworkReply* reply) {
   QJsonObject root = document.object();
   QJsonArray defValues = root["def"].toArray();
 
-  QVector<Definition> definitions;
+  QVector<Definition*> definitions;
   definitions.reserve(defValues.size());
   for (const auto& defValue : defValues) {
-    Definition def;
+    auto* def = new Definition(this);
     auto defObject = defValue.toObject();
 
-    def.text = defObject["text"].toString();
-    def.partOfSpeech = defObject["pos"].toString();
-    def.transcription = defObject["ts"].toString();
+    def->setText(defObject["text"].toString());
+    def->setPartOfSpeech(defObject["pos"].toString());
+    def->setTranscription(defObject["ts"].toString());
 
     auto translationValues = defObject["tr"].toArray();
-    QVector<Translation> translations;
+    QVector<Translation*> translations;
     translations.reserve(translationValues.size());
 
     for (const auto& translationValue : translationValues) {
-      Translation translation;
+      auto* translation = new Translation(def);
       auto translationObject = translationValue.toObject();
 
-      translation.text = translationObject["text"].toString();
+      translation->setText(translationObject["text"].toString());
       if (translationObject.contains("syn")) {
         auto synonymValues = translationObject["syn"].toArray();
         QStringList synonyms;
         synonyms.reserve(synonymValues.size());
         for (const auto& synonymValue : synonymValues) {
           auto synonymObject = synonymValue.toObject();
-          synonyms.push_back(synonymObject["text"].toString());
+          synonyms.emplaceBack(synonymObject["text"].toString());
         }
-        translation.synonyms = std::move(synonyms);
+        translation->setSynonyms(std::move(synonyms));
       }
 
       if (translationObject.contains("mean")) {
@@ -56,16 +61,16 @@ void Dictionary::onFinished(QNetworkReply* reply) {
         meanings.reserve(meaningValues.size());
         for (const auto& meaningValue : meaningValues) {
           auto meaningObject = meaningValue.toObject();
-          meanings.push_back(meaningObject["text"].toString());
+          meanings.emplaceBack(meaningObject["text"].toString());
         }
-        translation.meanings = std::move(meanings);
+        translation->setMeanings(std::move(meanings));
       }
 
-      translations.push_back(std::move(translation));
+      translations.emplaceBack(std::move(translation));
     }
 
-    def.translations = std::move(translations);
-    definitions.push_back(std::move(def));
+    def->setTranslations(std::move(translations));
+    definitions.emplaceBack(std::move(def));
   }
 
   emit definitionsReady(definitions);

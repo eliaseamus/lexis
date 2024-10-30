@@ -28,4 +28,8 @@ QString AppSettings::getCurrentLanguage() const {
   return _settings.value("currentLanguage").toString();
 }
 
+QString AppSettings::getInterfaceLanguage() const {
+  return _settings.value("interfaceLanguage").toString();
+}
+
 }

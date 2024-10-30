@@ -84,6 +84,7 @@ Item {
           border.width: 20
           RoundImage {
             anchors.centerIn: parent
+            imageFillMode: Image.Stretch
             anchors.fill: parent
             anchors.margins: 5
             source: modelData ? "icons/flags/%1.png".arg(modelData) : ""
@@ -117,7 +118,7 @@ Item {
                     deleteLanguageDialog.target =
                       "%1 ".arg(Utils.getFullLanguageName(modelData).toLowerCase()) +
                       qsTr("language");
-                    deleteLanguageDialog.imageSource = "icons/flags/%1.png".arg(modelData);
+                    deleteLanguageDialog.imageUrl = "icons/flags/%1.png".arg(modelData);
                     deleteLanguageDialog.open();
                   }
                 }
