@@ -40,7 +40,9 @@ void Library::addItem(LibraryItem* item) {
     ).arg(_table)
   );
 
-  item->setCreationTime(item->modificationTime());
+  auto now = QDateTime::currentDateTime();
+  item->setCreationTime(now);
+  item->setModificationTime(now);
   query.bindValue(":title", item->title());
   query.bindValue(":creation", item->creationTime().toString());
   query.bindValue(":modification", item->modificationTime().toString());
@@ -72,6 +74,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
       "WHERE id = \"%2\"").arg(_table, QString::number(item->id()))
   );
 
+  item->setModificationTime(QDateTime::currentDateTime());
   query.bindValue(":title", item->title());
   query.bindValue(":modification", item->modificationTime().toString());
   query.bindValue(":type", std::to_underlying(item->type()));

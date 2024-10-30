@@ -162,7 +162,6 @@ Rectangle {
     id: newDbRecord
     itemID: newItem.itemID
     title: titleItem.text
-    modificationTime: new Date(Date.now())
     type: sectionTypeManager.librarySectionType(types[type.currentIndex])
     imageUrl: imageItem.source
     color: cover.color
