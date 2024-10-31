@@ -109,6 +109,7 @@ Rectangle {
           cursorShape: Qt.PointingHandCursor
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
+              imagePicker.init(image);
               stackView.push(imagePicker)
             }
           }

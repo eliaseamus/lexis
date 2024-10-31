@@ -24,7 +24,13 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
 <context>
     <name>ImagePicker</name>
     <message>
-        <location filename="../src/qml/ImagePicker.qml" line="86"/>
+        <location filename="../src/qml/ImagePicker.qml" line="61"/>
+        <location filename="../src/qml/ImagePicker.qml" line="66"/>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ImagePicker.qml" line="109"/>
         <source>Pick an image
 and drop it in this area</source>
         <translation>Выберите изображение
@@ -50,7 +56,7 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="81"/>
+        <location filename="../src/qml/ItemView.qml" line="95"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -79,13 +85,13 @@ and drop it in this area</source>
         <translation type="vanished">До нашей эры</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="121"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="122"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="133"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="142"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="134"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="143"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -138,7 +144,7 @@ and drop it in this area</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="60"/>
+        <location filename="../src/qml/LibraryView.qml" line="61"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>

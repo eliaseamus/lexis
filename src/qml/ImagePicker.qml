@@ -12,39 +12,62 @@ SplitView {
   Item {
     SplitView.fillWidth: true
     SplitView.preferredWidth: main.width / 2
-    WebView {
-      id: searchResults
-      visible: false
+    ColumnLayout {
       anchors.fill: parent
-      url: "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2".arg(CSE_ID).arg(query)
+      WebView {
+        id: searchResults
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        visible: false
+        url: "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2".arg(CSE_ID).arg(query)
 
-      onLoadingChanged: (loadRequest) => {
-        if (query.trim().length == 0)
-          return;
+        onLoadingChanged: (loadRequest) => {
+          if (query.trim().length == 0)
+            return;
 
-        switch (loadRequest.status) {
-          case WebView.LoadSucceededStatus:
-            runJavaScript("
-              const ids = [\"cse-header\", \"cse-footer\"];
-              const classes = [\"gsc-tabsArea\", \"gsc-above-wrapper-area\"];
-              ids.forEach(removeElementByID);
-              classes.forEach(removeElementByClassName);
+          switch (loadRequest.status) {
+            case WebView.LoadSucceededStatus:
+              runJavaScript("
+                const ids = [\"cse-header\", \"cse-footer\"];
+                const classes = [\"gsc-tabsArea\", \"gsc-above-wrapper-area\"];
+                ids.forEach(removeElementByID);
+                classes.forEach(removeElementByClassName);
 
-              function removeElementByID(id, index, array) {
-                var element = document.getElementById(id);
-                element.parentNode.removeChild(element);
-              }
-
-              function removeElementByClassName(name, index, array) {
-                const elements = document.getElementsByClassName(name);
-                while (elements.length > 0) {
-                  elements[0].parentNode.removeChild(elements[0]);
+                function removeElementByID(id, index, array) {
+                  var element = document.getElementById(id);
+                  element.parentNode.removeChild(element);
                 }
-              }
-            ")
-            searchResults.visible = true;
-            spinner.visible = false;
-            break;
+
+                function removeElementByClassName(name, index, array) {
+                  const elements = document.getElementsByClassName(name);
+                  while (elements.length > 0) {
+                    elements[0].parentNode.removeChild(elements[0]);
+                  }
+                }
+              ")
+              searchResults.visible = true;
+              searchBar.visible = true;
+              spinner.visible = false;
+              break;
+          }
+        }
+      }
+      RowLayout {
+        id: searchBar
+        visible: false
+        Layout.fillWidth: true
+        TextField {
+          id: searchText
+          placeholderText: qsTr("Search")
+          text: query
+          Layout.fillWidth: true
+        }
+        PrettyButton {
+          text: qsTr("Search")
+          onClicked: {
+            searchResults.url = "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2"
+                                .arg(CSE_ID).arg(searchText.text.replace(" ", "+"));
+          }
         }
       }
     }
@@ -121,12 +144,14 @@ SplitView {
     }
   }
 
-  onVisibleChanged: {
-    image.source = ""
-    image.visible = false
+  function init(source) {
+    image.source = source;
+    image.visible = source.length > 0;
+    searchText.text = query;
+    searchBar.visible = false;
     searchResults.visible = false;
+    searchResults.reload();
     spinner.visible = true;
-    searchResults.reload()
   }
 
 }

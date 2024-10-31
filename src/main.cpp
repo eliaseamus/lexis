@@ -9,9 +9,9 @@
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
+  QtWebView::initialize();
   app.setOrganizationName("Lexis");
   app.setOrganizationDomain("");
-  QtWebView::initialize();
   QQmlApplicationEngine engine;
   lexis::AppManager appManager(app, engine);
   auto halt = [](){QCoreApplication::exit(-1);};
