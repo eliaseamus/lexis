@@ -78,10 +78,14 @@ class Dictionary : public WebService {
 
  private:
   AppSettings _settings;
+  QVector<Definition*> _definitions;
 
  public:
   explicit Dictionary(QObject* parent = nullptr) : WebService(parent) {}
   Q_INVOKABLE void request(const QString& query) override;
+
+ private:
+  void clearDefinitions();
 
  signals:
   void definitionsReady(const QVector<Definition*>& definitions);

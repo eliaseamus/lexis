@@ -24,13 +24,14 @@ Pane {
       ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        Layout.preferredWidth: main.width / 2 - sideBar.width
+        Layout.maximumWidth: main.width / 2 - sideBar.width
         RowLayout {
           Layout.fillWidth: true
-          Layout.leftMargin: 40
-          Layout.rightMargin: 40
+          Layout.maximumWidth: parent.width
+          Layout.bottomMargin: 20
           Text {
             text: title
+            Layout.leftMargin: 20
             font.pointSize: 40
           }
           Item {Layout.fillWidth: true}
@@ -38,8 +39,17 @@ Pane {
             id: transcription
             visible: false
             Layout.alignment: Qt.AlignVCenter
+            Layout.rightMargin: 30
             font.pointSize: 20
           }
+        }
+        Text {
+          id: dictionaryPage
+          font.pointSize: 16
+          textFormat: Text.RichText
+          Layout.maximumWidth: parent.width - 20
+          // Layout.margins: 20
+          wrapMode: Text.WordWrap
         }
         Item {Layout.fillHeight: true}
       }
@@ -80,12 +90,43 @@ Pane {
     target: dictionary
 
     function onDefinitionsReady(definitions) {
+      const hasMultipleDefinitions = definitions.length > 1;
+      var dictionaryText = String();
+      if (hasMultipleDefinitions) {
+        dictionaryText += "<ol>";
+      }
       definitions.forEach((definition) => {
-        if (definition.transcription.length > 0) {
+        if (definition.transcription.length > 0 && transcription.title.length == 0) {
           transcription.title = definition.transcription;
           transcription.visible = true;
         }
+        if (hasMultipleDefinitions) {
+          dictionaryText += "<li>";
+        }
+        dictionaryText += definition.partOfSpeech;
+        var translationText = String("<ul>");
+        definition.translations.forEach((translation) => {
+          translationText += "<li>";
+          translationText += translation.text;
+          if (translation.synonyms.length > 0) {
+            translationText += " (%1)".arg(translation.synonyms.join(", "));
+          }
+          if (translation.meanings.length > 0) {
+            translationText += ": %1".arg(translation.meanings.join(", "));
+          }
+          translationText += "</li>";
+        });
+        translationText += "</ul>";
+        dictionaryText += translationText;
+        if (hasMultipleDefinitions) {
+          dictionaryText += "</li><br>";
+        }
       });
+      if (hasMultipleDefinitions) {
+        dictionaryText += "</ol>";
+      }
+      dictionaryPage.text = dictionaryText;
+      dictionaryPage.visible = true;
       spinner.visible = false;
       body.visible = true;
     }
@@ -98,7 +139,10 @@ Pane {
   function init() {
     spinner.visible = true;
     body.visible = false;
+    transcription.title = "";
     transcription.visible = false;
+    dictionaryPage.text = "";
+    dictionaryPage.visible = false;
     dictionary.request(title)
   }
 

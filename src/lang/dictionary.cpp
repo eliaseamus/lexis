@@ -20,13 +20,20 @@ void Dictionary::request(const QString& query) {
                                              QString(query).replace(' ', '+')));
 }
 
+void Dictionary::clearDefinitions() {
+  for (auto* definition : _definitions) {
+    definition->deleteLater();
+  }
+  _definitions.clear();
+}
+
 void Dictionary::onFinished(QNetworkReply* reply) {
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray defValues = root["def"].toArray();
 
-  QVector<Definition*> definitions;
-  definitions.reserve(defValues.size());
+  clearDefinitions();
+  _definitions.reserve(defValues.size());
   for (const auto& defValue : defValues) {
     auto* def = new Definition(this);
     auto defObject = defValue.toObject();
@@ -70,10 +77,10 @@ void Dictionary::onFinished(QNetworkReply* reply) {
     }
 
     def->setTranslations(std::move(translations));
-    definitions.emplaceBack(std::move(def));
+    _definitions.emplaceBack(std::move(def));
   }
 
-  emit definitionsReady(definitions);
+  emit definitionsReady(_definitions);
 }
 
 }
