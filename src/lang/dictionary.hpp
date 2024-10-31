@@ -72,20 +72,38 @@ class Definition : public QObject {
   void dummy();
 };
 
+class DictionaryCache : public QObject {
+ Q_OBJECT
+
+ private:
+  struct DictionaryEntry {
+    QString query;
+    QString language;
+    QVector<Definition*> definitions;
+  };
+
+ private:
+  AppSettings _settings;
+  qsizetype _size;
+  QVector<DictionaryEntry> _cache;
+
+ public:
+  DictionaryCache(qsizetype size, QObject* parent = nullptr);
+  std::optional<QVector<Definition*>> getDefinitions(const QString& query);
+  void addDefinitions(const QVector<Definition*>& definitions);
+};
+
 class Dictionary : public WebService {
  Q_OBJECT
  QML_ELEMENT
 
  private:
   AppSettings _settings;
-  QVector<Definition*> _definitions;
+  DictionaryCache* _cache = nullptr;
 
  public:
-  explicit Dictionary(QObject* parent = nullptr) : WebService(parent) {}
+  explicit Dictionary(QObject* parent = nullptr);
   Q_INVOKABLE void request(const QString& query) override;
-
- private:
-  void clearDefinitions();
 
  signals:
   void definitionsReady(const QVector<Definition*>& definitions);

@@ -22,6 +22,7 @@ class AppSettings : public QObject {
    QString getSortRole() const;
    QString getCurrentLanguage() const;
    QString getInterfaceLanguage() const;
+   QString getCurrentInterfaceLanguagePair() const;
 };
 
 }

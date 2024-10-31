@@ -56,7 +56,8 @@ Pane {
       id: prompt
       Layout.alignment: Qt.AlignCenter
       Layout.rightMargin: sideBar.width
-      visible: settings.currentLanguage.length > 0 && library.sections.length === 0
+      visible: settings.currentLanguage.length > 0 &&
+               library.sections.length === 0
       title: qsTr("Library is empty.\n" +
                    "Add the first item using \"+\" button\n" +
                    "in the right bottom corner.")
@@ -82,7 +83,9 @@ Pane {
           SectionView {
             required property LibrarySection modelData
             title: sectionNames[modelData.type]
-            parentTable: tables.length == 0 ? settings.currentLanguage : tables[tables.length - 1]
+            parentTable: tables.length == 0 ?
+                         settings.currentLanguage :
+                         tables[tables.length - 1]
             model: modelData.model
 
             Connections {

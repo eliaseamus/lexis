@@ -24,7 +24,7 @@ Pane {
       ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        Layout.maximumWidth: main.width / 2 - sideBar.width
+        Layout.preferredWidth: main.width / 2 - sideBar.width
         RowLayout {
           Layout.fillWidth: true
           Layout.maximumWidth: parent.width
@@ -43,13 +43,21 @@ Pane {
             font.pointSize: 20
           }
         }
-        Text {
-          id: dictionaryPage
-          font.pointSize: 16
-          textFormat: Text.RichText
-          Layout.maximumWidth: parent.width - 20
-          // Layout.margins: 20
-          wrapMode: Text.WordWrap
+        ScrollView {
+          Layout.fillWidth: true
+          Layout.fillHeight: true
+          Layout.maximumWidth: parent.width
+          ScrollBar.horizontal: ScrollBar {policy: ScrollBar.AlwaysOff}
+          Text {
+            id: dictionaryPage
+            font.pointSize: 16
+            width: parent.width
+            textFormat: Text.RichText
+            wrapMode: Text.WordWrap
+          }
+          onWidthChanged: {
+            dictionaryPage.width = width
+          }
         }
         Item {Layout.fillHeight: true}
       }
@@ -64,7 +72,10 @@ Pane {
           anchors.centerIn: parent
           anchors.margins: 50
           image: imageUrl
-          iconRadius: 600
+          iconRadius: {
+            var minSide = parent.width < parent.height ? parent.width : parent.height;
+            return 3 * minSide / 4;
+          }
           iconColor: itemColor
           iconTitle: title
         }

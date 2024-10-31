@@ -9,22 +9,60 @@
 
 namespace lexis {
 
+DictionaryCache::DictionaryCache(qsizetype size, QObject* parent) :
+  QObject(parent),
+  _size(size)
+{
+  _cache.reserve(_size);
+}
+
+std::optional<QVector<Definition*>> DictionaryCache::getDefinitions(const QString& query) {
+  const auto language = _settings.getCurrentInterfaceLanguagePair();
+  auto findEntry = [&query, &language](const auto& entry) {
+    return entry.query.toLower() == query.toLower() && entry.language == language;
+  };
+  auto def = std::find_if(_cache.cbegin(), _cache.cend(), findEntry);
+  if (def != _cache.end()) {
+    _cache.move(std::distance(_cache.cbegin(), def), 0);
+    return _cache.first().definitions;
+  }
+  return std::nullopt;
+}
+
+void DictionaryCache::addDefinitions(const QVector<Definition*>& definitions) {
+  if (definitions.empty()) {
+    return;
+  }
+
+  DictionaryEntry entry;
+  entry.query = definitions.first()->text();
+  entry.language = _settings.getCurrentInterfaceLanguagePair();
+  entry.definitions = definitions;
+  if (_cache.size() < _size) {
+    _cache.emplaceBack(std::move(entry));
+  } else {
+    _cache.emplaceBack(std::move(entry));
+  }
+}
+
+Dictionary::Dictionary(QObject* parent) :
+  WebService(parent),
+  _cache(new DictionaryCache(20, this))
+{
+}
+
 void Dictionary::request(const QString& query) {
   static const auto urlFormat = QString("https://dictionary.yandex.net/api/v1/ \
                                          dicservice.json/lookup?               \
                                          key=%1&lang=%2&text=%3").remove(' ');
-  auto lang = QString("%1-%2").arg(_settings.getCurrentLanguage(),
-                                   _settings.getInterfaceLanguage());
-  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
-                                             lang,
-                                             QString(query).replace(' ', '+')));
-}
-
-void Dictionary::clearDefinitions() {
-  for (auto* definition : _definitions) {
-    definition->deleteLater();
+  if (auto definitions = _cache->getDefinitions(query); definitions != std::nullopt) {
+    emit definitionsReady(definitions.value());
+    return;
   }
-  _definitions.clear();
+
+  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
+                                             _settings.getCurrentInterfaceLanguagePair(),
+                                             QString(query).replace(' ', '+')));
 }
 
 void Dictionary::onFinished(QNetworkReply* reply) {
@@ -32,8 +70,8 @@ void Dictionary::onFinished(QNetworkReply* reply) {
   QJsonObject root = document.object();
   QJsonArray defValues = root["def"].toArray();
 
-  clearDefinitions();
-  _definitions.reserve(defValues.size());
+  QVector<Definition*> definitions;
+  definitions.reserve(defValues.size());
   for (const auto& defValue : defValues) {
     auto* def = new Definition(this);
     auto defObject = defValue.toObject();
@@ -77,10 +115,11 @@ void Dictionary::onFinished(QNetworkReply* reply) {
     }
 
     def->setTranslations(std::move(translations));
-    _definitions.emplaceBack(std::move(def));
+    definitions.emplaceBack(std::move(def));
   }
 
-  emit definitionsReady(_definitions);
+  _cache->addDefinitions(definitions);
+  emit definitionsReady(definitions);
 }
 
 }
