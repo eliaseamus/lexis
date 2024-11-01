@@ -7,6 +7,7 @@ SplitView {
   id: imagePicker
   orientation: Qt.Horizontal
   property string query
+  property string url: "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=".arg(CSE_ID)
   signal imagePicked(url: string)
 
   Item {
@@ -16,14 +17,15 @@ SplitView {
       anchors.fill: parent
       WebView {
         id: searchResults
+        property bool isInitialized
         Layout.fillHeight: true
         Layout.fillWidth: true
         visible: false
-        url: "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2".arg(CSE_ID).arg(query)
 
         onLoadingChanged: (loadRequest) => {
-          if (query.trim().length == 0)
+          if (query.trim().length == 0) {
             return;
+          }
 
           switch (loadRequest.status) {
             case WebView.LoadSucceededStatus:
@@ -48,7 +50,16 @@ SplitView {
               searchResults.visible = true;
               searchBar.visible = true;
               spinner.visible = false;
+              isInitialized = true;
               break;
+          }
+        }
+
+        onUrlChanged: {
+          if (isInitialized) {
+            searchResults.visible = true;
+            searchBar.visible = true;
+            spinner.visible = false;
           }
         }
       }
@@ -61,12 +72,16 @@ SplitView {
           placeholderText: qsTr("Search")
           text: query
           Layout.fillWidth: true
+          Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+              searchResults.url = imagePicker.url + text.replace(" ", "+");
+            }
+          }
         }
         PrettyButton {
           text: qsTr("Search")
           onClicked: {
-            searchResults.url = "https://cse.google.com/cse?cx=%1#gsc.tab=1&gsc.q=%2"
-                                .arg(CSE_ID).arg(searchText.text.replace(" ", "+"));
+            searchResults.url = imagePicker.url + searchText.text.replace(" ", "+");
           }
         }
       }
@@ -145,13 +160,14 @@ SplitView {
   }
 
   function init(source) {
+    spinner.visible = true;
     image.source = source;
     image.visible = source.length > 0;
     searchText.text = query;
     searchBar.visible = false;
     searchResults.visible = false;
     searchResults.reload();
-    spinner.visible = true;
+    searchResults.url = imagePicker.url + query;
   }
 
 }

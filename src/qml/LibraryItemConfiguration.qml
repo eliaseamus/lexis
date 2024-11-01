@@ -125,8 +125,10 @@ Rectangle {
         anchors.horizontalCenterOffset: -sideBar.width / 2
 
         onClicked: {
-          if (imagePicker.hasQuery)
-            stackView.push(imagePicker)
+          if (imagePicker.hasQuery) {
+            imagePicker.init("");
+            stackView.push(imagePicker);
+          }
         }
 
         ToolTip {
