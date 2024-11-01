@@ -20,10 +20,6 @@ qt_add_executable(${PROJECT_NAME}
   src/lang/dictionary.hpp
   # src/file_downloader.cpp
   # src/file_downloader.hpp
-  # src/gui/pronunciation_player.cpp
-  # src/gui/pronunciation_player.hpp
-  # src/gui/word_card.cpp
-  # src/gui/word_card.hpp
   # src/lang/pronunciation_service.cpp
   # src/lang/pronunciation_service.hpp
 )

@@ -30,7 +30,6 @@ class Library : public QObject {
   Q_INVOKABLE void openChildTable(int parentID);
   Q_INVOKABLE void dropTableRecursively(const QString& root);
   QVector<LibrarySection*> sections() const {return _sections;}
-  Q_INVOKABLE int getItemID(const QString& title) const;
 
  private:
   void clearSections();
@@ -39,8 +38,11 @@ class Library : public QObject {
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
   void insertItem(LibraryItem&& item);
+  int getItemID(const QString& title) const;
+  QString getTitle(int id) const;
   QStringList getTablesList() const;
   void dropTable(const QString& name);
+  void updateAudio(const QString& title, int id);
   void updateParentModificationTime(const QString& table, int id);
 
  signals:

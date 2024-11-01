@@ -57,6 +57,9 @@ void Library::addItem(LibraryItem* item) {
   }
 
   item->setID(getItemID(item->title()));
+  if (item->type() == LibrarySectionType::kWord) {
+    updateAudio(item->title(), item->id());
+  }
   updateParentModificationTime(_table, item->id());
   insertItem(std::move(*item));
 }
@@ -67,13 +70,15 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     return;
   }
 
+  auto oldTitle = getTitle(item->id());
   QSqlQuery query;
   query.prepare(
     QString(
       "UPDATE %1 "
       "SET title = :title, modification_time = :modification, type = :type, "
           "image = :image, color = :color "
-      "WHERE id = \"%2\"").arg(_table, QString::number(item->id()))
+      "WHERE id = \"%2\""
+    ).arg(_table, QString::number(item->id()))
   );
 
   item->setModificationTime(QDateTime::currentDateTime());
@@ -89,6 +94,9 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     return;
   }
 
+  if (item->type() == LibrarySectionType::kWord && oldTitle != item->title()) {
+    updateAudio(item->title(), item->id());
+  }
   updateParentModificationTime(_table, item->id());
 
   if (oldType == item->type()) {
@@ -188,19 +196,6 @@ void Library::dropTableRecursively(const QString& root) {
   }
 }
 
-int Library::getItemID(const QString& title) const {
-  QSqlQuery query(
-    QString(
-      "SELECT id FROM %1 WHERE title = \"%2\""
-    ).arg(_table, title)
-  );
-  int id = -1;
-  while (query.next()) {
-    id = query.value("id").toInt();
-  }
-  return id;
-}
-
 void Library::clearSections() {
   for (auto* section : _sections) {
     section->deleteLater();
@@ -260,6 +255,32 @@ QStringList Library::getTablesList() const {
   return list;
 }
 
+int Library::getItemID(const QString& title) const {
+  QSqlQuery query(
+    QString(
+      "SELECT id FROM %1 WHERE title = \"%2\""
+    ).arg(_table, title)
+  );
+  int id = -1;
+  while (query.next()) {
+    id = query.value("id").toInt();
+  }
+  return id;
+}
+
+QString Library::getTitle(int id) const {
+  QSqlQuery query(
+    QString(
+      "SELECT title FROM %1 WHERE id = \"%2\""
+    ).arg(_table, QString::number(id))
+  );
+  QString title;
+  while (query.next()) {
+    title = query.value("title").toString();
+  }
+  return title;
+}
+
 void Library::dropTable(const QString& name) {
   if (name.isEmpty()) {
     return;
@@ -274,6 +295,10 @@ void Library::dropTable(const QString& name) {
     _sections.clear();
     _table.clear();
   }
+}
+
+void Library::updateAudio(const QString& title, int id) {
+  qDebug() << "updateAudio" << title << id;
 }
 
 void Library::updateParentModificationTime(const QString& table, int id) {

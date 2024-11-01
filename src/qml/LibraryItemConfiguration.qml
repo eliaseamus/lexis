@@ -150,7 +150,7 @@ Rectangle {
           } else {
             library.addItem(newDbRecord);
           }
-          libraryView.refresh()
+          libraryView.refresh();
           popStack();
           newItem.clear();
         }
