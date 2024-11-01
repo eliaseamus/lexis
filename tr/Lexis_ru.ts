@@ -24,13 +24,13 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
 <context>
     <name>ImagePicker</name>
     <message>
-        <location filename="../src/qml/ImagePicker.qml" line="61"/>
-        <location filename="../src/qml/ImagePicker.qml" line="66"/>
+        <location filename="../src/qml/ImagePicker.qml" line="72"/>
+        <location filename="../src/qml/ImagePicker.qml" line="82"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/ImagePicker.qml" line="109"/>
+        <location filename="../src/qml/ImagePicker.qml" line="124"/>
         <source>Pick an image
 and drop it in this area</source>
         <translation>Выберите изображение
@@ -56,7 +56,12 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="95"/>
+        <location filename="../src/qml/ItemView.qml" line="45"/>
+        <source>Pronunciation</source>
+        <translation>Произношение</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ItemView.qml" line="108"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -90,8 +95,8 @@ and drop it in this area</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="134"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="143"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="136"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="145"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>

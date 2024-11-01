@@ -11,32 +11,47 @@ LibraryItem::LibraryItem(QObject* parent) :
   QObject(parent)
 {
   _image.setFileTemplate(dir.path() + fileTemplate);
+  _audio.setFileTemplate(dir.path() + fileTemplate);
 }
 
-void LibraryItem::init(LibraryItem&& item, QByteArray&& image) {
+LibraryItem::LibraryItem(LibraryItem&& item) {
+  _image.setFileTemplate(dir.path() + fileTemplate);
+  _audio.setFileTemplate(dir.path() + fileTemplate);
+  init(std::move(item));
+}
+
+LibraryItem& LibraryItem::operator=(LibraryItem&& item) {
+  init(std::move(item));
+  return *this;
+}
+
+void LibraryItem::init(LibraryItem&& item) {
   _itemID = item._itemID;
   _title = std::move(item._title);
   _creationTime = std::move(item._creationTime);
   _modificationTime = std::move(item._modificationTime);
   _type = std::move(item._type);
   _color = std::move(item._color);
-  setImage(std::move(image));
+  _imageUrl = std::move(item._imageUrl);
+  _image.setFileName(item._image.fileName());
+  item._image.setAutoRemove(false);
+  _audioUrl = std::move(item._audioUrl);
+  _audio.setFileName(item._audio.fileName());
+  item._audio.setAutoRemove(false);
 }
 
 QByteArray LibraryItem::image() const {
   if (_imageUrl.isEmpty()) {
     return {};
   }
+  return readFile(_imageUrl.toLocalFile());
+}
 
-  auto path = _imageUrl.toLocalFile();
-  QFile image(path);
-
-  if (!image.open(QIODevice::ReadOnly)) {
-    qWarning() << "fail to open image:" << path;
+QByteArray LibraryItem::audio() const {
+  if (_audioUrl.isEmpty()) {
     return {};
   }
-
-  return qCompress(image.readAll());
+  return readFile(_audioUrl.toLocalFile());
 }
 
 void LibraryItem::setTitle(const QString& title) {
@@ -55,23 +70,22 @@ void LibraryItem::setImage(QByteArray&& data) {
   if (data.isEmpty()) {
     return;
   }
-
   if (!_image.fileName().isEmpty()) {
-    rename(); // in order to QML reload image
+    _image.rename(getNewFileName()); // in order to QML reload image
   }
-  if (!_image.open()) {
-    qWarning() << "fail to open temporary file" << _image.fileName();
-    return;
-  }
-  _image.resize(0);
-  if (-1 == _image.write(qUncompress(data))) {
-    qWarning() << "Failed to overwrite image:" << _image.errorString();
-  }
-  _image.close();
+  writeFile(_image, std::move(data));
   _imageUrl = QUrl::fromLocalFile(_image.fileName());
 }
 
-void LibraryItem::rename() {
+void LibraryItem::setAudio(QByteArray&& data) {
+  if (data.isEmpty()) {
+    return;
+  }
+  writeFile(_audio, std::move(data));
+  _audioUrl = QUrl::fromLocalFile(_audio.fileName());
+}
+
+QString LibraryItem::getNewFileName() {
   QString newName;
   {
     QTemporaryFile file;
@@ -79,7 +93,30 @@ void LibraryItem::rename() {
     file.open();
     newName = file.fileName();
   }
-  _image.rename(newName);
+  return newName;
+}
+
+QByteArray LibraryItem::readFile(const QString& path) const {
+  QFile file(path);
+
+  if (!file.open(QIODevice::ReadOnly)) {
+    qWarning() << "fail to open file:" << path;
+    return {};
+  }
+
+  return qCompress(file.readAll());
+}
+
+void LibraryItem::writeFile(QTemporaryFile& file, QByteArray&& data) {
+  if (!file.open()) {
+    qWarning() << "fail to open temporary file" << file.fileName();
+    return;
+  }
+  file.resize(0);
+  if (-1 == file.write(qUncompress(data))) {
+    qWarning() << "Failed to overwrite file:" << file.errorString();
+  }
+  file.close();
 }
 
 }

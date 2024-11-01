@@ -19,8 +19,8 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
 
  public:
   explicit LibraryItemProxyModel(QObject* parent = nullptr);
-  void addItem(LibraryItem&& item, QByteArray&& image);
-  void updateItem(LibraryItem&& item, QByteArray&& image);
+  void addItem(LibraryItem&& item);
+  void updateItem(LibraryItem&& item);
   void removeItem(int id);
   bool isEmpty() const {return _source->isEmpty();}
   Qt::SortOrder sortOrder() const {return _sortOrder;}

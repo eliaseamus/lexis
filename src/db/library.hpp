@@ -38,7 +38,7 @@ class Library : public QObject {
   void createChildTable(const QString& parentTable, int parentID);
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
-  void insertItem(LibraryItem&& item, QByteArray&& image);
+  void insertItem(LibraryItem&& item);
   QStringList getTablesList() const;
   void dropTable(const QString& name);
   void updateParentModificationTime(const QString& table, int id);

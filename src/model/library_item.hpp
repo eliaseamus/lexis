@@ -23,6 +23,7 @@ class LibraryItem : public QObject {
   Q_PROPERTY(LibrarySectionType type READ type WRITE setType NOTIFY dummy);
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
+  Q_PROPERTY(QUrl audioUrl READ audioUrl WRITE setAudioUrl NOTIFY dummy);
 
  private:
   int _itemID;
@@ -30,13 +31,16 @@ class LibraryItem : public QObject {
   QDateTime _creationTime;
   QDateTime _modificationTime;
   LibrarySectionType _type;
+  QTemporaryFile _image;
   QUrl _imageUrl;
   QColor _color;
-  QTemporaryFile _image;
+  QTemporaryFile _audio;
+  QUrl _audioUrl;
 
  public:
   explicit LibraryItem(QObject* parent = nullptr);
-  void init(LibraryItem&& item, QByteArray&& image);
+  LibraryItem(LibraryItem&& item);
+  LibraryItem& operator=(LibraryItem&& item);
   int id() const {return _itemID;}
   QString title() const {return _title;}
   QDateTime creationTime() const {return _creationTime;}
@@ -45,6 +49,8 @@ class LibraryItem : public QObject {
   QUrl imageUrl() const {return _imageUrl;}
   QByteArray image() const;
   QColor color() const {return _color;}
+  QUrl audioUrl() const {return _audioUrl;}
+  QByteArray audio() const;
 
   void setID(int id) {_itemID = id;}
   void setTitle(const QString& title);
@@ -55,12 +61,20 @@ class LibraryItem : public QObject {
   void setImageUrl(const QUrl& imageUrl) {_imageUrl = imageUrl;}
   void setImage(QByteArray&& data);
   void setColor(const QColor& color) {_color = color;}
+  void setAudioUrl(const QUrl& audioUrl) {_audioUrl = audioUrl;}
+  void setAudio(QByteArray&& data);
 
  private:
-  void rename();
+  void init(LibraryItem&& item);
+  QString getNewFileName();
+  QByteArray readFile(const QString& path) const;
+  void writeFile(QTemporaryFile& file, QByteArray&& data);
 
  signals:
   void dummy();
+
+ private:
+  Q_DISABLE_COPY(LibraryItem)
 };
 
 }

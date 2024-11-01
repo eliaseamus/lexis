@@ -39,8 +39,21 @@ Pane {
             id: transcription
             visible: false
             Layout.alignment: Qt.AlignVCenter
-            Layout.rightMargin: 30
             font.pointSize: 20
+          }
+          RoundButton {
+            id: speaker
+            Layout.alignment: Qt.AlignVCenter
+            Layout.leftMargin: 10
+            Layout.rightMargin: 30
+            icon.source: "icons/audio.png"
+            ToolTip {
+              visible: speaker.hovered
+              text: qsTr("Pronunciation")
+            }
+            onClicked: {
+
+            }
           }
         }
         ScrollView {

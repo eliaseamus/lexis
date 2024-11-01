@@ -58,7 +58,7 @@ void Library::addItem(LibraryItem* item) {
 
   item->setID(getItemID(item->title()));
   updateParentModificationTime(_table, item->id());
-  insertItem(std::move(*item), item->image());
+  insertItem(std::move(*item));
 }
 
 void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
@@ -93,14 +93,14 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
 
   if (oldType == item->type()) {
     auto* section = getSection(item->type());
-    section->updateItem(std::move(*item), std::move(item->image()));
+    section->updateItem(std::move(*item));
   } else {
     auto* section = getSection(oldType);
     section->removeItem(item->id());
     if (section->isEmpty()) {
       _sections.removeOne(section);
     }
-    insertItem(std::move(*item), item->image());
+    insertItem(std::move(*item));
   }
 
 }
@@ -134,7 +134,8 @@ void Library::createTable() {
      title             TEXT,                              \
      type              INTEGER,                           \
      image             BLOB,                              \
-     color             TEXT)"
+     color             TEXT,                              \
+     audio             BLOB)"
   ).arg(_table);
   if (!query.exec(createTableQuery)) {
     qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
@@ -153,7 +154,8 @@ void Library::createChildTable(const QString& parentTable, int parentID) {
      title             TEXT,                              \
      type              INTEGER,                           \
      image             BLOB,                              \
-     color             TEXT)"
+     color             TEXT,                              \
+     audio             BLOB)"
   ).arg(_table, parentTable, QString::number(parentID));
   if (!query.exec(createTableQuery)) {
     qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
@@ -223,7 +225,7 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 void Library::populateSections() {
   QSqlQuery query(
     QString(
-      "SELECT id, title, creation_time, modification_time, type, image, color FROM %1"
+      "SELECT id, title, creation_time, modification_time, type, image, color, audio FROM %1"
     ).arg(_table)
   );
 
@@ -235,16 +237,18 @@ void Library::populateSections() {
     item.setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
     item.setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
     item.setType(_typeManager.librarySectionType(query.value("type").toInt()));
+    item.setImage(query.value("image").toByteArray());
     item.setColor(query.value("color").toString());
+    item.setAudio(query.value("audio").toByteArray());
 
-    insertItem(std::move(item), query.value("image").toByteArray());
+    insertItem(std::move(item));
   }
 
 }
 
-void Library::insertItem(LibraryItem&& item, QByteArray&& image) {
+void Library::insertItem(LibraryItem&& item) {
   auto* section = getSection(item.type());
-  section->addItem(std::move(item), std::move(image));
+  section->addItem(std::move(item));
 }
 
 QStringList Library::getTablesList() const {

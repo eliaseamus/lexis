@@ -24,12 +24,13 @@ class LibraryItemModel : public QAbstractListModel {
     ModificationTimeRole,
     TypeRole,
     ImageUrlRole,
-    ColorRole
+    ColorRole,
+    AudioUrlRole
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);
-  void addItem(LibraryItem&& item, QByteArray&& image);
-  void updateItem(LibraryItem&& item, QByteArray&& image);
+  void addItem(LibraryItem&& item);
+  void updateItem(LibraryItem&& item);
   void removeItem(int id);
   bool isEmpty() const {return _items.isEmpty();}
   int rowCount(const QModelIndex& parent = {}) const override;

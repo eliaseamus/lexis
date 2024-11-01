@@ -7,15 +7,15 @@ LibraryItemModel::LibraryItemModel(QObject* parent) :
 {
 }
 
-void LibraryItemModel::addItem(LibraryItem&& item, QByteArray&& image) {
+void LibraryItemModel::addItem(LibraryItem&& item) {
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
   auto* newItem = new LibraryItem(this);
-  newItem->init(std::move(item), std::move(image));
+  *newItem = std::move(item);
   _items.append(newItem);
   endInsertRows();
 }
 
-void LibraryItemModel::updateItem(LibraryItem&& item, QByteArray&& image) {
+void LibraryItemModel::updateItem(LibraryItem&& item) {
   auto target = std::find_if(_items.begin(), _items.end(), [&item](auto* e) {
     return e->id() == item.id();
   });
@@ -26,7 +26,7 @@ void LibraryItemModel::updateItem(LibraryItem&& item, QByteArray&& image) {
   }
   item.setCreationTime((*target)->creationTime());
   emit layoutAboutToBeChanged();
-  (*target)->init(std::move(item), std::move(image));
+  **target = std::move(item);
   emit layoutChanged();
 }
 
@@ -71,6 +71,8 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->imageUrl();
     case ColorRole:
       return item->color();
+    case AudioUrlRole:
+      return item->audioUrl();
   }
 
   return {};
@@ -85,6 +87,7 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[TypeRole] = "type";
   roles[ImageUrlRole] = "imageUrl";
   roles[ColorRole] = "itemColor";
+  roles[AudioUrlRole] = "audioUrl";
   return roles;
 }
 
