@@ -51,11 +51,13 @@ void Library::addItem(LibraryItem* item) {
   query.bindValue(":color", item->color().name());
 
   if (!query.exec()) {
-    qWarning() << "Failed to insert item into database:" << query.lastError();
+    qWarning() << QString("Failed to insert item into '%1' table:").arg(_table)
+               << query.lastError();
     return;
   }
 
   item->setID(getItemID(item->title()));
+  updateParentModificationTime(_table, item->id());
   insertItem(std::move(*item), item->image());
 }
 
@@ -82,10 +84,12 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   query.bindValue(":color", item->color().name());
 
   if (!query.exec()) {
-    qWarning() << QString("Failed to update '%1' item in '%2' database:")
+    qWarning() << QString("Failed to update '%1' item in '%2' table:")
                   .arg(item->title(), _table) << query.lastError();
     return;
   }
+
+  updateParentModificationTime(_table, item->id());
 
   if (oldType == item->type()) {
     auto* section = getSection(item->type());
@@ -102,10 +106,11 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
 }
 
 void Library::deleteItem(int id, LibrarySectionType type) {
+  updateParentModificationTime(_table, id);
   QSqlQuery query;
   query.prepare(QString("DELETE FROM %1 WHERE id = \"%2\"").arg(_table, QString::number(id)));
   if (!query.exec()) {
-    qWarning() << QString("Failed to delete item of id = '%1' from '%2' database:")
+    qWarning() << QString("Failed to delete item of id = '%1' from '%2' table:")
                   .arg(QString::number(id), _table) << query.lastError();
     return;
   }
@@ -141,15 +146,15 @@ void Library::createChildTable(const QString& parentTable, int parentID) {
   auto createTableQuery = QString(
     "CREATE TABLE IF NOT EXISTS %1                        \
     (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
-     parent_id         INTEGER DEFAULT %2,                \
+     parent_table      TEXT DEFAULT %2,                   \
+     parent_id         INTEGER DEFAULT %3,                \
      creation_time     TEXT,                              \
      modification_time TEXT,                              \
      title             TEXT,                              \
      type              INTEGER,                           \
      image             BLOB,                              \
-     color             TEXT,                              \
-     FOREIGN KEY (parent_id) REFERENCES %3(parent_id) ON DELETE CASCADE)"
-  ).arg(_table, QString::number(parentID), parentTable);
+     color             TEXT)"
+  ).arg(_table, parentTable, QString::number(parentID));
   if (!query.exec(createTableQuery)) {
     qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
   }
@@ -192,15 +197,6 @@ int Library::getItemID(const QString& title) const {
     id = query.value("id").toInt();
   }
   return id;
-}
-
-LibrarySectionType Library::getItemType(int id) const {
-  QSqlQuery query(QString("SELECT type FROM %1 WHERE id = %2").arg(_table, id));
-  LibrarySectionType type = LibrarySectionType::kUnknown;
-  while (query.next()) {
-    type = _typeManager.librarySectionType(query.value("type").toInt());
-  }
-  return type;
 }
 
 void Library::clearSections() {
@@ -252,7 +248,7 @@ void Library::insertItem(LibraryItem&& item, QByteArray&& image) {
 }
 
 QStringList Library::getTablesList() const {
-  QSqlQuery query("SELECT name FROM sqlite_master WHERE type='table'");
+  QSqlQuery query("SELECT name FROM sqlite_master WHERE type = 'table'");
   QStringList list;
   while (query.next()) {
     list.append(query.value("name").toString());
@@ -273,6 +269,32 @@ void Library::dropTable(const QString& name) {
   if (name == _table) {
     _sections.clear();
     _table.clear();
+  }
+}
+
+void Library::updateParentModificationTime(const QString& table, int id) {
+  QSqlQuery query(
+    QString(
+      "SELECT parent_table, parent_id FROM %1 WHERE id = \"%2\""
+    ).arg(table, QString::number(id))
+  );
+  while (query.next()) {
+    auto parentTable = query.value("parent_table").toString();
+    auto parentID = query.value("parent_id").toInt();
+    QSqlQuery updateQuery;
+    updateQuery.prepare(
+      QString(
+        "UPDATE %1 "
+        "SET modification_time = :modification "
+        "WHERE id = \"%2\"").arg(parentTable, QString::number(parentID))
+    );
+    updateQuery.bindValue(":modification", QDateTime::currentDateTime().toString());
+    if (!updateQuery.exec()) {
+      qWarning() << QString("Failed to update '%1' item in '%2' table:")
+                    .arg(QString::number(parentID), parentTable) << query.lastError();
+      return;
+    }
+    updateParentModificationTime(parentTable, parentID);
   }
 }
 
