@@ -114,3 +114,4 @@ qt_add_translations(${PROJECT_NAME}
 add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})
 add_definitions(-DCSE_ID=${CSE_ID})
+add_definitions(-DELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY})

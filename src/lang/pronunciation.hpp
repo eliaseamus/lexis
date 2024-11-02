@@ -9,12 +9,23 @@ namespace lexis {
 class ElevenLabs : public WebService {
  Q_OBJECT
 
+ private:
+  QString _apiKey;
+  QStringList _voices;
+  const QString _model = "eleven_multilingual_v2";
+
  public:
-  explicit ElevenLabs(QObject* parent = nullptr) : WebService(parent) {}
-  void get(const QString& query) override;
+  explicit ElevenLabs(QObject* parent = nullptr);
+  void textToSpeech(const QString& query);
 
  public slots:
   void onFinished(QNetworkReply* reply) override;
+
+ private:
+  void requestVoices();
+  void requestAudio(const QString& query, const QString& voice);
+  void retrieveVoices(QNetworkReply* reply);
+  void retrieveAudio(QNetworkReply* reply);
 
  signals:
    void audioReady(const QByteArray& audio);
@@ -25,7 +36,7 @@ class PlayHT : public WebService {
 
  public:
   explicit PlayHT(QObject* parent = nullptr) : WebService(parent) {}
-  void get(const QString& query) override;
+  void textToSpeech(const QString& query);
 
  public slots:
   void onFinished(QNetworkReply* reply) override;
