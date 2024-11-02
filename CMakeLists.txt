@@ -12,16 +12,34 @@ include_directories(src src/db src/gui src/lang src/model)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
 
 qt_add_executable(${PROJECT_NAME}
+  # src/file_downloader.cpp
+  # src/file_downloader.hpp
+  src/lang/dictionary.cpp
+  src/lang/dictionary.hpp
+  src/lang/predictor.cpp
+  src/lang/predictor.hpp
+  src/lang/pronunciation.cpp
+  src/lang/pronunciation.hpp
   src/main.cpp
+  src/model/library_item.hpp
+  src/model/library_item.cpp
+  src/model/library_item_model.hpp
+  src/model/library_item_model.cpp
+  src/model/library_item_proxy_model.hpp
+  src/model/library_item_proxy_model.cpp
+  src/model/library_section.hpp
+  src/model/library_section.cpp
+  src/model/section_type.hpp
+  src/model/section_type.cpp
   src/web_service.cpp
   src/web_service.hpp
   src/utils.hpp
-  src/lang/dictionary.cpp
-  src/lang/dictionary.hpp
-  # src/file_downloader.cpp
-  # src/file_downloader.hpp
-  # src/lang/pronunciation_service.cpp
-  # src/lang/pronunciation_service.hpp
+  src/app_manager.hpp
+  src/app_manager.cpp
+  src/app_settings.hpp
+  src/app_settings.cpp
+  src/db/library.cpp
+  src/db/library.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -63,25 +81,6 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/TimeInfoDialog.qml
     src/qml/ToolBar.qml
     src/qml/utils.js
-  SOURCES
-    src/app_manager.hpp
-    src/app_manager.cpp
-    src/app_settings.hpp
-    src/app_settings.cpp
-    src/db/library.cpp
-    src/db/library.hpp
-    src/lang/predictor.cpp
-    src/lang/predictor.hpp
-    src/model/library_item.hpp
-    src/model/library_item.cpp
-    src/model/library_item_model.hpp
-    src/model/library_item_model.cpp
-    src/model/library_item_proxy_model.hpp
-    src/model/library_item_proxy_model.cpp
-    src/model/library_section.hpp
-    src/model/library_section.cpp
-    src/model/section_type.hpp
-    src/model/section_type.cpp
   RESOURCES
     src/qml/icons/audio.png
     src/qml/icons/back.png

@@ -25,6 +25,11 @@ void LibraryItemProxyModel::updateItem(LibraryItem&& item) {
   emit changed();
 }
 
+void LibraryItemProxyModel::updateAudio(int id, QByteArray&& audio) {
+  _source->updateAudio(id, std::move(audio));
+  emit changed();
+}
+
 void LibraryItemProxyModel::removeItem(int id) {
   _source->removeItem(id);
   emit changed();

@@ -154,10 +154,11 @@ Pane {
     id: sectionTypeManager
   }
 
-  function displayItem(title, image, color) {
+  function displayItem(title, image, color, audio) {
     itemView.title = title;
     itemView.imageUrl = image;
     itemView.itemColor = color;
+    itemView.audioUrl = audio;
     itemView.init();
     stackView.push(itemView);
   }

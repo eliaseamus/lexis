@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QLexis
+import "utils.js" as Utils
 
 Rectangle {
   id: newItem
@@ -32,6 +33,8 @@ Rectangle {
     imageItem.source = ""
     imageItem.visible = false
     cover.color = palette.base
+    customColor.Material.background = "white";
+    customColor.icon.color = "black";
   }
 
   ColumnLayout {
@@ -72,15 +75,17 @@ Rectangle {
 
       RoundButton {
         id: customColor
-        text: "+"
+        icon.source: "icons/plus.png"
+        icon.color: "black"
         Material.background: "white"
         onClicked: colorDialog.open()
 
         ColorDialog {
           id: colorDialog
           onAccepted: {
-            customColor.Material.background = selectedColor
-            cover.color = selectedColor
+            customColor.Material.background = selectedColor;
+            customColor.icon.color = Utils.getFgColor(selectedColor);
+            cover.color = selectedColor;
           }
         }
       }

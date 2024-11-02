@@ -6,6 +6,7 @@
 #include <QUrl>
 
 #include "library_section.hpp"
+#include "pronunciation.hpp"
 
 namespace lexis {
 
@@ -16,9 +17,19 @@ class Library : public QObject {
  Q_PROPERTY(QVector<LibrarySection*> sections READ sections NOTIFY dummy);
 
  private:
+  // used for async operations on database
+  struct CurrentItem {
+    QString table;
+    int id;
+    LibrarySectionType type;
+  };
+
+ private:
   QVector<LibrarySection*> _sections;
   QString _table;
   SectionTypeManager _typeManager;
+  Pronunciation* _pronunciation = nullptr;
+  CurrentItem _audioItem;
 
  public:
   explicit Library(QObject* parent = nullptr);
@@ -35,15 +46,18 @@ class Library : public QObject {
   void clearSections();
   void createTable();
   void createChildTable(const QString& parentTable, int parentID);
-  LibrarySection* getSection(LibrarySectionType type);
+  LibrarySection* getSection(LibrarySectionType type, bool createIfNotExists = true);
   void populateSections();
   void insertItem(LibraryItem&& item);
   int getItemID(const QString& title) const;
   QString getTitle(int id) const;
   QStringList getTablesList() const;
   void dropTable(const QString& name);
-  void updateAudio(const QString& title, int id);
+  void updateAudio(const QString& title);
   void updateParentModificationTime(const QString& table, int id);
+
+ private slots:
+  void updateAudioItem(QByteArray audio);
 
  signals:
   void dummy();

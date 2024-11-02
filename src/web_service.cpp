@@ -9,7 +9,7 @@ WebService::WebService(QObject* parent) :
   connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
 }
 
-void WebService::request(const QString& query) {
+void WebService::get(const QString& query) {
   _manager->get(QNetworkRequest(QUrl(query)));
 }
 

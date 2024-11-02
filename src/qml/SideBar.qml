@@ -100,11 +100,9 @@ Item {
               acceptedButtons: Qt.LeftButton | Qt.RightButton
               onClicked: (mouse) => {
                 if (mouse.button === Qt.LeftButton) {
-                  if (settings.currentLanguage !== modelData) {
-                    settings.currentLanguage = modelData
-                    libraryView.changeLanguage(modelData)
-                    stackView.pop(null)
-                  }
+                  settings.currentLanguage = modelData
+                  libraryView.changeLanguage(modelData)
+                  stackView.pop(null)
                 } else if (mouse.button === Qt.RightButton) {
                   contextMenu.popup()
                 }

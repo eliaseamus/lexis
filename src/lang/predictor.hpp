@@ -17,7 +17,7 @@ class Predictor : public WebService {
 
  public:
   explicit Predictor(QObject* parent = nullptr) : WebService(parent) {}
-  Q_INVOKABLE void request(const QString& query) override;
+  Q_INVOKABLE void get(const QString& query) override;
 
  signals:
   void predictionsReceived(const QStringList& predictions);

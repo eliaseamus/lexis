@@ -51,7 +51,7 @@ Dictionary::Dictionary(QObject* parent) :
 {
 }
 
-void Dictionary::request(const QString& query) {
+void Dictionary::get(const QString& query) {
   static const auto urlFormat = QString("https://dictionary.yandex.net/api/v1/ \
                                          dicservice.json/lookup?               \
                                          key=%1&lang=%2&text=%3").remove(' ');
@@ -60,7 +60,7 @@ void Dictionary::request(const QString& query) {
     return;
   }
 
-  WebService::request(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
+  WebService::get(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
                                              _settings.getCurrentInterfaceLanguagePair(),
                                              QString(query).replace(' ', '+')));
 }

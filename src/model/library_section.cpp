@@ -36,6 +36,10 @@ void LibrarySection::updateItem(LibraryItem&& item) {
   _model->updateItem(std::move(item));
 }
 
+void LibrarySection::updateAudio(int id, QByteArray&& audio) {
+  _model->updateAudio(id, std::move(audio));
+}
+
 void LibrarySection::removeItem(int id) {
   _model->removeItem(id);
 }

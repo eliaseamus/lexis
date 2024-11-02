@@ -9,7 +9,7 @@
 
 namespace lexis {
 
-void Predictor::request(const QString& query) {
+void Predictor::get(const QString& query) {
   static const auto limit = 10;
   static const auto urlFormat = QString("https://predictor.yandex.net/api/v1/ \
                                          predict.json/complete?               \
@@ -20,7 +20,7 @@ void Predictor::request(const QString& query) {
                                       QString(query).replace(' ', '+'),
                                       _settings.getCurrentLanguage(),
                                       QString::number(limit));
-  WebService::request(url);
+  WebService::get(url);
 }
 
 void Predictor::onFinished(QNetworkReply* reply) {

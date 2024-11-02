@@ -27,7 +27,7 @@ Item {
 
     onTextEdited: {
       completions.currentIndex = -1
-      predictor.request(text)
+      predictor.get(text)
     }
   }
 

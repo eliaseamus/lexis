@@ -103,7 +103,7 @@ class Dictionary : public WebService {
 
  public:
   explicit Dictionary(QObject* parent = nullptr);
-  Q_INVOKABLE void request(const QString& query) override;
+  Q_INVOKABLE void get(const QString& query) override;
 
  signals:
   void definitionsReady(const QVector<Definition*>& definitions);

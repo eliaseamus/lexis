@@ -14,7 +14,7 @@ class WebService : public QObject {
 
  public:
   explicit WebService(QObject* parent = nullptr);
-  virtual void request(const QString& query);
+  virtual void get(const QString& query);
 
  public slots:
   virtual void onFinished(QNetworkReply* reply) = 0;

@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtMultimedia
 import QLexis
 
 Pane {
   property string title
   property string imageUrl
   property color itemColor
+  property string audioUrl
 
   ColumnLayout {
     anchors.fill: parent
@@ -34,26 +36,28 @@ Pane {
             Layout.leftMargin: 20
             font.pointSize: 40
           }
-          Item {Layout.fillWidth: true}
-          PrettyLabel {
-            id: transcription
-            visible: false
-            Layout.alignment: Qt.AlignVCenter
-            font.pointSize: 20
-          }
           RoundButton {
             id: speaker
             Layout.alignment: Qt.AlignVCenter
             Layout.leftMargin: 10
-            Layout.rightMargin: 30
+            icon.color: settings.fgColor
+            Material.background: settings.accentColor
             icon.source: "icons/audio.png"
             ToolTip {
               visible: speaker.hovered
               text: qsTr("Pronunciation")
             }
             onClicked: {
-
+              pronunciation.play();
             }
+          }
+          Item {Layout.fillWidth: true}
+          PrettyLabel {
+            id: transcription
+            visible: false
+            Layout.alignment: Qt.AlignVCenter
+            Layout.rightMargin: 30
+            font.pointSize: 20
           }
         }
         ScrollView {
@@ -108,6 +112,12 @@ Pane {
         text: qsTr("Back")
       }
     }
+  }
+
+  MediaPlayer {
+    id: pronunciation
+    source: audioUrl
+    audioOutput: AudioOutput {}
   }
 
   Connections {
@@ -167,7 +177,7 @@ Pane {
     transcription.visible = false;
     dictionaryPage.text = "";
     dictionaryPage.visible = false;
-    dictionary.request(title)
+    dictionary.get(title)
   }
 
 }
