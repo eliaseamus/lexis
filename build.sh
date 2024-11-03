@@ -6,6 +6,8 @@
 # DICTIONARY_API_KEY
 # GOOGLE_CUSTOM_SEARCH_ENGINE_ID (CSE_ID)
 # ELEVEN_LABS_API_KEY
+# PLAY_HT_USER
+# PLAY_HT_API_KEY
 source env.sh
 
 function build {
@@ -15,7 +17,9 @@ function build {
         -DPREDICTOR_API_KEY=${PREDICTOR_API_KEY}     \
         -DDICTIONARY_API_KEY=${DICTIONARY_API_KEY}   \
         -DCSE_ID=${CSE_ID}                           \
-        -DELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY}
+        -DELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY} \
+        -DPLAY_HT_USER=${PLAY_HT_USER}               \
+        -DPLAY_HT_API_KEY=${PLAY_HT_API_KEY}
 
     ninja -C build
     ln -sf build/compile_commands.json compile_commands.json

@@ -21,7 +21,6 @@ class Library : public QObject {
   struct CurrentItem {
     QString table;
     int id;
-    LibrarySectionType type;
   };
 
  private:
@@ -40,24 +39,25 @@ class Library : public QObject {
   Q_INVOKABLE void openTable(const QString& name);
   Q_INVOKABLE void openChildTable(int parentID);
   Q_INVOKABLE void dropTableRecursively(const QString& root);
+  Q_INVOKABLE void readAudio(int id);
   QVector<LibrarySection*> sections() const {return _sections;}
 
  private:
   void clearSections();
   void createTable();
   void createChildTable(const QString& parentTable, int parentID);
-  LibrarySection* getSection(LibrarySectionType type, bool createIfNotExists = true);
+  LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
   void insertItem(LibraryItem&& item);
   int getItemID(const QString& title) const;
   QString getTitle(int id) const;
   QStringList getTablesList() const;
   void dropTable(const QString& name);
-  void updateAudio(const QString& title);
+  void requestAudio(const QString& title);
   void updateParentModificationTime(const QString& table, int id);
 
  private slots:
-  void updateAudioItem(QByteArray audio);
+  void updateAudio(QByteArray audio);
 
  signals:
   void dummy();

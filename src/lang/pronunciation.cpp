@@ -80,20 +80,98 @@ void ElevenLabs::retrieveAudio(QNetworkReply* reply) {
   emit audioReady(qCompress(reply->readAll()));
 }
 
-void PlayHT::textToSpeech(const QString& query) {
+PlayHT::PlayHT(QObject* parent) :
+  WebService(parent)
+{
+  _userID = MAKE_STR(PLAY_HT_USER);
+  _apiKey = MAKE_STR(PLAY_HT_API_KEY);
+  requestVoices();
+}
 
+void PlayHT::textToSpeech(const QString& query) {
+  static qsizetype voiceIndex = 0;
+
+  if (!_voices.size()) {
+    qWarning() << "No voices saved, request voices once again";
+    requestVoices();
+  }
+
+  requestAudio(query, _voices[voiceIndex]);
+
+  if (++voiceIndex >= _voices.size()) {
+    voiceIndex = 0;
+  }
 }
 
 void PlayHT::onFinished(QNetworkReply* reply) {
+  if (_voices.isEmpty()) {
+    retrieveVoices(reply);
+  } else {
+    retrieveAudio(reply);
+  }
+}
+
+void PlayHT::requestVoices() {
+  QNetworkRequest request(QUrl("https://api.play.ht/api/v2/voices"));
+  request.setRawHeader("Accept", "application/json");
+  request.setRawHeader("X-USER-ID", _userID.toUtf8());
+  request.setRawHeader("AUTHORIZATION", _apiKey.toUtf8());
+  WebService::get(request);
+}
+
+void PlayHT::requestAudio(const QString& query, const QString& voice) {
+  QNetworkRequest request(QUrl("https://api.play.ht/api/v2/tts/stream"));
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request.setRawHeader("Accept", "audio/mpeg");
+  request.setRawHeader("X-USER-ID", _userID.toUtf8());
+  request.setRawHeader("AUTHORIZATION", _apiKey.toUtf8());
+
+  QJsonObject obj;
+  obj["text"] = query;
+  obj["voice_engine"] = _voiceEngine;
+  obj["voice"] = voice;
+  obj["language"] = getLanguage();
+  QJsonDocument doc(obj);
+  QByteArray body = doc.toJson();
+
+  WebService::post(request, body);
+}
+
+void PlayHT::retrieveVoices(QNetworkReply* reply) {
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-  if (!document.isArray()) {
-    qDebug() << "no audio was found";
-    return;
+  QJsonArray voicesValues = document.array();
+
+  _voices.reserve(voicesValues.size());
+  for (const auto& voiceValue : voicesValues) {
+    auto voiceObject = voiceValue.toObject();
+    _voices.append(voiceObject["id"].toString());
+  }
+}
+
+void PlayHT::retrieveAudio(QNetworkReply* reply) {
+  emit audioReady(qCompress(reply->readAll()));
+}
+
+QString PlayHT::getLanguage() {
+  static QHash<QString, QString> languages = {
+    {"de", "german"},
+    {"en", "english"},
+    {"es", "spanish"},
+    {"fr", "french"},
+    {"it", "italian"},
+    {"pl", "polish"},
+    {"ru", "russian"},
+    {"tr", "turkish"},
+    {"uk", "ukranian"}
+  };
+
+  auto currentLanguage = _settings.getCurrentLanguage();
+  if (!languages.contains(currentLanguage)) {
+    qWarning() << currentLanguage << "not found";
+    return "";
   }
 
-  QJsonArray values = document.array();
-
-  //
+  return languages[currentLanguage];
 }
 
 Pronunciation::Pronunciation(QObject* parent) :

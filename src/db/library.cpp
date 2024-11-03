@@ -13,7 +13,7 @@ Library::Library(QObject* parent) :
   openDatabase("lexis.db");
   AppSettings settings;
   openTable(settings.getCurrentLanguage());
-  connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudioItem);
+  connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
 }
 
 void Library::openDatabase(const QString& name) {
@@ -62,8 +62,7 @@ void Library::addItem(LibraryItem* item) {
   if (item->type() == LibrarySectionType::kWord) {
     _audioItem.table = _table;
     _audioItem.id = item->id();
-    _audioItem.type = item->type();
-    updateAudio(item->title());
+    requestAudio(item->title());
   }
   updateParentModificationTime(_table, item->id());
   insertItem(std::move(*item));
@@ -102,8 +101,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   if (item->type() == LibrarySectionType::kWord && oldTitle != item->title()) {
     _audioItem.table = _table;
     _audioItem.id = item->id();
-    _audioItem.type = item->type();
-    updateAudio(item->title());
+    requestAudio(item->title());
   }
   updateParentModificationTime(_table, item->id());
 
@@ -204,6 +202,22 @@ void Library::dropTableRecursively(const QString& root) {
   }
 }
 
+void Library::readAudio(int id) {
+  QSqlQuery query(
+    QString(
+      "SELECT audio FROM %1 WHERE id = \"%2\""
+    ).arg(_table, QString::number(id))
+  );
+
+  QByteArray audio;
+  while (query.next()) {
+    audio = query.value("audio").toByteArray();
+  }
+
+  auto* section = getSection(LibrarySectionType::kWord);
+  section->updateAudio(id, std::move(audio));
+}
+
 void Library::clearSections() {
   for (auto* section : _sections) {
     section->deleteLater();
@@ -211,17 +225,13 @@ void Library::clearSections() {
   _sections.clear();
 }
 
-LibrarySection* Library::getSection(LibrarySectionType type, bool createIfNotExists) {
+LibrarySection* Library::getSection(LibrarySectionType type) {
   auto pos = std::find_if(_sections.begin(), _sections.end(), [type](LibrarySection* section) {
     return section->type() == type;
   });
 
   if (pos != _sections.end()) {
     return *pos;
-  }
-
-  if (!createIfNotExists) {
-    return nullptr;
   }
 
   auto* section = new LibrarySection(type, this);
@@ -232,7 +242,7 @@ LibrarySection* Library::getSection(LibrarySectionType type, bool createIfNotExi
 void Library::populateSections() {
   QSqlQuery query(
     QString(
-      "SELECT id, title, creation_time, modification_time, type, image, color, audio FROM %1"
+      "SELECT id, title, creation_time, modification_time, type, image, color FROM %1"
     ).arg(_table)
   );
 
@@ -246,7 +256,6 @@ void Library::populateSections() {
     item.setType(_typeManager.librarySectionType(query.value("type").toInt()));
     item.setImage(query.value("image").toByteArray());
     item.setColor(query.value("color").toString());
-    item.setAudio(query.value("audio").toByteArray());
 
     insertItem(std::move(item));
   }
@@ -309,7 +318,7 @@ void Library::dropTable(const QString& name) {
   }
 }
 
-void Library::updateAudio(const QString& title) {
+void Library::requestAudio(const QString& title) {
   _pronunciation->get(title);
 }
 
@@ -339,7 +348,7 @@ void Library::updateParentModificationTime(const QString& table, int id) {
   }
 }
 
-void Library::updateAudioItem(QByteArray audio) {
+void Library::updateAudio(QByteArray audio) {
   QSqlQuery query;
   query.prepare(
     QString(
@@ -354,13 +363,6 @@ void Library::updateAudioItem(QByteArray audio) {
                   .arg(QString::number(_audioItem.id), _audioItem.table) << query.lastError();
     return;
   }
-
-  auto* section = getSection(_audioItem.type, false);
-  if (!section) {
-    return;
-  }
-
-  section->updateAudio(_audioItem.id, std::move(audio));
 }
 
 }

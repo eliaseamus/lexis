@@ -1,8 +1,8 @@
 #pragma once
 
-#include <qqml.h>
-
 #include "web_service.hpp"
+
+#include "app_settings.hpp"
 
 namespace lexis {
 
@@ -34,12 +34,26 @@ class ElevenLabs : public WebService {
 class PlayHT : public WebService {
  Q_OBJECT
 
+ private:
+  QString _userID;
+  QString _apiKey;
+  QStringList _voices;
+  const QString _voiceEngine = "Play3.0-mini";
+  AppSettings _settings;
+
  public:
-  explicit PlayHT(QObject* parent = nullptr) : WebService(parent) {}
+  explicit PlayHT(QObject* parent = nullptr);
   void textToSpeech(const QString& query);
 
  public slots:
   void onFinished(QNetworkReply* reply) override;
+
+ private:
+  void requestVoices();
+  void requestAudio(const QString& query, const QString& voice);
+  void retrieveVoices(QNetworkReply* reply);
+  void retrieveAudio(QNetworkReply* reply);
+  QString getLanguage();
 
  signals:
    void audioReady(const QByteArray& audio);
@@ -47,7 +61,6 @@ class PlayHT : public WebService {
 
 class Pronunciation: public QObject {
  Q_OBJECT
- QML_ELEMENT
 
  private:
   ElevenLabs* _elevenLabs = nullptr;

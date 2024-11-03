@@ -118,7 +118,8 @@ Item {
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
               if (type == "Word") {
-                libraryView.displayItem(title, imageUrl, itemColor, audioUrl)
+                library.readAudio(itemID);
+                libraryView.displayItem(title, imageUrl, itemColor, audioUrl);
               } else {
                 libraryView.loadPage(parentTable, itemID, title)
               }

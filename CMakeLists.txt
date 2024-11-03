@@ -12,8 +12,6 @@ include_directories(src src/db src/gui src/lang src/model)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
 
 qt_add_executable(${PROJECT_NAME}
-  # src/file_downloader.cpp
-  # src/file_downloader.hpp
   src/lang/dictionary.cpp
   src/lang/dictionary.hpp
   src/lang/predictor.cpp
@@ -115,3 +113,5 @@ add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})
 add_definitions(-DCSE_ID=${CSE_ID})
 add_definitions(-DELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY})
+add_definitions(-DPLAY_HT_USER=${PLAY_HT_USER})
+add_definitions(-DPLAY_HT_API_KEY=${PLAY_HT_API_KEY})
