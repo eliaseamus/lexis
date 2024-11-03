@@ -24,30 +24,22 @@ void Predictor::get(const QString& query) {
 }
 
 void Predictor::onFinished(QNetworkReply* reply) {
-  static const char space = ' ';
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray values = root["text"].toArray();
   bool isEndOfWord = root["endOfWord"].toBool();
-  bool isPhrase = _query.contains(space);
+  int pos = root["pos"].toInt();
 
   QVector<QString> predictions;
   predictions.reserve(values.size());
   for (const auto& value : values) {
-    QString prediction = value.toString();
-    if (isPhrase) {
-      const QString& startOfQuery = _query.mid(0, _query.lastIndexOf(space) + 1);
-      const QString& endOfQuery = _query.split(space).constLast();
-      if (prediction.startsWith(endOfQuery)) {
-        prediction.prepend(startOfQuery);
-      } else if (isEndOfWord) {
-        prediction.prepend(_query + space);
-      } else {
-        prediction.prepend(_query);
-      }
-    } else if (isEndOfWord && !prediction.startsWith(_query)) {
-      prediction.prepend(_query + space);
+    auto prediction = _query;
+    if (pos < 0) {
+      prediction = prediction.sliced(0, prediction.size() + pos);
+    } else if (isEndOfWord && pos > 0) {
+      prediction += " ";
     }
+    prediction += value.toString();
     predictions.push_back(std::move(prediction));
   }
   emit predictionsReceived(predictions);
