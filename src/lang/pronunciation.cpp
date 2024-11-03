@@ -6,24 +6,30 @@
 #include <QJsonArray>
 
 #include <random>
+#include <thread>
 
 #include "utils.hpp"
 
 namespace lexis {
 
-ElevenLabs::ElevenLabs(QObject* parent) :
-  WebService(parent)
-{
-  _apiKey = MAKE_STR(ELEVEN_LABS_API_KEY);
-  requestVoices();
-}
-
-void ElevenLabs::textToSpeech(const QString& query) {
+void TTSService::textToSpeech(const QString& query) {
+  using namespace std::chrono_literals;
   static qsizetype voiceIndex = 0;
 
-  if (!_voices.size()) {
+  int i = 0;
+  const int attempts = 10;
+  while (!_voices.size()) {
     qWarning() << "No voices saved, request voices once again";
     requestVoices();
+    if (++i == attempts) {
+      break;
+    }
+    std::this_thread::sleep_for(500ms);
+  }
+
+  if (!_voices.size()) {
+    qWarning() << "No voices found, failed to request audio";
+    return;
   }
 
   requestAudio(query, _voices[voiceIndex]);
@@ -33,12 +39,22 @@ void ElevenLabs::textToSpeech(const QString& query) {
   }
 }
 
-void ElevenLabs::onFinished(QNetworkReply* reply) {
+void TTSService::retrieveAudio(QNetworkReply* reply) {
+  emit audioReady(qCompress(reply->readAll()));
+}
+
+void TTSService::onFinished(QNetworkReply* reply) {
   if (_voices.isEmpty()) {
     retrieveVoices(reply);
   } else {
     retrieveAudio(reply);
   }
+}
+
+ElevenLabs::ElevenLabs(QObject* parent) :
+  TTSService(parent)
+{
+  _apiKey = MAKE_STR(ELEVEN_LABS_API_KEY);
 }
 
 void ElevenLabs::requestVoices() {
@@ -69,46 +85,20 @@ void ElevenLabs::retrieveVoices(QNetworkReply* reply) {
   QJsonObject root = document.object();
   QJsonArray voicesValues = root["voices"].toArray();
 
-  _voices.reserve(voicesValues.size());
+  QStringList voices;
+  voices.reserve(voicesValues.size());
   for (const auto& voiceValue : voicesValues) {
     auto voiceObject = voiceValue.toObject();
-    _voices.append(voiceObject["voice_id"].toString());
+    voices.append(voiceObject["voice_id"].toString());
   }
-}
-
-void ElevenLabs::retrieveAudio(QNetworkReply* reply) {
-  emit audioReady(qCompress(reply->readAll()));
+  setVoices(voices);
 }
 
 PlayHT::PlayHT(QObject* parent) :
-  WebService(parent)
+  TTSService(parent)
 {
   _userID = MAKE_STR(PLAY_HT_USER);
   _apiKey = MAKE_STR(PLAY_HT_API_KEY);
-  requestVoices();
-}
-
-void PlayHT::textToSpeech(const QString& query) {
-  static qsizetype voiceIndex = 0;
-
-  if (!_voices.size()) {
-    qWarning() << "No voices saved, request voices once again";
-    requestVoices();
-  }
-
-  requestAudio(query, _voices[voiceIndex]);
-
-  if (++voiceIndex >= _voices.size()) {
-    voiceIndex = 0;
-  }
-}
-
-void PlayHT::onFinished(QNetworkReply* reply) {
-  if (_voices.isEmpty()) {
-    retrieveVoices(reply);
-  } else {
-    retrieveAudio(reply);
-  }
 }
 
 void PlayHT::requestVoices() {
@@ -141,15 +131,13 @@ void PlayHT::retrieveVoices(QNetworkReply* reply) {
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonArray voicesValues = document.array();
 
-  _voices.reserve(voicesValues.size());
+  QStringList voices;
+  voices.reserve(voicesValues.size());
   for (const auto& voiceValue : voicesValues) {
     auto voiceObject = voiceValue.toObject();
-    _voices.append(voiceObject["id"].toString());
+    voices.append(voiceObject["id"].toString());
   }
-}
-
-void PlayHT::retrieveAudio(QNetworkReply* reply) {
-  emit audioReady(qCompress(reply->readAll()));
+  setVoices(voices);
 }
 
 QString PlayHT::getLanguage() {
@@ -168,7 +156,7 @@ QString PlayHT::getLanguage() {
   auto currentLanguage = _settings.getCurrentLanguage();
   if (!languages.contains(currentLanguage)) {
     qWarning() << currentLanguage << "not found";
-    return "";
+    return "english";
   }
 
   return languages[currentLanguage];
@@ -179,6 +167,8 @@ Pronunciation::Pronunciation(QObject* parent) :
   _elevenLabs(new ElevenLabs(this)),
   _playHT(new PlayHT(this))
 {
+  _elevenLabs->requestVoices();
+  _playHT->requestVoices();
   connect(_elevenLabs, &ElevenLabs::audioReady, this, &Pronunciation::sendAudio);
   connect(_playHT, &PlayHT::audioReady, this, &Pronunciation::sendAudio);
 }

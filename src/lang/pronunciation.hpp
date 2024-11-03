@@ -6,57 +6,67 @@
 
 namespace lexis {
 
-class ElevenLabs : public WebService {
+class TTSService : public WebService {
  Q_OBJECT
 
  private:
-  QString _apiKey;
   QStringList _voices;
-  const QString _model = "eleven_multilingual_v2";
 
  public:
-  explicit ElevenLabs(QObject* parent = nullptr);
-  void textToSpeech(const QString& query);
+  explicit TTSService(QObject* parent = nullptr) : WebService(parent) {}
+  void textToSpeech (const QString& query);
+  virtual void requestVoices() = 0;
+
+ protected:
+  virtual void requestAudio(const QString& query, const QString& voice) = 0;
+  virtual void retrieveVoices(QNetworkReply* reply) = 0;
+  virtual void retrieveAudio(QNetworkReply* reply);
 
  public slots:
   void onFinished(QNetworkReply* reply) override;
 
- private:
-  void requestVoices();
-  void requestAudio(const QString& query, const QString& voice);
-  void retrieveVoices(QNetworkReply* reply);
-  void retrieveAudio(QNetworkReply* reply);
+ protected:
+  void setVoices(const QStringList& voices) {_voices = voices;}
 
  signals:
-   void audioReady(const QByteArray& audio);
+  void audioReady(const QByteArray& audio);
 };
 
-class PlayHT : public WebService {
+class ElevenLabs : public TTSService {
+ Q_OBJECT
+
+ private:
+  QString _apiKey;
+  const QString _model = "eleven_multilingual_v2";
+
+ public:
+  explicit ElevenLabs(QObject* parent = nullptr);
+  void requestVoices() override;
+
+ protected:
+  void requestAudio(const QString& query, const QString& voice) override;
+  void retrieveVoices(QNetworkReply* reply) override;
+};
+
+class PlayHT : public TTSService {
  Q_OBJECT
 
  private:
   QString _userID;
   QString _apiKey;
-  QStringList _voices;
   const QString _voiceEngine = "Play3.0-mini";
   AppSettings _settings;
 
  public:
   explicit PlayHT(QObject* parent = nullptr);
-  void textToSpeech(const QString& query);
+  void requestVoices() override;
 
- public slots:
-  void onFinished(QNetworkReply* reply) override;
+ protected:
+  void requestAudio(const QString& query, const QString& voice) override;
+  void retrieveVoices(QNetworkReply* reply) override;
 
  private:
-  void requestVoices();
-  void requestAudio(const QString& query, const QString& voice);
-  void retrieveVoices(QNetworkReply* reply);
-  void retrieveAudio(QNetworkReply* reply);
   QString getLanguage();
-
- signals:
-   void audioReady(const QByteArray& audio);
 };
 
 class Pronunciation: public QObject {
