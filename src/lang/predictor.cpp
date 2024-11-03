@@ -27,8 +27,8 @@ void Predictor::onFinished(QNetworkReply* reply) {
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray values = root["text"].toArray();
-  bool isEndOfWord = root["endOfWord"].toBool();
   int pos = root["pos"].toInt();
+  bool isEndOfWord = root["endOfWord"].toBool();
 
   QVector<QString> predictions;
   predictions.reserve(values.size());

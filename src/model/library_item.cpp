@@ -70,9 +70,6 @@ void LibraryItem::setImage(QByteArray&& data) {
   if (data.isEmpty()) {
     return;
   }
-  if (!_image.fileName().isEmpty()) {
-    _image.rename(getNewFileName()); // in order to QML reload image
-  }
   writeFile(_image, std::move(data));
   _imageUrl = QUrl::fromLocalFile(_image.fileName());
 }
@@ -83,17 +80,6 @@ void LibraryItem::setAudio(QByteArray&& data) {
   }
   writeFile(_audio, std::move(data));
   _audioUrl = QUrl::fromLocalFile(_audio.fileName());
-}
-
-QString LibraryItem::getNewFileName() {
-  QString newName;
-  {
-    QTemporaryFile file;
-    file.setFileTemplate(dir.path() + fileTemplate);
-    file.open();
-    newName = file.fileName();
-  }
-  return newName;
 }
 
 QByteArray LibraryItem::readFile(const QString& path) const {

@@ -70,7 +70,6 @@ SplitView {
         TextField {
           id: searchText
           placeholderText: qsTr("Search")
-          text: query
           Layout.fillWidth: true
           Keys.onPressed: (event) => {
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
@@ -80,6 +79,7 @@ SplitView {
         }
         PrettyButton {
           text: qsTr("Search")
+          enabled: searchText.text.length > 0
           onClicked: {
             searchResults.url = imagePicker.url + searchText.text.replace(" ", "+");
           }
@@ -112,6 +112,7 @@ SplitView {
 
       Image {
         id: image
+        property int cacheBuster: 0
         visible: false
         fillMode: Image.PreserveAspectFit
         Layout.fillWidth: true
@@ -153,9 +154,10 @@ SplitView {
       if (!drop.hasUrls) {
         return;
       }
-      image.source = drop.urls[0]
-      image.visible = true
-      dropBackground.color = dropBackground.defaultColor
+      const url = drop.urls[0].toString() + "?cacheBuster=%1".arg(image.cacheBuster++);
+      image.source = url;
+      image.visible = true;
+      dropBackground.color = dropBackground.defaultColor;
     }
   }
 
@@ -163,7 +165,7 @@ SplitView {
     spinner.visible = true;
     image.source = source;
     image.visible = source.length > 0;
-    searchText.text = query;
+    searchText.text = "";
     searchBar.visible = false;
     searchResults.visible = false;
     searchResults.reload();

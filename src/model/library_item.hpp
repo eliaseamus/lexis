@@ -66,7 +66,6 @@ class LibraryItem : public QObject {
 
  private:
   void init(LibraryItem&& item);
-  QString getNewFileName();
   QByteArray readFile(const QString& path) const;
   void writeFile(QTemporaryFile& file, QByteArray&& data);
 
