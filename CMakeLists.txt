@@ -59,9 +59,11 @@ qt_add_qml_module(${PROJECT_NAME}
   VERSION 1.0
   QML_FILES
     src/qml/DeleteDialog.qml
+    src/qml/HelpDialog.qml
     src/qml/Icon.qml
     src/qml/ImagePicker.qml
     src/qml/ImageWithEffect.qml
+    src/qml/InfoLine.qml
     src/qml/InterfaceLanguageDialog.qml
     src/qml/ItemView.qml
     src/qml/LibraryItemConfiguration.qml
@@ -85,6 +87,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/icons/color.png
     src/qml/icons/language.png
     src/qml/icons/plus.png
+    src/qml/icons/question.png
     src/qml/icons/search.png
     src/qml/icons/sort.png
     src/qml/icons/sort-ascending.png

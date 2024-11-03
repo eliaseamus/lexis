@@ -50,6 +50,16 @@ Item {
         }
         onClicked: colorDialog.open()
       }
+      RoundButton {
+        id: help
+        flat: true
+        icon.source: "icons/question.png"
+        ToolTip {
+          visible: help.hovered
+          text: qsTr("Help")
+        }
+        onClicked: helpDialog.open()
+      }
       Item {
         Layout.fillHeight: true
       }
@@ -156,6 +166,13 @@ Item {
     }
   }
 
+  HelpDialog {
+    id: helpDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
   SelectLanguageDialog {
     id: selectLanguageDialog
     x: (main.width - width) / 2
@@ -206,5 +223,10 @@ Item {
   Shortcut {
     sequence: "Alt+3"
     onActivated: colorDialog.open()
+  }
+
+  Shortcut {
+    sequence: "Alt+4"
+    onActivated: helpDialog.open()
   }
 }

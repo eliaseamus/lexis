@@ -10,30 +10,16 @@ Dialog {
   ColumnLayout {
     anchors.fill: parent
     anchors.margins: -5
-    RowLayout {
-      Layout.fillWidth: true
-      Layout.topMargin: 15
-      Layout.bottomMargin: 10
-      PrettyLabel {
-        title: qsTr("Creation:")
-      }
-      Item {Layout.fillWidth: true}
-      Label {
-        text: Qt.formatDateTime(creationTime)
-      }
+    spacing: 15
+    InfoLine {
+      Layout.topMargin: 20
+      infoTitle: qsTr("Creation:")
+      infoText: Qt.formatDateTime(creationTime)
     }
-    RowLayout {
-      Layout.fillWidth: true
-      Layout.bottomMargin: 15
-      PrettyLabel {
-        title: qsTr("Last edit:")
-      }
-      Item {Layout.fillWidth: true}
-      Label {
-        text: Qt.formatDateTime(modificationTime)
-      }
+    InfoLine {
+      infoTitle: qsTr("Last edit:")
+      infoText: Qt.formatDateTime(modificationTime)
     }
-
     PrettyButton {
       text: qsTr("Ok")
       Layout.alignment: Qt.AlignHCenter
