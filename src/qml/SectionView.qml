@@ -192,7 +192,7 @@ Item {
           item["title"] = title;
           item["creationTime"] = creationTime;
           item["modificationTime"] = modificationTime;
-          item["type"] = type;
+          item["type"] = sectionTypeManager.librarySectionType(type);
           item["imageUrl"] = imageUrl;
           item["itemColor"] = itemColor;
           item["audioUrl"] = audioUrl;
