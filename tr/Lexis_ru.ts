@@ -112,12 +112,12 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="48"/>
+        <location filename="../src/qml/ItemView.qml" line="50"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="84"/>
+        <location filename="../src/qml/ItemView.qml" line="110"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
@@ -126,7 +126,7 @@ and drop it in this area</source>
         <translation type="vanished">Ввести значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="121"/>
+        <location filename="../src/qml/ItemView.qml" line="94"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -209,12 +209,12 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="46"/>
+        <location filename="../src/qml/LibraryView.qml" line="49"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="61"/>
+        <location filename="../src/qml/LibraryView.qml" line="64"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -256,17 +256,27 @@ in the right bottom corner.</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="133"/>
+        <location filename="../src/qml/SectionView.qml" line="147"/>
+        <source>Select</source>
+        <translation>Выделить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="151"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="145"/>
+        <location filename="../src/qml/SectionView.qml" line="158"/>
+        <source>Move</source>
+        <translation>Переместить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionView.qml" line="162"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="156"/>
+        <location filename="../src/qml/SectionView.qml" line="173"/>
         <source>Time info</source>
         <translation>Время</translation>
     </message>

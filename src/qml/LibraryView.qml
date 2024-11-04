@@ -20,6 +20,9 @@ Pane {
   property var tables: []
   property bool isStartPage: true
   property var pages: []
+  property var selectedItems: []
+  property bool isSelectMode
+  signal quitSelectMode
 
   ColumnLayout {
     id: layout
@@ -175,6 +178,21 @@ Pane {
     stackView.push(itemConfiguration);
   }
 
+  function selectItem(item) {
+    selectedItems.push(item);
+    isSelectMode = true;
+  }
+
+  function deselectItem(id) {
+    let index = selectedItems.findIndex((item) => {return Number(item["itemID"]) === id;});
+    if (index !== -1) {
+      selectedItems.splice(index, 1);
+    }
+    if (selectedItems.length == 0) {
+      isSelectMode = false;
+    }
+  }
+
   function changeLanguage(language) {
     isStartPage = true;
     pages = [];
@@ -203,12 +221,18 @@ Pane {
     itemsSection.visible = sectionsLength > 0;
     prompt.visible = settings.currentLanguage.length > 0 && sectionsLength === 0;
     toolBar.refresh();
+    selectedItems = [];
+    isSelectMode = false;
     itemConfiguration.clear();
   }
 
   function pop() {
     if (toolBar.isSearchActive) {
       toolBar.toggleSearchLine();
+    } else if (isSelectMode) {
+      selectedItems = [];
+      isSelectMode = false;
+      quitSelectMode();
     } else if (tables.length > 1) {
       tables.pop();
       var table = tables.pop();

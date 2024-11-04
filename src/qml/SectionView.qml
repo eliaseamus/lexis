@@ -82,12 +82,20 @@ Item {
 
       delegate: Rectangle {
         id: gridItem
+        property bool isSelected
         width: 200
         height: 200
         color: mouseArea.containsPress ? itemColor.darker(1.1) : itemColor
         border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
         border.width: 2
         radius: 10
+        RoundButton {
+          flat: true
+          visible: isSelected
+          icon.source: "icons/check.png"
+          icon.color: settings.fgColor
+          Material.background: settings.accentColor
+        }
         ColumnLayout {
           anchors.fill: parent
           anchors.margins: 10
@@ -115,38 +123,39 @@ Item {
           hoverEnabled: true
           cursorShape: Qt.PointingHandCursor
           acceptedButtons: Qt.LeftButton | Qt.RightButton
+          onPressAndHold: toggleSelection()
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
-              if (type == "Word") {
-                library.readAudio(itemID);
-                var item = [];
-                item["itemID"] = itemID;
-                item["title"] = title;
-                item["imageUrl"] = imageUrl;
-                item["itemColor"] = itemColor;
-                item["audioUrl"] = audioUrl;
-                item["meaning"] = meaning;
-                libraryView.displayItem(item);
+              if (libraryView.isSelectMode) {
+                toggleSelection();
               } else {
-                libraryView.loadPage(parentTable, itemID, title)
+                if (type == "Word") {
+                  library.readAudio(itemID);
+                  libraryView.displayItem(buildItemDict());
+                } else {
+                  libraryView.loadPage(parentTable, itemID, title)
+                }
               }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
             }
           }
+
           Menu {
             id: contextMenu
             MenuItem {
+              text: qsTr("Select")
+              onTriggered: toggleSelection()
+            }
+            MenuItem {
               text: qsTr("Edit")
+              enabled: !gridItem.isSelected
               onTriggered: {
-                var item = [];
-                item["itemID"] = itemID;
-                item["title"] = title;
-                item["type"] = sectionTypeManager.librarySectionType(type);
-                item["imageUrl"] = imageUrl;
-                item["itemColor"] = itemColor;
-                libraryView.editItem(item);
+                libraryView.editItem(buildItemDict());
               }
+            }
+            MenuItem {
+              text: qsTr("Move")
             }
             MenuItem {
               text: qsTr("Delete")
@@ -161,12 +170,43 @@ Item {
             }
             MenuItem {
               text: qsTr("Time info")
+              enabled: !gridItem.isSelected
               onTriggered: {
                 timeInfoDialog.creationTime = creationTime;
                 timeInfoDialog.modificationTime = modificationTime;
                 timeInfoDialog.open();
               }
             }
+          }
+        }
+        Connections {
+          target: libraryView
+          function onQuitSelectMode() {
+            gridItem.isSelected = false;
+          }
+        }
+
+        function buildItemDict() {
+          var item = [];
+          item["itemID"] = itemID;
+          item["title"] = title;
+          item["creationTime"] = creationTime;
+          item["modificationTime"] = modificationTime;
+          item["type"] = type;
+          item["imageUrl"] = imageUrl;
+          item["itemColor"] = itemColor;
+          item["audioUrl"] = audioUrl;
+          item["meaning"] = meaning;
+          return item;
+        }
+
+        function toggleSelection() {
+          if (!gridItem.isSelected) {
+            libraryView.selectItem(buildItemDict());
+            gridItem.isSelected = true;
+          } else {
+            libraryView.deselectItem(itemID);
+            gridItem.isSelected = false;
           }
         }
       }

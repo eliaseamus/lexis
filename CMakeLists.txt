@@ -85,6 +85,7 @@ qt_add_qml_module(${PROJECT_NAME}
   RESOURCES
     src/qml/icons/audio.png
     src/qml/icons/back.png
+    src/qml/icons/check.png
     src/qml/icons/color.png
     src/qml/icons/language.png
     src/qml/icons/plus.png
