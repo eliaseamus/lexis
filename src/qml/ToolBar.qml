@@ -101,14 +101,14 @@ RowLayout {
 
   Shortcut {
     id: searchCmd
-    enabled: library.sections.length > 0
+    enabled: stackView.currentItem === libraryView && library.sections.length > 0
     sequence: StandardKey.Find
     onActivated: toolBar.toggleSearchLine()
   }
 
   Shortcut {
     id: newItemCmd
-    enabled: settings.currentLanguage.length > 0
+    enabled: stackView.currentItem === libraryView && settings.currentLanguage.length > 0
     sequence: StandardKey.New
     onActivated: addNewItem()
   }

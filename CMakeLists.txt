@@ -64,6 +64,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/ImagePicker.qml
     src/qml/ImageWithEffect.qml
     src/qml/InfoLine.qml
+    src/qml/InputDialog.qml
     src/qml/InterfaceLanguageDialog.qml
     src/qml/ItemView.qml
     src/qml/LibraryItemConfiguration.qml

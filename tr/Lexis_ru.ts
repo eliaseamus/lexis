@@ -64,7 +64,7 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="34"/>
+        <location filename="../src/qml/HelpDialog.qml" line="35"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
@@ -83,6 +83,14 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
 and drop it in this area</source>
         <translation>Выберите изображение
 и перетащите его в эту область</translation>
+    </message>
+</context>
+<context>
+    <name>InputDialog</name>
+    <message>
+        <location filename="../src/qml/InputDialog.qml" line="18"/>
+        <source>Insert text</source>
+        <translation>Введите текст</translation>
     </message>
 </context>
 <context>
@@ -109,7 +117,16 @@ and drop it in this area</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="112"/>
+        <location filename="../src/qml/ItemView.qml" line="84"/>
+        <source>Add meaning</source>
+        <translation>Добавить значение</translation>
+    </message>
+    <message>
+        <source>Insert meaning</source>
+        <translation type="vanished">Ввести значение</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ItemView.qml" line="121"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -331,12 +348,12 @@ in the right bottom corner.</source>
         <translation>Создание:</translation>
     </message>
     <message>
-        <location filename="../src/qml/TimeInfoDialog.qml" line="21"/>
+        <location filename="../src/qml/TimeInfoDialog.qml" line="20"/>
         <source>Last edit:</source>
         <translation>Изменение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/TimeInfoDialog.qml" line="26"/>
+        <location filename="../src/qml/TimeInfoDialog.qml" line="24"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>

@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Dialog {
-  id: deleteLanguageDialog
+  id: deleteDialog
   property string target
   property string imageUrl
   property color backgroundColor: palette.base
@@ -37,10 +37,10 @@ Dialog {
     OkCancel {
       Layout.topMargin: 10
       okay: function () {
-        deleteLanguageDialog.accept()
+        deleteDialog.accept()
       }
       cancel:  function () {
-        deleteLanguageDialog.reject()
+        deleteDialog.reject()
       }
     }
   }

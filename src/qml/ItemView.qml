@@ -77,10 +77,43 @@ Pane {
           }
         }
         Item {Layout.fillHeight: true}
+        RowLayout {
+          Layout.fillWidth: true
+          Layout.alignment: Qt.AlignBottom
+          RoundButton {
+            id: back
+            icon.source: "icons/back.png"
+            icon.color: settings.fgColor
+            Material.background: settings.accentColor
+            onClicked: popStack()
+
+            ToolTip {
+              visible: back.hovered
+              text: qsTr("Back")
+            }
+          }
+          Item {Layout.fillWidth: true}
+          RoundButton {
+            id: insertMeaning
+            icon.source: "icons/plus.png"
+            icon.color: settings.fgColor
+            Material.background: settings.accentColor
+            onClicked: {
+              inputDialog.text = dictionaryPage.text;
+              inputDialog.open();
+            }
+
+            ToolTip {
+              visible: insertMeaning.hovered
+              text: qsTr("Add meaning")
+            }
+          }
+        }
       }
       Rectangle {
         Layout.fillHeight: true
         Layout.fillWidth: true
+        Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: main.width / 2
         radius: 10
         color: itemColor
@@ -99,19 +132,6 @@ Pane {
       }
     }
     Item {Layout.fillHeight: true}
-    RoundButton {
-      id: back
-      icon.source: "icons/back.png"
-      icon.color: settings.fgColor
-      Layout.alignment: Qt.AlignBottom
-      Material.background: settings.accentColor
-      onClicked: popStack()
-
-      ToolTip {
-        visible: back.hovered
-        text: qsTr("Back")
-      }
-    }
   }
 
   MediaPlayer {
@@ -159,15 +179,28 @@ Pane {
       if (hasMultipleDefinitions) {
         dictionaryText += "</ol>";
       }
-      dictionaryPage.text = dictionaryText;
-      dictionaryPage.visible = true;
       spinner.visible = false;
       body.visible = true;
+      if (dictionaryText.length > 0) {
+        dictionaryPage.text = dictionaryText;
+      } else {
+        insertMeaning.enabled = true;
+      }
     }
   }
 
   Dictionary {
     id: dictionary
+  }
+
+  InputDialog {
+    id: inputDialog
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+    onAccepted: {
+      dictionaryPage.text = inputDialog.text;
+    }
   }
 
   function init() {
@@ -176,7 +209,7 @@ Pane {
     transcription.title = "";
     transcription.visible = false;
     dictionaryPage.text = "";
-    dictionaryPage.visible = false;
+    insertMeaning.enabled = false;
     dictionary.get(title)
   }
 

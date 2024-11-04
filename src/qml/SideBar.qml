@@ -185,13 +185,8 @@ Item {
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
-  }
-
-  Connections {
-    target: deleteLanguageDialog
-
-    function onAccepted() {
-      var language = languageToDelete;
+    onAccepted: {
+      var language = sideBar.languageToDelete;
       library.dropTableRecursively(language);
       var index = settings.languages.indexOf(language);
       if (index !== -1) {
