@@ -110,8 +110,9 @@ Pane {
     target: toolBar
 
     function onAddNewItem() {
-      itemConfiguration.clear()
-      stackView.push(itemConfiguration)
+      itemConfiguration.clear();
+      clearSelectedItems();
+      stackView.push(itemConfiguration);
     }
 
     function onGoBack() {
@@ -193,6 +194,12 @@ Pane {
     }
   }
 
+  function clearSelectedItems() {
+    selectedItems = [];
+    isSelectMode = false;
+    quitSelectMode();
+  }
+
   function changeLanguage(language) {
     isStartPage = true;
     pages = [];
@@ -221,8 +228,6 @@ Pane {
     itemsSection.visible = sectionsLength > 0;
     prompt.visible = settings.currentLanguage.length > 0 && sectionsLength === 0;
     toolBar.refresh();
-    selectedItems = [];
-    isSelectMode = false;
     itemConfiguration.clear();
   }
 
@@ -230,9 +235,7 @@ Pane {
     if (toolBar.isSearchActive) {
       toolBar.toggleSearchLine();
     } else if (isSelectMode) {
-      selectedItems = [];
-      isSelectMode = false;
-      quitSelectMode();
+      clearSelectedItems();
     } else if (tables.length > 1) {
       tables.pop();
       var table = tables.pop();

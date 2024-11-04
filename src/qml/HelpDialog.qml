@@ -8,6 +8,7 @@ Dialog {
     qsTr("Back"),
     qsTr("Search"),
     qsTr("New item"),
+    qsTr("Cancel selection"),
     qsTr("Quit"),
     qsTr("Interface language"),
     qsTr("Sort rule"),
@@ -21,7 +22,7 @@ Dialog {
     anchors.topMargin: 15
     spacing: 15
     Repeater {
-      model: ["Esc", "Ctrl + F", "Ctrl + N", "Ctrl + Q",
+      model: ["Esc", "Ctrl + F", "Ctrl + N", "Esc", "Ctrl + Q",
               "Alt + 1", "Alt + 2", "Alt + 3", "Alt + 4"]
       InfoLine {
         required property string modelData

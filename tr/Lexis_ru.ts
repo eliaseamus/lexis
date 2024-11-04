@@ -29,42 +29,51 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation>Назад</translation>
     </message>
     <message>
+        <source>Back / Cancel selection</source>
+        <translation type="vanished">Назад / Отменить выделение</translation>
+    </message>
+    <message>
         <location filename="../src/qml/HelpDialog.qml" line="9"/>
+        <source>Cancel selection</source>
+        <translation>Отменить выделение</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/HelpDialog.qml" line="10"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="10"/>
+        <location filename="../src/qml/HelpDialog.qml" line="11"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="11"/>
+        <location filename="../src/qml/HelpDialog.qml" line="12"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="12"/>
+        <location filename="../src/qml/HelpDialog.qml" line="13"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="13"/>
+        <location filename="../src/qml/HelpDialog.qml" line="14"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="14"/>
+        <location filename="../src/qml/HelpDialog.qml" line="15"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="15"/>
+        <location filename="../src/qml/HelpDialog.qml" line="16"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="35"/>
+        <location filename="../src/qml/HelpDialog.qml" line="36"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
@@ -256,27 +265,27 @@ in the right bottom corner.</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="147"/>
+        <location filename="../src/qml/SectionView.qml" line="148"/>
         <source>Select</source>
         <translation>Выделить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="151"/>
+        <location filename="../src/qml/SectionView.qml" line="153"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="158"/>
+        <location filename="../src/qml/SectionView.qml" line="160"/>
         <source>Move</source>
         <translation>Переместить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="162"/>
+        <location filename="../src/qml/SectionView.qml" line="163"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="173"/>
+        <location filename="../src/qml/SectionView.qml" line="174"/>
         <source>Time info</source>
         <translation>Время</translation>
     </message>
