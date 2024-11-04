@@ -5,10 +5,12 @@ import QtMultimedia
 import QLexis
 
 Pane {
+  property int itemID
   property string title
   property string imageUrl
   property color itemColor
   property string audioUrl
+  property string meaning
 
   ColumnLayout {
     anchors.fill: parent
@@ -182,8 +184,10 @@ Pane {
       spinner.visible = false;
       body.visible = true;
       if (dictionaryText.length > 0) {
+        dictionaryPage.textFormat = Text.RichText;
         dictionaryPage.text = dictionaryText;
       } else {
+        dictionaryPage.textFormat = Text.PlainText;
         insertMeaning.enabled = true;
       }
     }
@@ -200,6 +204,7 @@ Pane {
     parent: ApplicationWindow.overlay
     onAccepted: {
       dictionaryPage.text = inputDialog.text;
+      library.updateMeaning(itemID, dictionaryPage.text);
     }
   }
 
@@ -208,9 +213,17 @@ Pane {
     body.visible = false;
     transcription.title = "";
     transcription.visible = false;
-    dictionaryPage.text = "";
-    insertMeaning.enabled = false;
-    dictionary.get(title)
+    if (meaning.length > 0) {
+      dictionaryPage.textFormat = Text.PlainText;
+      dictionaryPage.text = meaning;
+      insertMeaning.enabled = true;
+      spinner.visible = false;
+      body.visible = true;
+    } else {
+      dictionaryPage.text = "";
+      insertMeaning.enabled = false;
+      dictionary.get(title);
+    }
   }
 
 }

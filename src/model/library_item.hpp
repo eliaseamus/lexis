@@ -24,6 +24,7 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QUrl imageUrl READ imageUrl WRITE setImageUrl NOTIFY dummy);
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
   Q_PROPERTY(QUrl audioUrl READ audioUrl WRITE setAudioUrl NOTIFY dummy);
+  Q_PROPERTY(QString meaning READ meaning WRITE setMeaning NOTIFY dummy);
 
  private:
   int _itemID;
@@ -36,6 +37,7 @@ class LibraryItem : public QObject {
   QColor _color;
   QTemporaryFile _audio;
   QUrl _audioUrl;
+  QString _meaning;
 
  public:
   explicit LibraryItem(QObject* parent = nullptr);
@@ -51,6 +53,7 @@ class LibraryItem : public QObject {
   QColor color() const {return _color;}
   QUrl audioUrl() const {return _audioUrl;}
   QByteArray audio() const;
+  QString meaning() const {return _meaning;}
 
   void setID(int id) {_itemID = id;}
   void setTitle(const QString& title);
@@ -63,6 +66,7 @@ class LibraryItem : public QObject {
   void setColor(const QColor& color) {_color = color;}
   void setAudioUrl(const QUrl& audioUrl) {_audioUrl = audioUrl;}
   void setAudio(QByteArray&& data);
+  void setMeaning(const QString& meaning) {_meaning = meaning;}
 
  private:
   void init(LibraryItem&& item);

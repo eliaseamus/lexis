@@ -25,13 +25,15 @@ class LibraryItemModel : public QAbstractListModel {
     TypeRole,
     ImageUrlRole,
     ColorRole,
-    AudioUrlRole
+    AudioUrlRole,
+    MeaningRole
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);
   void addItem(LibraryItem&& item);
   void updateItem(LibraryItem&& item);
   void updateAudio(int id, QByteArray&& audio);
+  void updateMeaning(int id, const QString& meaning);
   void removeItem(int id);
   bool isEmpty() const {return _items.isEmpty();}
   int rowCount(const QModelIndex& parent = {}) const override;

@@ -40,6 +40,10 @@ void LibrarySection::updateAudio(int id, QByteArray&& audio) {
   _model->updateAudio(id, std::move(audio));
 }
 
+void LibrarySection::updateMeaning(int id, const QString& meaning) {
+  _model->updateMeaning(id, meaning);
+}
+
 void LibrarySection::removeItem(int id) {
   _model->removeItem(id);
 }

@@ -119,7 +119,14 @@ Item {
             if (mouse.button === Qt.LeftButton) {
               if (type == "Word") {
                 library.readAudio(itemID);
-                libraryView.displayItem(title, imageUrl, itemColor, audioUrl);
+                var item = [];
+                item["itemID"] = itemID;
+                item["title"] = title;
+                item["imageUrl"] = imageUrl;
+                item["itemColor"] = itemColor;
+                item["audioUrl"] = audioUrl;
+                item["meaning"] = meaning;
+                libraryView.displayItem(item);
               } else {
                 libraryView.loadPage(parentTable, itemID, title)
               }

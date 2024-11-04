@@ -149,7 +149,8 @@ void Library::createTable() {
      type              INTEGER,                           \
      image             BLOB,                              \
      color             TEXT,                              \
-     audio             BLOB)"
+     audio             BLOB,                              \
+     meaning           TEXT)"
   ).arg(_table);
   if (!query.exec(createTableQuery)) {
     qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
@@ -169,7 +170,8 @@ void Library::createChildTable(const QString& parentTable, int parentID) {
      type              INTEGER,                           \
      image             BLOB,                              \
      color             TEXT,                              \
-     audio             BLOB)"
+     audio             BLOB,                              \
+     meaning           TEXT)"
   ).arg(_table, parentTable, QString::number(parentID));
   if (!query.exec(createTableQuery)) {
     qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
@@ -218,6 +220,28 @@ void Library::readAudio(int id) {
   section->updateAudio(id, std::move(audio));
 }
 
+void Library::updateMeaning(int id, const QString& meaning) {
+  QSqlQuery query;
+  query.prepare(
+    QString(
+      "UPDATE %1 "
+      "SET meaning = :meaning "
+      "WHERE id = \"%2\""
+    ).arg(_table, QString::number(id))
+  );
+
+  query.bindValue(":meaning", meaning);
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update '%1' item in '%2' table:")
+                  .arg(QString::number(id), _table) << query.lastError();
+    return;
+  }
+
+  auto* section = getSection(LibrarySectionType::kWord);
+  section->updateMeaning(id, meaning);
+}
+
 void Library::clearSections() {
   for (auto* section : _sections) {
     section->deleteLater();
@@ -242,7 +266,7 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 void Library::populateSections() {
   QSqlQuery query(
     QString(
-      "SELECT id, title, creation_time, modification_time, type, image, color FROM %1"
+      "SELECT id, title, creation_time, modification_time, type, image, color, meaning FROM %1"
     ).arg(_table)
   );
 
@@ -256,6 +280,7 @@ void Library::populateSections() {
     item.setType(_typeManager.librarySectionType(query.value("type").toInt()));
     item.setImage(query.value("image").toByteArray());
     item.setColor(query.value("color").toString());
+    item.setMeaning(query.value("meaning").toString());
 
     insertItem(std::move(item));
   }

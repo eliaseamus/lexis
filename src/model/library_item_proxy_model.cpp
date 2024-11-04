@@ -30,6 +30,11 @@ void LibraryItemProxyModel::updateAudio(int id, QByteArray&& audio) {
   emit changed();
 }
 
+void LibraryItemProxyModel::updateMeaning(int id, const QString& meaning) {
+  _source->updateMeaning(id, meaning);
+  emit changed();
+}
+
 void LibraryItemProxyModel::removeItem(int id) {
   _source->removeItem(id);
   emit changed();

@@ -41,6 +41,17 @@ void LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
   (*item)->setAudio(std::move(audio));
 }
 
+void LibraryItemModel::updateMeaning(int id, const QString& meaning) {
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
+    return item->id() == id;
+  });
+  if (item == _items.end()) {
+    qWarning() << QString("Failed to update meaning of %1: no item with such id").arg(id);
+    return;
+  }
+  (*item)->setMeaning(meaning);
+}
+
 void LibraryItemModel::removeItem(int id) {
   auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
     return item->id() == id;
@@ -84,6 +95,8 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->color();
     case AudioUrlRole:
       return item->audioUrl();
+    case MeaningRole:
+      return item->meaning();
   }
 
   return {};
@@ -99,6 +112,7 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[ImageUrlRole] = "imageUrl";
   roles[ColorRole] = "itemColor";
   roles[AudioUrlRole] = "audioUrl";
+  roles[MeaningRole] = "meaning";
   return roles;
 }
 

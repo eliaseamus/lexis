@@ -35,6 +35,7 @@ class LibrarySection : public QObject {
   void addItem(LibraryItem&& item);
   void updateItem(LibraryItem&& item);
   void updateAudio(int id, QByteArray&& audio);
+  void updateMeaning(int id, const QString& meaning);
   void removeItem(int id);
   bool isEmpty() const {return _model->isEmpty();}
 

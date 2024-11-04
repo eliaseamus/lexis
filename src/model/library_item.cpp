@@ -38,6 +38,7 @@ void LibraryItem::init(LibraryItem&& item) {
   _audioUrl = std::move(item._audioUrl);
   _audio.setFileName(item._audio.fileName());
   item._audio.setAutoRemove(false);
+  _meaning = std::move(item._meaning);
 }
 
 QByteArray LibraryItem::image() const {

@@ -20,9 +20,9 @@ Window {
     }
 
     StackView {
+      id: stackView
       Layout.fillHeight: true
       Layout.fillWidth: true
-      id: stackView
       initialItem: libraryView
     }
     Component.onCompleted: appManager.changeLanguage(settings.interfaceLanguage);
@@ -58,9 +58,9 @@ Window {
 
   function popStack() {
     if (stackView.currentItem == libraryView) {
-      libraryView.pop()
+      libraryView.pop();
     } else {
-      stackView.pop()
+      stackView.pop();
     }
   }
 }

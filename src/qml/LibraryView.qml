@@ -154,11 +154,13 @@ Pane {
     id: sectionTypeManager
   }
 
-  function displayItem(title, image, color, audio) {
-    itemView.title = title;
-    itemView.imageUrl = image;
-    itemView.itemColor = color;
-    itemView.audioUrl = audio;
+  function displayItem(item) {
+    itemView.itemID = Number(item["itemID"]);
+    itemView.title = String(item["title"]);
+    itemView.imageUrl = String(item["imageUrl"]);
+    itemView.itemColor = String(item["itemColor"]);
+    itemView.audioUrl = String(item["audioUrl"]);
+    itemView.meaning = String(item["meaning"]);
     itemView.init();
     stackView.push(itemView);
   }
