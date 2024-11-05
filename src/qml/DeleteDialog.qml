@@ -4,19 +4,21 @@ import QtQuick.Layouts
 
 Dialog {
   id: deleteDialog
-  property string target
-  property string imageUrl
+  property var targets: []
   property color backgroundColor: palette.base
 
   ColumnLayout {
     PrettyLabel {
       title: qsTr("Are you sure you want to<br>" +
-                  "delete <b>%1</b> from your library?").arg(target)
+                  "delete <b>%1</b> from your library?")
+                  .arg(targets.map((item) => item["title"]).join(", "))
       format: Text.RichText
       horizontalAlignment: Qt.AlignHCenter
       Layout.alignment: Qt.AlignHCenter
       Layout.topMargin: 10
       Layout.bottomMargin: 20
+      Layout.preferredWidth: 300
+      wrapMode: Text.WordWrap
     }
     Rectangle {
       Layout.preferredHeight: 200
@@ -24,14 +26,23 @@ Dialog {
       Layout.alignment: Qt.AlignCenter
       color: backgroundColor
       radius: 10
-      Icon {
-        width: 200
-        height: 200
-        anchors.centerIn: parent
-        image: imageUrl
-        iconRadius: 170
-        iconColor: backgroundColor
-        iconTitle: target
+      RowLayout {
+        anchors.fill: parent
+        spacing: -285
+        Repeater {
+          model: targets
+          Layout.alignment: Qt.AlignCenter
+          Icon {
+            required property int index
+            width: 200
+            height: 200
+            image: targets[index]["imageUrl"]
+            Layout.alignment: Qt.AlignCenter
+            iconRadius: 170
+            iconColor: backgroundColor
+            iconTitle: targets[index]["title"]
+          }
+        }
       }
     }
     OkCancel {

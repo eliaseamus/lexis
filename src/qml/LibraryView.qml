@@ -20,6 +20,7 @@ Pane {
   property var tables: []
   property bool isStartPage: true
   property var pages: []
+  property var itemToDelete
   property var selectedItems: []
   property bool isSelectMode
   signal quitSelectMode
@@ -120,6 +121,22 @@ Pane {
     }
   }
 
+  Connections {
+    target: deleteItemDialog
+
+    function onAccepted() {
+      if (isSelectMode) {
+        selectedItems.forEach((item) => {
+          library.deleteItem(item["itemID"], item["type"]);
+        });
+        clearSelectedItems();
+      } else {
+        library.deleteItem(itemToDelete["itemID"], itemToDelete["type"]);
+      }
+      libraryView.refresh();
+    }
+  }
+
   LibraryItemConfiguration {
     id: itemConfiguration
     visible: false
@@ -159,24 +176,37 @@ Pane {
   }
 
   function displayItem(item) {
-    itemView.itemID = Number(item["itemID"]);
-    itemView.title = String(item["title"]);
-    itemView.imageUrl = String(item["imageUrl"]);
-    itemView.itemColor = String(item["itemColor"]);
-    itemView.audioUrl = String(item["audioUrl"]);
-    itemView.meaning = String(item["meaning"]);
+    itemView.itemID = item["itemID"];
+    itemView.title = item["title"];
+    itemView.imageUrl = item["imageUrl"];
+    itemView.itemColor = item["itemColor"];
+    itemView.audioUrl = item["audioUrl"];
+    itemView.meaning = item["meaning"];
     itemView.init();
     stackView.push(itemView);
   }
 
   function editItem(item) {
-    itemConfiguration.itemID = Number(item["itemID"]);
-    itemConfiguration.currentType = Number(item["type"]);
-    itemConfiguration.title = String(item["title"]);
-    itemConfiguration.image = String(item["imageUrl"]);
-    itemConfiguration.backgroundColor = String(item["itemColor"]);
+    itemConfiguration.itemID = item["itemID"];
+    itemConfiguration.currentType = item["type"];
+    itemConfiguration.title = item["title"];
+    itemConfiguration.image = item["imageUrl"];
+    itemConfiguration.backgroundColor = item["itemColor"];
     itemConfiguration.init();
     stackView.push(itemConfiguration);
+  }
+
+  function deleteItem(item) {
+    itemToDelete = item;
+    deleteItemDialog.targets = [item];
+    deleteItemDialog.backgroundColor = item["itemColor"];
+    deleteItemDialog.open();
+  }
+
+  function deleteSelectedItems() {
+    deleteItemDialog.targets = selectedItems
+    deleteItemDialog.backgroundColor = settings.accentColor;
+    deleteItemDialog.open();
   }
 
   function selectItem(item) {
@@ -185,7 +215,7 @@ Pane {
   }
 
   function deselectItem(id) {
-    let index = selectedItems.findIndex((item) => {return Number(item["itemID"]) === id;});
+    let index = selectedItems.findIndex((item) => {return item["itemID"] === id;});
     if (index !== -1) {
       selectedItems.splice(index, 1);
     }

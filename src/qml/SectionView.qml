@@ -9,8 +9,6 @@ Item {
   property string title
   property string parentTable
   property LibraryItemProxyModel model
-  property int itemToDelete: -1
-  property string itemToDeleteType
   Layout.fillWidth: true
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
 
@@ -160,12 +158,11 @@ Item {
             MenuItem {
               text: qsTr("Delete")
               onTriggered: {
-                itemToDelete = itemID;
-                itemToDeleteType = type;
-                deleteItemDialog.target = title;
-                deleteItemDialog.imageUrl = imageUrl;
-                deleteItemDialog.backgroundColor = itemColor;
-                deleteItemDialog.open();
+                if (libraryView.isSelectMode) {
+                  libraryView.deleteSelectedItems();
+                } else {
+                  libraryView.deleteItem(buildItemDict());
+                }
               }
             }
             MenuItem {
@@ -210,18 +207,6 @@ Item {
           }
         }
       }
-    }
-  }
-
-  Connections {
-    target: deleteItemDialog
-
-    function onAccepted() {
-      if (itemToDelete == -1) {
-        return;
-      }
-      library.deleteItem(itemToDelete, sectionTypeManager.librarySectionType(itemToDeleteType));
-      libraryView.refresh()
     }
   }
 
