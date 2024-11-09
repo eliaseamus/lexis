@@ -119,6 +119,10 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
 
 }
 
+void Library::moveItem(int id, const QString& sourceTable, int target, const QString& targetTable) {
+  qDebug() << "move" << id << "from" << sourceTable << "to" << target << "in" << targetTable;
+}
+
 void Library::deleteItem(int id, LibrarySectionType type) {
   updateParentModificationTime(_table, id);
   QSqlQuery query;

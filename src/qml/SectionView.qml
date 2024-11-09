@@ -126,7 +126,7 @@ Item {
             }
           }
           onPositionChanged: (mouse) => {
-            if (dragItems.draggableTypes.indexOf(type) === -1) {
+            if (libraryView.movableTypes.indexOf(type) === -1) {
               return;
             }
             const point = mapToItem(libraryView,
@@ -141,7 +141,7 @@ Item {
                   var items = libraryView.selectedItems;
                   items = items.filter((item) => {
                     const typeName = sectionTypeManager.librarySectionTypeName(item["type"]);
-                    return dragItems.draggableTypes.indexOf(typeName) !== -1;
+                    return libraryView.movableTypes.indexOf(typeName) !== -1;
                   });
                   let index = items.findIndex((item) => {return item["itemID"] === itemID;});
                   if (index !== -1) {
@@ -177,6 +177,7 @@ Item {
             }
             MenuItem {
               text: qsTr("Move")
+              enabled: libraryView.movableTypes.indexOf(type) !== -1
             }
             MenuItem {
               text: qsTr("Delete")
@@ -229,7 +230,8 @@ Item {
                 if (libraryView.isSelectMode) {
                   libraryView.clearSelectedItems();
                 }
-                // TODO: move items
+                const ids = dragItems.items.map((item) => item["itemID"]);
+                libraryView.moveItems(ids, parentTable, itemID, parentTable);
               }
             }
           }

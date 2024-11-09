@@ -35,6 +35,7 @@ class Library : public QObject {
   Q_INVOKABLE void openDatabase(const QString& name);
   Q_INVOKABLE void addItem(LibraryItem* item);
   Q_INVOKABLE void updateItem(LibraryItem* item, LibrarySectionType oldType);
+  Q_INVOKABLE void moveItem(int id, const QString& sourceTable, int target, const QString& targetTable);
   Q_INVOKABLE void deleteItem(int id, LibrarySectionType type);
   Q_INVOKABLE void openTable(const QString& name);
   Q_INVOKABLE void openChildTable(int parentID);

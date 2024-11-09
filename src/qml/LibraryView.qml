@@ -17,6 +17,7 @@ Pane {
     qsTr("Album"),
     qsTr("Song")
   ]
+  property var movableTypes: ["Word", "Subject group"]
   property var tables: []
   property bool isStartPage: true
   property var pages: []
@@ -188,7 +189,6 @@ Pane {
     height: 200
     visible: false
     property var items: []
-    property var draggableTypes: ["Word", "Subject group"]
     signal drop
     opacity: 0.8
     Repeater {
@@ -280,6 +280,11 @@ Pane {
     tables = [];
     itemConfiguration.typesNum = 8;
     library.openTable(language);
+    refresh();
+  }
+
+  function moveItems(ids, sourceTable, targetID, targetTable) {
+    ids.forEach((id) => library.moveItem(id, sourceTable, targetID, targetTable));
     refresh();
   }
 
