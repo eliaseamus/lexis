@@ -91,7 +91,7 @@ Item {
         MouseArea {
           id: mouseArea
           anchors.fill: parent
-          drag.target: dragItem
+          drag.target: dragItems
           hoverEnabled: true
           cursorShape: drag.active ? Qt.DragMoveCursor : Qt.PointingHandCursor
           acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -114,20 +114,39 @@ Item {
           }
           onReleased: {
             if (drag.active) {
-              dragItem.visible = false;
+              dragItems.visible = false;
             }
           }
           onPositionChanged: (mouse) => {
-            dragItem.x = gridItem.x + mouse.x - dragItem.width / 2;
-            dragItem.y = gridItem.y + mouse.y - dragItem.height / 2;
+            const point = mapToItem(libraryView,
+                                    mapFromItem(grid,
+                                                gridItem.x + mouse.x - dragItems.width / 2,
+                                                gridItem.y + mouse.y - dragItems.height / 2));
+            dragItems.x = point.x;
+            dragItems.y = point.y;
             if (drag.active) {
-              if (!dragItem.visible) {
-                dragItem.parent = grid;
-                dragItem.backgroundColor = itemColor;
-                dragItem.borderColor = palette.base;
-                dragItem.itemTitle = gridItem.itemTitle;
-                dragItem.imageSource = gridItem.imageSource;
-                dragItem.visible = true;
+              if (!dragItems.visible) {
+                if (libraryView.isSelectMode) {
+                  var items = libraryView.selectedItems;
+                  let index = items.findIndex((item) => {return item["itemID"] === itemID;});
+                  if (index !== -1) {
+                    var currentItem = items[index];
+                    items.splice(index, 1);
+                    items.push(currentItem);
+                  } else {
+                    toggleSelection();
+                    return;
+                  }
+                  dragItems.items = items;
+                } else {
+                  var item = [];
+                  item["itemID"] = itemID;
+                  item["itemColor"] = itemColor;
+                  item["title"] = title;
+                  item["imageUrl"] = imageUrl;
+                  dragItems.items = [item];
+                }
+                dragItems.visible = true;
               }
             }
           }
@@ -202,15 +221,5 @@ Item {
         }
       }
     }
-    SectionItem {
-      id: dragItem
-      visible: false
-      MouseArea {
-        hoverEnabled: true
-        anchors.fill: parent
-        cursorShape: Qt.DragMoveCursor
-      }
-    }
   }
-
 }

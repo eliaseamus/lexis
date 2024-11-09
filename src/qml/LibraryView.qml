@@ -137,6 +137,16 @@ Pane {
     }
   }
 
+  Connections {
+    target: main
+
+    function onActiveChanged() {
+      if (dragItems.visible && !active) {
+        dragItems.visible = false;
+      }
+    }
+  }
+
   LibraryItemConfiguration {
     id: itemConfiguration
     visible: false
@@ -169,6 +179,31 @@ Pane {
     x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
+  }
+
+  RowLayout {
+    id: dragItems
+    spacing: -195
+    width: 200
+    height: 200
+    visible: false
+    property var items: []
+    Repeater {
+      model: dragItems.items
+      Layout.alignment: Qt.AlignCenter
+      SectionItem {
+        required property int index
+        backgroundColor: dragItems.items[index]["itemColor"]
+        borderColor: palette.base
+        itemTitle: dragItems.items[index]["title"]
+        imageSource: dragItems.items[index]["imageUrl"]
+        MouseArea {
+          hoverEnabled: true
+          anchors.fill: parent
+          cursorShape: Qt.DragMoveCursor
+        }
+      }
+    }
   }
 
   SectionTypeManager {
