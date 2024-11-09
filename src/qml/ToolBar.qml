@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 RowLayout {
   id: toolBar
-  property bool isSearchActive: searchLine.display
+  property alias isSearchActive: searchLine.display
 
   signal goBack
   signal searchRequest(query: string)

@@ -68,8 +68,9 @@ Item {
         var totalCellWidth = count * cellWidth;
         var rows = totalCellWidth / width + 0.5;
 
-        if (width < 2 * cellWidth)
-          rows = count
+        if (width < 2 * cellWidth) {
+          rows = count;
+        }
 
         return Math.round(rows);
       }
@@ -78,48 +79,21 @@ Item {
       cellHeight: 215
       model: librarySection.model
 
-      delegate: Rectangle {
+      delegate: SectionItem {
         id: gridItem
-        property bool isSelected
-        width: 200
-        height: 200
-        color: mouseArea.containsPress ? itemColor.darker(1.1) : itemColor
-        border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
-        border.width: 2
-        radius: 10
-        RoundButton {
-          flat: true
-          visible: isSelected
-          icon.source: "icons/check.png"
-          icon.color: settings.fgColor
-          Material.background: settings.accentColor
-        }
-        ColumnLayout {
-          anchors.fill: parent
-          anchors.margins: 10
-          Icon {
-            Layout.preferredHeight: 150
-            Layout.preferredWidth: 150
-            Layout.alignment: Qt.AlignCenter
-            image: imageUrl
-            iconRadius: 150
-            iconColor: itemColor
-            iconTitle: title
-          }
-          Text {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.preferredWidth: 180
-            horizontalAlignment: Qt.AlignHCenter
-            text: title
-            elide: Text.ElideRight
-            color: Utils.getFgColor(itemColor)
-          }
-        }
+        backgroundColor: (mouseArea.containsPress || mouseArea.drag.active) ||
+                         (libraryView.isSelectMode && isSelected) ?
+                         itemColor.darker(1.2) :
+                         itemColor
+        borderColor: mouseArea.containsMouse ? settings.accentColor : palette.base
+        itemTitle: title
+        imageSource: imageUrl
         MouseArea {
           id: mouseArea
           anchors.fill: parent
+          drag.target: dragItem
           hoverEnabled: true
-          cursorShape: Qt.PointingHandCursor
+          cursorShape: drag.active ? Qt.DragMoveCursor : Qt.PointingHandCursor
           acceptedButtons: Qt.LeftButton | Qt.RightButton
           onPressAndHold: toggleSelection()
           onClicked: (mouse) => {
@@ -136,6 +110,25 @@ Item {
               }
             } else if (mouse.button === Qt.RightButton) {
               contextMenu.popup()
+            }
+          }
+          onReleased: {
+            if (drag.active) {
+              dragItem.visible = false;
+            }
+          }
+          onPositionChanged: (mouse) => {
+            dragItem.x = gridItem.x + mouse.x - dragItem.width / 2;
+            dragItem.y = gridItem.y + mouse.y - dragItem.height / 2;
+            if (drag.active) {
+              if (!dragItem.visible) {
+                dragItem.parent = grid;
+                dragItem.backgroundColor = itemColor;
+                dragItem.borderColor = palette.base;
+                dragItem.itemTitle = gridItem.itemTitle;
+                dragItem.imageSource = gridItem.imageSource;
+                dragItem.visible = true;
+              }
             }
           }
 
@@ -176,6 +169,7 @@ Item {
             }
           }
         }
+
         Connections {
           target: libraryView
           function onQuitSelectMode() {
@@ -206,6 +200,15 @@ Item {
             gridItem.isSelected = false;
           }
         }
+      }
+    }
+    SectionItem {
+      id: dragItem
+      visible: false
+      MouseArea {
+        hoverEnabled: true
+        anchors.fill: parent
+        cursorShape: Qt.DragMoveCursor
       }
     }
   }
