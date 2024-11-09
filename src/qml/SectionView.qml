@@ -85,13 +85,19 @@ Item {
                          (libraryView.isSelectMode && isSelected) ?
                          itemColor.darker(1.2) :
                          itemColor
-        borderColor: mouseArea.containsMouse ? settings.accentColor : palette.base
+        borderColor: (mouseArea.containsMouse && !mouseArea.drag.active) || dropArea.containsDrop ?
+                     settings.accentColor :
+                     palette.base
         itemTitle: title
         imageSource: imageUrl
+
         MouseArea {
           id: mouseArea
           anchors.fill: parent
           drag.target: dragItems
+          Drag.hotSpot.x: dragItems.width / 2
+          Drag.hotSpot.y: dragItems.height / 2
+          Drag.source: mouseArea
           hoverEnabled: true
           cursorShape: drag.active ? Qt.DragMoveCursor : Qt.PointingHandCursor
           acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -114,10 +120,15 @@ Item {
           }
           onReleased: {
             if (drag.active) {
+              dragItems.drop();
+              dragItems.Drag.active = false;
               dragItems.visible = false;
             }
           }
           onPositionChanged: (mouse) => {
+            if (dragItems.draggableTypes.indexOf(type) === -1) {
+              return;
+            }
             const point = mapToItem(libraryView,
                                     mapFromItem(grid,
                                                 gridItem.x + mouse.x - dragItems.width / 2,
@@ -128,6 +139,10 @@ Item {
               if (!dragItems.visible) {
                 if (libraryView.isSelectMode) {
                   var items = libraryView.selectedItems;
+                  items = items.filter((item) => {
+                    const typeName = sectionTypeManager.librarySectionTypeName(item["type"]);
+                    return dragItems.draggableTypes.indexOf(typeName) !== -1;
+                  });
                   let index = items.findIndex((item) => {return item["itemID"] === itemID;});
                   if (index !== -1) {
                     var currentItem = items[index];
@@ -139,13 +154,9 @@ Item {
                   }
                   dragItems.items = items;
                 } else {
-                  var item = [];
-                  item["itemID"] = itemID;
-                  item["itemColor"] = itemColor;
-                  item["title"] = title;
-                  item["imageUrl"] = imageUrl;
-                  dragItems.items = [item];
+                  dragItems.items = [buildItemDict()];
                 }
+                dragItems.Drag.active = true;
                 dragItems.visible = true;
               }
             }
@@ -193,6 +204,34 @@ Item {
           target: libraryView
           function onQuitSelectMode() {
             gridItem.isSelected = false;
+          }
+        }
+
+        DropArea {
+          id: dropArea
+          anchors.fill: parent
+          property bool containsDrop
+          onEntered: {
+            if (type == "Word") {
+              return;
+            } else if (dragItems.contains(itemID)) {
+              return;
+            }
+            containsDrop = true;
+          }
+          onExited: {
+            containsDrop = false;
+          }
+          Connections {
+            target: dragItems
+            function onDrop() {
+              if (dropArea.containsDrop) {
+                if (libraryView.isSelectMode) {
+                  libraryView.clearSelectedItems();
+                }
+                // TODO: move items
+              }
+            }
           }
         }
 

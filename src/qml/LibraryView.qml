@@ -188,6 +188,9 @@ Pane {
     height: 200
     visible: false
     property var items: []
+    property var draggableTypes: ["Word", "Subject group"]
+    signal drop
+    opacity: 0.8
     Repeater {
       model: dragItems.items
       Layout.alignment: Qt.AlignCenter
@@ -203,6 +206,10 @@ Pane {
           cursorShape: Qt.DragMoveCursor
         }
       }
+    }
+    function contains(itemID) {
+      let index = dragItems.items.findIndex((item) => {return item["itemID"] === itemID;});
+      return index !== -1;
     }
   }
 
