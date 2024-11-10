@@ -58,11 +58,13 @@ void Library::addItem(LibraryItem* item) {
     return;
   }
 
-  item->setID(getItemID(item->title()));
+  item->setID(getItemID(item->title(), _table));
   if (item->type() == LibrarySectionType::kWord) {
     _audioItem.table = _table;
     _audioItem.id = item->id();
     requestAudio(item->title());
+  } else {
+    createChildTable(item->id());
   }
   updateParentModificationTime(_table, item->id());
   insertItem(std::move(*item));
@@ -74,7 +76,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     return;
   }
 
-  auto oldTitle = getTitle(item->id());
+  auto oldTitle = getTitle(item->id(), _table);
   QSqlQuery query;
   query.prepare(
     QString(
@@ -119,8 +121,21 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
 
 }
 
-void Library::moveItem(int id, const QString& sourceTable, int target, const QString& targetTable) {
-  qDebug() << "move" << id << "from" << sourceTable << "to" << target << "in" << targetTable;
+void Library::moveItem(int id, const QString& sourceTable, const QString& targetTable) {
+  auto item = readItem(id, sourceTable);
+  if (!removeItem(id, item.type(), sourceTable)) {
+    return;
+  }
+  if (!insertItem(item, targetTable)) {
+    return;
+  }
+
+  if (item.type() == LibrarySectionType::kWord) {
+    return;
+  }
+
+  const auto oldName = QString("%1_%2").arg(sourceTable, QString::number(id));
+  renameTableRecursively(oldName, targetTable, getItemID(item.title(), targetTable));
 }
 
 void Library::deleteItem(int id, LibrarySectionType type) {
@@ -161,8 +176,10 @@ void Library::createTable() {
   }
 }
 
-void Library::createChildTable(const QString& parentTable, int parentID) {
+void Library::createChildTable(int parentID) {
   QSqlQuery query;
+  auto parentIDString = QString::number(parentID);
+  auto childTable = QString("%1_%2").arg(_table, parentIDString);
   auto createTableQuery = QString(
     "CREATE TABLE IF NOT EXISTS %1                        \
     (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
@@ -176,9 +193,9 @@ void Library::createChildTable(const QString& parentTable, int parentID) {
      color             TEXT,                              \
      audio             BLOB,                              \
      meaning           TEXT)"
-  ).arg(_table, parentTable, QString::number(parentID));
+  ).arg(childTable, _table, parentIDString);
   if (!query.exec(createTableQuery)) {
-    qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
+    qDebug() << QString("failed to create %1 table").arg(childTable) << query.lastError();
   }
 }
 
@@ -193,10 +210,8 @@ void Library::openTable(const QString& name) {
 }
 
 void Library::openChildTable(int parentID) {
-  auto parentTable = _table;
-  _table = QString("%1_%2").arg(_table, QString::number(parentID));
   clearSections();
-  createChildTable(parentTable, parentID);
+  _table = QString("%1_%2").arg(_table, QString::number(parentID));
   populateSections();
 }
 
@@ -244,6 +259,80 @@ void Library::updateMeaning(int id, const QString& meaning) {
 
   auto* section = getSection(LibrarySectionType::kWord);
   section->updateMeaning(id, meaning);
+}
+
+LibraryItem Library::readItem(int id, const QString& table) {
+  QSqlQuery query(
+    QString(
+      "SELECT id, title, creation_time, modification_time, type, image, color, "
+      "meaning, audio FROM %1 WHERE id = %2"
+    ).arg(table, QString::number(id))
+  );
+
+  LibraryItem item;
+  if (query.next()) {
+    item.setID(query.value("id").toInt());
+    item.setTitle(query.value("title").toString());
+    item.setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
+    item.setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
+    item.setType(_typeManager.librarySectionType(query.value("type").toInt()));
+    item.setImage(query.value("image").toByteArray());
+    item.setColor(query.value("color").toString());
+    item.setAudio(query.value("audio").toByteArray());
+    item.setMeaning(query.value("meaning").toString());
+  } else {
+    qDebug() << QString("Failed to read item of id = %1 from %2 table")
+                .arg(QString::number(id), table);
+  }
+  return item;
+}
+
+bool Library::removeItem(int id, LibrarySectionType type, const QString& table) {
+  updateParentModificationTime(table, id);
+  QSqlQuery query;
+  query.prepare(QString("DELETE FROM %1 WHERE id = %2")
+                .arg(table, QString::number(id)));
+  if (!query.exec()) {
+    qWarning() << QString("Failed to delete item of id = '%1' from '%2' table:")
+                  .arg(QString::number(id), table) << query.lastError();
+    return false;
+  }
+  if (table == _table) {
+    auto* section = getSection(type);
+    section->removeItem(id);
+    if (section->isEmpty()) {
+      _sections.removeOne(section);
+    }
+  }
+  return true;
+}
+
+bool Library::insertItem(LibraryItem& item, const QString& table) {
+  QSqlQuery query;
+  query.prepare(
+    QString(
+      "INSERT INTO %1"
+      "(title, creation_time, modification_time, type, image, color, audio, meaning)"
+      "VALUES (:title, :creation, :modification, :type, :image, :color, :audio, :meaning)"
+    ).arg(table)
+  );
+
+  item.setModificationTime(QDateTime::currentDateTime());
+  query.bindValue(":title", item.title());
+  query.bindValue(":creation", item.creationTime().toString());
+  query.bindValue(":modification", item.modificationTime().toString());
+  query.bindValue(":type", std::to_underlying(item.type()));
+  query.bindValue(":image", item.image());
+  query.bindValue(":color", item.color().name());
+  query.bindValue(":audio", item.audio());
+  query.bindValue(":meaning", item.meaning());
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to insert item into '%1' table:").arg(table)
+               << query.lastError();
+    return false;
+  }
+  return true;
 }
 
 void Library::clearSections() {
@@ -305,11 +394,11 @@ QStringList Library::getTablesList() const {
   return list;
 }
 
-int Library::getItemID(const QString& title) const {
+int Library::getItemID(const QString& title, const QString& table) const {
   QSqlQuery query(
     QString(
       "SELECT id FROM %1 WHERE title = \"%2\""
-    ).arg(_table, title)
+    ).arg(table, title)
   );
   int id = -1;
   while (query.next()) {
@@ -318,11 +407,11 @@ int Library::getItemID(const QString& title) const {
   return id;
 }
 
-QString Library::getTitle(int id) const {
+QString Library::getTitle(int id, const QString& table) const {
   QSqlQuery query(
     QString(
       "SELECT title FROM %1 WHERE id = \"%2\""
-    ).arg(_table, QString::number(id))
+    ).arg(table, QString::number(id))
   );
   QString title;
   while (query.next()) {
@@ -365,7 +454,8 @@ void Library::updateParentModificationTime(const QString& table, int id) {
       QString(
         "UPDATE %1 "
         "SET modification_time = :modification "
-        "WHERE id = \"%2\"").arg(parentTable, QString::number(parentID))
+        "WHERE id = \"%2\""
+      ).arg(parentTable, QString::number(parentID))
     );
     updateQuery.bindValue(":modification", QDateTime::currentDateTime().toString());
     if (!updateQuery.exec()) {
@@ -375,6 +465,63 @@ void Library::updateParentModificationTime(const QString& table, int id) {
     }
     updateParentModificationTime(parentTable, parentID);
   }
+}
+
+void Library::renameTableRecursively(const QString& oldName,
+                                     const QString& parentTable, int parentId) {
+  const auto newName = QString("%1_%2").arg(parentTable, QString::number(parentId));
+  if (!renameTable(oldName, newName)) {
+    return;
+  }
+  if (!updateParentInfo(newName, parentTable, parentId)) {
+    return;
+  }
+
+  QSqlQuery query(QString("SELECT id, type FROM %1").arg(newName));
+  while (query.next()) {
+    auto id = query.value("id").toInt();
+    auto type = _typeManager.librarySectionType(query.value("type").toInt());
+    if (type != LibrarySectionType::kWord) {
+      const auto childOldName = QString("%1_%2").arg(oldName, QString::number(id));
+      renameTableRecursively(childOldName, newName, id);
+    }
+  }
+}
+
+bool Library::renameTable(const QString& oldName, const QString& newName) {
+  QSqlQuery query;
+  query.prepare(
+    QString(
+      "ALTER TABLE %1 RENAME TO %2"
+    ).arg(oldName, newName)
+  );
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to rename %1 table to %2:").arg(oldName, newName)
+               << query.lastError();
+    return false;
+  }
+  return true;
+}
+
+bool Library::updateParentInfo(const QString& table, const QString& parentTable, int parentId) {
+  QSqlQuery query;
+  query.prepare(
+    QString(
+      "UPDATE %1 "
+      "SET parent_table = :parent_table, parent_id = :parent_id"
+    ).arg(table)
+  );
+
+  query.bindValue(":parent_table", parentTable);
+  query.bindValue(":parent_id", QString::number(parentId));
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update parent info in '%1' table:").arg(table)
+               << query.lastError();
+    return false;
+  }
+  return true;
 }
 
 void Library::updateAudio(QByteArray audio) {

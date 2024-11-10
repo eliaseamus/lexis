@@ -231,7 +231,8 @@ Item {
                   libraryView.clearSelectedItems();
                 }
                 const ids = dragItems.items.map((item) => item["itemID"]);
-                libraryView.moveItems(ids, parentTable, itemID, parentTable);
+                const targetTable = "%1_%2".arg(parentTable).arg(itemID);
+                libraryView.moveItems(ids, parentTable, targetTable);
               }
             }
           }

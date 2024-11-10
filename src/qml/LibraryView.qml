@@ -283,8 +283,8 @@ Pane {
     refresh();
   }
 
-  function moveItems(ids, sourceTable, targetID, targetTable) {
-    ids.forEach((id) => library.moveItem(id, sourceTable, targetID, targetTable));
+  function moveItems(ids, sourceTable, targetTable) {
+    ids.forEach((id) => library.moveItem(id, sourceTable, targetTable));
     refresh();
   }
 
