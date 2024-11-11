@@ -29,6 +29,10 @@ qt_add_executable(${PROJECT_NAME}
   src/model/library_section.cpp
   src/model/section_type.hpp
   src/model/section_type.cpp
+  src/model/tree_item.hpp
+  src/model/tree_item.cpp
+  src/model/tree_model.hpp
+  src/model/tree_model.cpp
   src/web_service.cpp
   src/web_service.hpp
   src/utils.hpp
@@ -70,6 +74,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/LibraryItemConfiguration.qml
     src/qml/LibraryView.qml
     src/qml/Main.qml
+    src/qml/MoveDialog.qml
     src/qml/OkCancel.qml
     src/qml/PrettyButton.qml
     src/qml/PrettyLabel.qml

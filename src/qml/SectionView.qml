@@ -178,6 +178,10 @@ Item {
             MenuItem {
               text: qsTr("Move")
               enabled: libraryView.movableTypes.indexOf(type) !== -1
+              onTriggered: {
+                moveDialog.currentTable = parentTable;
+                moveDialog.open();
+              }
             }
             MenuItem {
               text: qsTr("Delete")

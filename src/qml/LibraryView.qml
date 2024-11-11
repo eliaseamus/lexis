@@ -182,6 +182,13 @@ Pane {
     parent: ApplicationWindow.overlay
   }
 
+  MoveDialog {
+    id: moveDialog
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
   RowLayout {
     id: dragItems
     spacing: -195
