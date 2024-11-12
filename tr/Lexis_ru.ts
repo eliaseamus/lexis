@@ -16,7 +16,7 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
 удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
     </message>
     <message>
-        <location filename="../src/qml/DeleteDialog.qml" line="13"/>
+        <location filename="../src/qml/DeleteDialog.qml" line="12"/>
         <source>Are you sure you want to&lt;br&gt;delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation>Вы уверены что хотите&lt;br&gt;удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
     </message>
@@ -33,17 +33,17 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation type="vanished">Назад / Отменить выделение</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="9"/>
+        <location filename="../src/qml/HelpDialog.qml" line="11"/>
         <source>Cancel selection</source>
         <translation>Отменить выделение</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="10"/>
+        <location filename="../src/qml/HelpDialog.qml" line="9"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="11"/>
+        <location filename="../src/qml/HelpDialog.qml" line="10"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
@@ -218,12 +218,12 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="49"/>
+        <location filename="../src/qml/LibraryView.qml" line="51"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="64"/>
+        <location filename="../src/qml/LibraryView.qml" line="66"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -260,32 +260,32 @@ in the right bottom corner.</source>
 <context>
     <name>SectionView</name>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="45"/>
+        <location filename="../src/qml/SectionView.qml" line="43"/>
         <source>Sort order</source>
         <translation>Порядок сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="148"/>
+        <location filename="../src/qml/SectionView.qml" line="168"/>
         <source>Select</source>
         <translation>Выделить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="153"/>
+        <location filename="../src/qml/SectionView.qml" line="172"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="160"/>
+        <location filename="../src/qml/SectionView.qml" line="179"/>
         <source>Move</source>
         <translation>Переместить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="163"/>
+        <location filename="../src/qml/SectionView.qml" line="188"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionView.qml" line="174"/>
+        <location filename="../src/qml/SectionView.qml" line="198"/>
         <source>Time info</source>
         <translation>Время</translation>
     </message>
@@ -394,6 +394,14 @@ in the right bottom corner.</source>
         <location filename="../src/qml/ToolBar.qml" line="98"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
+    </message>
+</context>
+<context>
+    <name>lexis::Library</name>
+    <message>
+        <location filename="../src/db/library.cpp" line="265"/>
+        <source>Start page</source>
+        <translation>Стартовая страница</translation>
     </message>
 </context>
 <context>

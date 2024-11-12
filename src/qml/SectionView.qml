@@ -179,7 +179,9 @@ Item {
               text: qsTr("Move")
               enabled: libraryView.movableTypes.indexOf(type) !== -1
               onTriggered: {
-                moveDialog.currentTable = parentTable;
+                // moveDialog.model = library.getStructure();
+                // moveDialog.view.expandRecursively();
+                moveDialog.init();
                 moveDialog.open();
               }
             }

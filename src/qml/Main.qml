@@ -16,6 +16,7 @@ Window {
     anchors.fill: parent
     SideBar {
       id: sideBar
+      z: 1
       Layout.fillHeight: true
     }
 

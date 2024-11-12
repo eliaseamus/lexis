@@ -2,8 +2,6 @@
 
 #include <QtSql/QtSql>
 
-#include "app_settings.hpp"
-
 namespace lexis {
 
 Library::Library(QObject* parent) :
@@ -11,8 +9,7 @@ Library::Library(QObject* parent) :
   _pronunciation(new Pronunciation(this))
 {
   openDatabase("lexis.db");
-  AppSettings settings;
-  openTable(settings.getCurrentLanguage());
+  openTable(_settings.getCurrentLanguage());
   connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
 }
 
@@ -259,6 +256,21 @@ void Library::updateMeaning(int id, const QString& meaning) {
 
   auto* section = getSection(LibrarySectionType::kWord);
   section->updateMeaning(id, meaning);
+}
+
+TreeModel* Library::getStructure() {
+  auto headerData = QVariantList() << "title" << "table";
+  auto header = std::make_unique<TreeItem>(headerData);
+  auto language = _settings.getCurrentLanguage();
+  auto rootData = QVariantList() << tr("Start page") << language;
+  auto root = std::make_unique<TreeItem>(rootData, header.get());
+
+  addChildItems(language, root.get());
+  header->appendChild(std::move(root));
+
+  auto* model = new TreeModel(this);
+  model->setRoot(std::move(header));
+  return model;
 }
 
 LibraryItem Library::readItem(int id, const QString& table) {
@@ -522,6 +534,22 @@ bool Library::updateParentInfo(const QString& table, const QString& parentTable,
     return false;
   }
   return true;
+}
+
+void Library::addChildItems(const QString& table, TreeItem* parent) {
+  QSqlQuery query(QString("SELECT id, title, type FROM %1").arg(table));
+  while (query.next()) {
+    auto id = query.value("id").toInt();
+    auto title = query.value("title").toString();
+    auto type = _typeManager.librarySectionType(query.value("type").toInt());
+    if (type != LibrarySectionType::kWord) {
+      auto childTable = QString("%1_%2").arg(table, QString::number(id));
+      auto itemData = QVariantList() << title << childTable;
+      auto item = std::make_unique<TreeItem>(itemData, parent);
+      addChildItems(childTable, item.get());
+      parent->appendChild(std::move(item));
+    }
+  }
 }
 
 void Library::updateAudio(QByteArray audio) {
