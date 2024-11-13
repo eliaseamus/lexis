@@ -19,6 +19,15 @@ QVariant TreeModel::data(const QModelIndex& index, int role) const {
   return item->data(index.column());
 }
 
+QVariant TreeModel::columnData(const QModelIndex& index, int column) {
+  if (!index.isValid()) {
+    return {};
+  }
+
+  const auto* item = static_cast<const TreeItem*>(index.internalPointer());
+  return column < item->columnCount() ? item->data(column) : QVariant{};
+}
+
 Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const {
   return index.isValid() ? QAbstractItemModel::flags(index) : Qt::ItemFlags(Qt::NoItemFlags);
 }

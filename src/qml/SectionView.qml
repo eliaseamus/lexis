@@ -179,6 +179,8 @@ Item {
               text: qsTr("Move")
               enabled: libraryView.movableTypes.indexOf(type) !== -1
               onTriggered: {
+                moveDialog.itemID = itemID;
+                moveDialog.sourceTable = parentTable;
                 moveDialog.model = library.getStructure();
                 moveDialog.view.expandRecursively();
                 moveDialog.open();
