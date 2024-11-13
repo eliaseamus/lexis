@@ -71,6 +71,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/InputDialog.qml
     src/qml/InterfaceLanguageDialog.qml
     src/qml/ItemView.qml
+    src/qml/LexisBox.qml
     src/qml/LibraryItemConfiguration.qml
     src/qml/LibraryView.qml
     src/qml/Main.qml

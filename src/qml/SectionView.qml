@@ -179,9 +179,8 @@ Item {
               text: qsTr("Move")
               enabled: libraryView.movableTypes.indexOf(type) !== -1
               onTriggered: {
-                // moveDialog.model = library.getStructure();
-                // moveDialog.view.expandRecursively();
-                moveDialog.init();
+                moveDialog.model = library.getStructure();
+                moveDialog.view.expandRecursively();
                 moveDialog.open();
               }
             }

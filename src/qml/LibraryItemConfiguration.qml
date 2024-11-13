@@ -42,7 +42,7 @@ Rectangle {
     anchors.fill: parent
     anchors.margins: 20
 
-    ComboBox {
+    LexisBox {
       id: type
       currentIndex: currentType
       Layout.fillWidth: true

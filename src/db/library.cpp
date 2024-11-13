@@ -259,6 +259,7 @@ void Library::updateMeaning(int id, const QString& meaning) {
 }
 
 TreeModel* Library::getStructure() {
+  static TreeModel* prevStructure = nullptr;
   auto headerData = QVariantList() << "title" << "table";
   auto header = std::make_unique<TreeItem>(headerData);
   auto language = _settings.getCurrentLanguage();
@@ -268,8 +269,12 @@ TreeModel* Library::getStructure() {
   addChildItems(language, root.get());
   header->appendChild(std::move(root));
 
+  if (prevStructure) {
+    prevStructure->deleteLater();
+  }
   auto* model = new TreeModel(this);
   model->setRoot(std::move(header));
+  prevStructure = model;
   return model;
 }
 
