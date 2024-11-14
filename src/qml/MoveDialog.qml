@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 Dialog {
   id: moveDialog
-  property int itemID
+  property list<int> ids
   property string sourceTable
   property alias model: view.model
   property alias view: view
@@ -49,7 +49,7 @@ Dialog {
       Layout.topMargin: 10
       okay: function () {
         const targetTable = view.model.columnData(view.selectionModel.currentIndex, 1);
-        library.moveItem(itemID, sourceTable, targetTable);
+        libraryView.moveItems(ids, sourceTable, targetTable);
         moveDialog.accept()
       }
       cancel:  function () {

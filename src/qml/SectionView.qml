@@ -179,7 +179,11 @@ Item {
               text: qsTr("Move")
               enabled: libraryView.movableTypes.indexOf(type) !== -1
               onTriggered: {
-                moveDialog.itemID = itemID;
+                if (libraryView.isSelectMode) {
+                  moveDialog.ids = libraryView.selectedItems.map((item) => item["itemID"]);
+                } else {
+                  moveDialog.ids = [itemID];
+                }
                 moveDialog.sourceTable = parentTable;
                 moveDialog.model = library.getStructure();
                 moveDialog.view.expandRecursively();

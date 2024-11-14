@@ -292,6 +292,8 @@ Pane {
 
   function moveItems(ids, sourceTable, targetTable) {
     ids.forEach((id) => library.moveItem(id, sourceTable, targetTable));
+    dragItems.visible = false;
+    clearSelectedItems();
     refresh();
   }
 
@@ -322,9 +324,9 @@ Pane {
       clearSelectedItems();
     } else if (tables.length > 1) {
       tables.pop();
-      var table = tables.pop();
+      var table = tables[tables.length - 1];
       pages.pop();
-      pageTitle.title = pages.pop();
+      pageTitle.title = pages[pages.length - 1];
       library.openTable(table);
       refresh();
     } else if (!isStartPage) {
