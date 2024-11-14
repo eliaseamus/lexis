@@ -64,8 +64,8 @@ Pane {
       visible: settings.currentLanguage.length > 0 &&
                library.sections.length === 0
       title: qsTr("Library is empty.\n" +
-                   "Add the first item using \"+\" button\n" +
-                   "in the right bottom corner.")
+                  "Add the first item using \"+\" button\n" +
+                  "in the right bottom corner.")
     }
 
     Item {Layout.fillHeight: true}

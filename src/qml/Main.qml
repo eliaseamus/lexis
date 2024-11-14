@@ -44,7 +44,7 @@ Window {
   }
 
   Shortcut {
-    sequence: "Esc"
+    sequences: ["Esc", "Alt+Left"]
     onActivated: popStack()
   }
 

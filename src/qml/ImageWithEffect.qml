@@ -15,6 +15,7 @@ Item {
     fillMode: image.fillMode
     source: image.source
   }
+
   MultiEffect {
     source: sourceItem
     anchors.fill: sourceItem

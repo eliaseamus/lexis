@@ -81,16 +81,22 @@ Item {
 
       delegate: SectionItem {
         id: gridItem
-        backgroundColor: (mouseArea.containsPress || mouseArea.drag.active) ||
-                         (libraryView.isSelectMode && isSelected) ?
-                         itemColor.darker(1.2) :
-                         itemColor
+        backgroundColor: {
+          if (itemColor === undefined) {
+            return "white";
+          }
+          if ((mouseArea.containsPress || mouseArea.drag.active) ||
+              (libraryView.isSelectMode && isSelected)) {
+            return itemColor.darker(1.2);
+          } else {
+            return itemColor;
+          }
+        }
         borderColor: (mouseArea.containsMouse && !mouseArea.drag.active) || dropArea.containsDrop ?
                      settings.accentColor :
                      palette.base
         itemTitle: title
         imageSource: imageUrl
-
         MouseArea {
           id: mouseArea
           anchors.fill: parent
@@ -104,7 +110,7 @@ Item {
           onPressAndHold: toggleSelection()
           onClicked: (mouse) => {
             if (mouse.button === Qt.LeftButton) {
-              if (libraryView.isSelectMode) {
+              if (libraryView.isSelectMode || mouse.modifiers & Qt.ControlModifier) {
                 toggleSelection();
               } else {
                 if (type == "Word") {
@@ -162,53 +168,8 @@ Item {
             }
           }
 
-          Menu {
+          SectionItemMenu {
             id: contextMenu
-            MenuItem {
-              text: qsTr("Select")
-              onTriggered: toggleSelection()
-            }
-            MenuItem {
-              text: qsTr("Edit")
-              enabled: !gridItem.isSelected
-              onTriggered: {
-                libraryView.editItem(buildItemDict());
-              }
-            }
-            MenuItem {
-              text: qsTr("Move")
-              enabled: libraryView.movableTypes.indexOf(type) !== -1
-              onTriggered: {
-                if (libraryView.isSelectMode) {
-                  moveDialog.ids = libraryView.selectedItems.map((item) => item["itemID"]);
-                } else {
-                  moveDialog.ids = [itemID];
-                }
-                moveDialog.sourceTable = parentTable;
-                moveDialog.model = library.getStructure();
-                moveDialog.view.expandRecursively();
-                moveDialog.open();
-              }
-            }
-            MenuItem {
-              text: qsTr("Delete")
-              onTriggered: {
-                if (libraryView.isSelectMode) {
-                  libraryView.deleteSelectedItems();
-                } else {
-                  libraryView.deleteItem(buildItemDict());
-                }
-              }
-            }
-            MenuItem {
-              text: qsTr("Time info")
-              enabled: !gridItem.isSelected
-              onTriggered: {
-                timeInfoDialog.creationTime = creationTime;
-                timeInfoDialog.modificationTime = modificationTime;
-                timeInfoDialog.open();
-              }
-            }
           }
         }
 

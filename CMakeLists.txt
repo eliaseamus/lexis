@@ -81,6 +81,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/PrettyLabel.qml
     src/qml/RoundImage.qml
     src/qml/SectionItem.qml
+    src/qml/SectionItemMenu.qml
     src/qml/SectionView.qml
     src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml

@@ -4,18 +4,6 @@
 <context>
     <name>DeleteDialog</name>
     <message>
-        <source>Are you sure you want to
-delete %1 from your library?</source>
-        <translation type="vanished">Вы уверены что хотите
-удалить %1 из своей библиотеки?</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to
-delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
-        <translation type="vanished">Вы уверены что хотите
-удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
-    </message>
-    <message>
         <location filename="../src/qml/DeleteDialog.qml" line="12"/>
         <source>Are you sure you want to&lt;br&gt;delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation>Вы уверены что хотите&lt;br&gt;удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
@@ -27,10 +15,6 @@ delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <location filename="../src/qml/HelpDialog.qml" line="8"/>
         <source>Back</source>
         <translation>Назад</translation>
-    </message>
-    <message>
-        <source>Back / Cancel selection</source>
-        <translation type="vanished">Назад / Отменить выделение</translation>
     </message>
     <message>
         <location filename="../src/qml/HelpDialog.qml" line="11"/>
@@ -109,14 +93,6 @@ and drop it in this area</source>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
-    <message>
-        <source>Use as input language</source>
-        <translation type="vanished">Использовать при вводе текста</translation>
-    </message>
-    <message>
-        <source>Impacts on text autocomplete</source>
-        <translation type="vanished">Влияет на автодополнение текста</translation>
-    </message>
 </context>
 <context>
     <name>ItemView</name>
@@ -131,10 +107,6 @@ and drop it in this area</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <source>Insert meaning</source>
-        <translation type="vanished">Ввести значение</translation>
-    </message>
-    <message>
         <location filename="../src/qml/ItemView.qml" line="94"/>
         <source>Back</source>
         <translation>Назад</translation>
@@ -146,22 +118,6 @@ and drop it in this area</source>
         <location filename="../src/qml/LibraryItemConfiguration.qml" line="56"/>
         <source>Title</source>
         <translation>Название</translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation type="vanished">Автор</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">Год</translation>
-    </message>
-    <message>
-        <source>Book</source>
-        <translation type="vanished">Книга</translation>
-    </message>
-    <message>
-        <source>Before Christ</source>
-        <translation type="vanished">До нашей эры</translation>
     </message>
     <message>
         <location filename="../src/qml/LibraryItemConfiguration.qml" line="127"/>
@@ -231,18 +187,6 @@ in the right bottom corner.</source>
 Добавьте первый элемент с помощью кнопки &quot;+&quot;
 в правом нижнем углу.</translation>
     </message>
-    <message>
-        <source>Back</source>
-        <translation type="vanished">Назад</translation>
-    </message>
-    <message>
-        <source>Search</source>
-        <translation type="vanished">Поиск</translation>
-    </message>
-    <message>
-        <source>New item</source>
-        <translation type="vanished">Новый элемент</translation>
-    </message>
 </context>
 <context>
     <name>OkCancel</name>
@@ -258,36 +202,39 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>SectionItemMenu</name>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="6"/>
+        <source>Select</source>
+        <translation>Выделить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="10"/>
+        <source>Edit</source>
+        <translation>Редактировать</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="17"/>
+        <source>Move</source>
+        <translation>Переместить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="32"/>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="42"/>
+        <source>Time info</source>
+        <translation>Время</translation>
+    </message>
+</context>
+<context>
     <name>SectionView</name>
     <message>
         <location filename="../src/qml/SectionView.qml" line="43"/>
         <source>Sort order</source>
         <translation>Порядок сортировки</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionView.qml" line="168"/>
-        <source>Select</source>
-        <translation>Выделить</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionView.qml" line="172"/>
-        <source>Edit</source>
-        <translation>Редактировать</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionView.qml" line="179"/>
-        <source>Move</source>
-        <translation>Переместить</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionView.qml" line="188"/>
-        <source>Delete</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionView.qml" line="198"/>
-        <source>Time info</source>
-        <translation>Время</translation>
     </message>
 </context>
 <context>
@@ -323,10 +270,6 @@ in the right bottom corner.</source>
         <translation>язык</translation>
     </message>
     <message>
-        <source>Add a new language to learn</source>
-        <translation type="vanished">Добавить новый язык</translation>
-    </message>
-    <message>
         <location filename="../src/qml/SideBar.qml" line="123"/>
         <source>Delete</source>
         <translation>Удалить</translation>
@@ -357,10 +300,6 @@ in the right bottom corner.</source>
 </context>
 <context>
     <name>TimeInfoDialog</name>
-    <message>
-        <source>Created:</source>
-        <translation type="vanished">Создание:</translation>
-    </message>
     <message>
         <location filename="../src/qml/TimeInfoDialog.qml" line="16"/>
         <source>Creation:</source>
@@ -399,7 +338,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="265"/>
+        <location filename="../src/db/library.cpp" line="266"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>

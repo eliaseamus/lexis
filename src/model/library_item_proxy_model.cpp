@@ -77,7 +77,7 @@ bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& 
       return leftData.toDateTime() < rightData.toDateTime();
     case QMetaType::QString:
       return QString::localeAwareCompare(leftData.toString(), rightData.toString()) < 0;
-    }
+  }
 
   qWarning() << "Unknown type for sorting";
   return false;

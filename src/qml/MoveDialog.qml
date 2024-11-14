@@ -49,7 +49,11 @@ Dialog {
       Layout.topMargin: 10
       okay: function () {
         const targetTable = view.model.columnData(view.selectionModel.currentIndex, 1);
-        libraryView.moveItems(ids, sourceTable, targetTable);
+        if (sourceTable !== targetTable) {
+          libraryView.moveItems(ids, sourceTable, targetTable);
+        } else {
+          libraryView.clearSelectedItems();
+        }
         moveDialog.accept()
       }
       cancel:  function () {
