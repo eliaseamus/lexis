@@ -241,6 +241,7 @@ Pane {
     itemConfiguration.title = item["title"];
     itemConfiguration.image = item["imageUrl"];
     itemConfiguration.backgroundColor = item["itemColor"];
+    itemConfiguration.meaning = item["meaning"];
     itemConfiguration.init();
     stackView.push(itemConfiguration);
   }

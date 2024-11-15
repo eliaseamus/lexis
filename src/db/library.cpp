@@ -394,7 +394,6 @@ void Library::populateSections() {
 
     insertItem(std::move(item));
   }
-
 }
 
 void Library::insertItem(LibraryItem&& item) {

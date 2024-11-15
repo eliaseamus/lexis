@@ -16,6 +16,7 @@ Rectangle {
   property string title
   property string image
   property color backgroundColor: palette.base
+  property string meaning
 
   function init() {
     editMode = true
@@ -174,6 +175,7 @@ Rectangle {
     type: sectionTypeManager.librarySectionType(types[type.currentIndex])
     imageUrl: imageItem.source
     color: cover.color
+    meaning: newItem.meaning
   }
 
   ImagePicker {
