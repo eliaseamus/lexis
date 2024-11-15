@@ -20,7 +20,7 @@ void Library::openDatabase(const QString& name) {
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
   db.setDatabaseName(info.filePath());
   if (!db.open()) {
-    qDebug() << QString("Failed to open %1").arg(info.filePath()).toStdString();
+    qWarning() << QString("Failed to open %1").arg(info.filePath()).toStdString();
   }
 }
 
@@ -169,7 +169,7 @@ void Library::createTable() {
      meaning           TEXT)"
   ).arg(_table);
   if (!query.exec(createTableQuery)) {
-    qDebug() << QString("failed to create %1 table").arg(_table) << query.lastError();
+    qWarning() << QString("failed to create %1 table").arg(_table) << query.lastError();
   }
 }
 
@@ -192,7 +192,7 @@ void Library::createChildTable(int parentID) {
      meaning           TEXT)"
   ).arg(childTable, _table, parentIDString);
   if (!query.exec(createTableQuery)) {
-    qDebug() << QString("failed to create %1 table").arg(childTable) << query.lastError();
+    qWarning() << QString("failed to create %1 table").arg(childTable) << query.lastError();
   }
 }
 
@@ -220,7 +220,7 @@ void Library::dropTableRecursively(const QString& root) {
   }
 }
 
-void Library::readAudio(int id) {
+QUrl Library::readAudio(int id) {
   QSqlQuery query(
     QString(
       "SELECT audio FROM %1 WHERE id = \"%2\""
@@ -233,7 +233,7 @@ void Library::readAudio(int id) {
   }
 
   auto* section = getSection(LibrarySectionType::kWord);
-  section->updateAudio(id, std::move(audio));
+  return section->updateAudio(id, std::move(audio));
 }
 
 void Library::updateMeaning(int id, const QString& meaning) {
@@ -298,7 +298,7 @@ LibraryItem Library::readItem(int id, const QString& table) {
     item.setAudio(query.value("audio").toByteArray());
     item.setMeaning(query.value("meaning").toString());
   } else {
-    qDebug() << QString("Failed to read item of id = %1 from %2 table")
+    qWarning() << QString("Failed to read item of id = %1 from %2 table")
                 .arg(QString::number(id), table);
   }
   return item;
@@ -443,7 +443,7 @@ void Library::dropTable(const QString& name) {
   QSqlQuery query;
   auto deleteTableQuery = QString("DROP TABLE IF EXISTS %1").arg(name);
   if (!query.exec(deleteTableQuery)) {
-    qDebug() << "failed to delete table" << name << query.lastError();
+    qWarning() << "failed to delete table" << name << query.lastError();
     return;
   }
   if (name == _table) {
@@ -569,7 +569,6 @@ void Library::updateAudio(QByteArray audio) {
   if (!query.exec()) {
     qWarning() << QString("Failed to update '%1' item in '%2' table:")
                   .arg(QString::number(_audioItem.id), _audioItem.table) << query.lastError();
-    return;
   }
 }
 

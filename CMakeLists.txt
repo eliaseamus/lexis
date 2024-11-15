@@ -36,6 +36,7 @@ qt_add_executable(${PROJECT_NAME}
   src/web_service.cpp
   src/web_service.hpp
   src/utils.hpp
+  src/utils.cpp
   src/app_manager.hpp
   src/app_manager.cpp
   src/app_settings.hpp

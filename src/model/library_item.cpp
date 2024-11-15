@@ -2,21 +2,22 @@
 
 #include <QFile>
 
-namespace lexis {
+#include "utils.hpp"
 
-QString fileTemplate = "/Lexis-XXXXXX";
-QTemporaryDir dir(QDir::tempPath() + fileTemplate);
+namespace lexis {
 
 LibraryItem::LibraryItem(QObject* parent) :
   QObject(parent)
 {
-  _image.setFileTemplate(dir.path() + fileTemplate);
-  _audio.setFileTemplate(dir.path() + fileTemplate);
+  const auto fileTemplate = temporaryFileTemplate();
+  _image.setFileTemplate(fileTemplate);
+  _audio.setFileTemplate(fileTemplate);
 }
 
 LibraryItem::LibraryItem(LibraryItem&& item) {
-  _image.setFileTemplate(dir.path() + fileTemplate);
-  _audio.setFileTemplate(dir.path() + fileTemplate);
+  const auto fileTemplate = temporaryFileTemplate();
+  _image.setFileTemplate(fileTemplate);
+  _audio.setFileTemplate(fileTemplate);
   init(std::move(item));
 }
 

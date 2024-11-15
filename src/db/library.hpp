@@ -43,7 +43,7 @@ class Library : public QObject {
   Q_INVOKABLE void openTable(const QString& name);
   Q_INVOKABLE void openChildTable(int parentID);
   Q_INVOKABLE void dropTableRecursively(const QString& root);
-  Q_INVOKABLE void readAudio(int id);
+  Q_INVOKABLE QUrl readAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE TreeModel* getStructure();
   QVector<LibrarySection*> sections() const {return _sections;}

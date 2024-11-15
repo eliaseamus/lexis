@@ -25,9 +25,10 @@ void LibraryItemProxyModel::updateItem(LibraryItem&& item) {
   emit changed();
 }
 
-void LibraryItemProxyModel::updateAudio(int id, QByteArray&& audio) {
-  _source->updateAudio(id, std::move(audio));
+QUrl LibraryItemProxyModel::updateAudio(int id, QByteArray&& audio) {
+  auto res = _source->updateAudio(id, std::move(audio));
   emit changed();
+  return res;
 }
 
 void LibraryItemProxyModel::updateMeaning(int id, const QString& meaning) {

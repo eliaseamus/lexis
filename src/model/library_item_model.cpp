@@ -30,15 +30,16 @@ void LibraryItemModel::updateItem(LibraryItem&& item) {
   emit layoutChanged();
 }
 
-void LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
+QUrl LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
   auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
     return item->id() == id;
   });
   if (item == _items.end()) {
     qWarning() << QString("Failed to update audio of %1: no item with such id").arg(id);
-    return;
+    return {};
   }
   (*item)->setAudio(std::move(audio));
+  return (*item)->audioUrl();
 }
 
 void LibraryItemModel::updateMeaning(int id, const QString& meaning) {

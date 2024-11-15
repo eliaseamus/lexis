@@ -6,7 +6,6 @@
 #include <QUrl>
 #include <QColor>
 #include <QTemporaryFile>
-#include <QTemporaryDir>
 
 #include "section_type.hpp"
 

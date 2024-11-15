@@ -32,7 +32,7 @@ class LibraryItemModel : public QAbstractListModel {
   explicit LibraryItemModel(QObject* parent = nullptr);
   void addItem(LibraryItem&& item);
   void updateItem(LibraryItem&& item);
-  void updateAudio(int id, QByteArray&& audio);
+  QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
   void removeItem(int id);
   bool isEmpty() const {return _items.isEmpty();}

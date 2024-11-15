@@ -9,7 +9,7 @@ Pane {
   property string title
   property string imageUrl
   property color itemColor
-  property string audioUrl
+  property alias audioUrl: pronunciation.source
   property string meaning
 
   ColumnLayout {
@@ -50,6 +50,9 @@ Pane {
               text: qsTr("Pronunciation")
             }
             onClicked: {
+              if (audioUrl.toString().length === 0) {
+                audioUrl = library.readAudio(itemID);
+              }
               pronunciation.play();
             }
           }
@@ -138,7 +141,6 @@ Pane {
 
   MediaPlayer {
     id: pronunciation
-    source: audioUrl
     audioOutput: AudioOutput {}
   }
 

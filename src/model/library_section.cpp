@@ -36,8 +36,8 @@ void LibrarySection::updateItem(LibraryItem&& item) {
   _model->updateItem(std::move(item));
 }
 
-void LibrarySection::updateAudio(int id, QByteArray&& audio) {
-  _model->updateAudio(id, std::move(audio));
+QUrl LibrarySection::updateAudio(int id, QByteArray&& audio) {
+  return _model->updateAudio(id, std::move(audio));
 }
 
 void LibrarySection::updateMeaning(int id, const QString& meaning) {
