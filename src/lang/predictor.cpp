@@ -24,6 +24,10 @@ void Predictor::get(const QString& query) {
 }
 
 void Predictor::onFinished(QNetworkReply* reply) {
+  if (hasError(reply)) {
+    return;
+  }
+
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray values = root["text"].toArray();

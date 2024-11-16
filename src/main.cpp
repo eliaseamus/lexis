@@ -12,6 +12,13 @@ int main(int argc, char* argv[]) {
   QtWebView::initialize();
   app.setOrganizationName("Lexis");
   app.setOrganizationDomain("");
+
+  QString workingDirectory = qgetenv("LEXIS_WORKDIR");
+  if (!workingDirectory.isEmpty()) {
+    QDir::setCurrent(workingDirectory);
+    qDebug() << "Working directory set to:" << QDir::currentPath();
+  }
+
   QQmlApplicationEngine engine;
   lexis::AppManager appManager(app, engine);
   auto halt = [](){QCoreApplication::exit(-1);};

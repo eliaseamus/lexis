@@ -20,6 +20,14 @@ Pane {
       visible: true
       Layout.alignment: Qt.AlignCenter
     }
+    NetworkErrorScreen {
+      id: networkErrorScreen
+      visible: false
+      Layout.fillWidth: true
+      Layout.fillHeight: true
+      Layout.rightMargin: sideBar.width
+    }
+
     RowLayout {
       id: body
       visible: false
@@ -147,6 +155,12 @@ Pane {
   Connections {
     target: dictionary
 
+    function onErrorOccured(error) {
+      networkErrorScreen.errorString = error;
+      spinner.visible = false;
+      networkErrorScreen.visible = true;
+    }
+
     function onDefinitionsReady(definitions) {
       const hasMultipleDefinitions = definitions.length > 1;
       var dictionaryText = String();
@@ -184,6 +198,7 @@ Pane {
         dictionaryText += "</ol>";
       }
       spinner.visible = false;
+      networkErrorScreen.visible = false;
       body.visible = true;
       if (dictionaryText.length > 0) {
         dictionaryPage.textFormat = Text.RichText;
@@ -212,6 +227,7 @@ Pane {
 
   function init() {
     spinner.visible = true;
+    networkErrorScreen.visible = false;
     body.visible = false;
     transcription.title = "";
     transcription.visible = false;

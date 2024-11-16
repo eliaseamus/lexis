@@ -21,6 +21,12 @@ class WebService : public QObject {
  public slots:
   virtual void onFinished(QNetworkReply* reply) = 0;
 
+ protected:
+  bool hasError(QNetworkReply* reply);
+
+ signals:
+  void errorOccured(QString);
+
 };
 
 }

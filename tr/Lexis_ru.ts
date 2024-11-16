@@ -97,17 +97,17 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="50"/>
+        <location filename="../src/qml/ItemView.qml" line="58"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="110"/>
+        <location filename="../src/qml/ItemView.qml" line="121"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="94"/>
+        <location filename="../src/qml/ItemView.qml" line="105"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -115,18 +115,18 @@ and drop it in this area</source>
 <context>
     <name>LibraryItemConfiguration</name>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="56"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="57"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="127"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="128"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="141"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="150"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="142"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="151"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -186,6 +186,16 @@ in the right bottom corner.</source>
         <translation>Библиотека пуста.
 Добавьте первый элемент с помощью кнопки &quot;+&quot;
 в правом нижнем углу.</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkErrorScreen</name>
+    <message>
+        <location filename="../src/qml/NetworkErrorScreen.qml" line="12"/>
+        <source>Network connection problem:
+</source>
+        <translation>Ошибка сетевого соединения:
+</translation>
     </message>
 </context>
 <context>
@@ -338,7 +348,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="266"/>
+        <location filename="../src/db/library.cpp" line="270"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>

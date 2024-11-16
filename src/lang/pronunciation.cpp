@@ -44,6 +44,9 @@ void TTSService::retrieveAudio(QNetworkReply* reply) {
 }
 
 void TTSService::onFinished(QNetworkReply* reply) {
+  if (hasError(reply)) {
+    return;
+  }
   if (_voices.isEmpty()) {
     retrieveVoices(reply);
   } else {

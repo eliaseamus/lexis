@@ -50,7 +50,13 @@ SplitView {
               searchResults.visible = true;
               searchBar.visible = true;
               spinner.visible = false;
+              networkErrorScreen.visible = false;
               isInitialized = true;
+              break;
+            case WebView.LoadFailedStatus:
+              networkErrorScreen.errorString = loadRequest.errorString;
+              spinner.visible = false;
+              networkErrorScreen.visible = true;
               break;
           }
         }
@@ -60,6 +66,7 @@ SplitView {
             searchResults.visible = true;
             searchBar.visible = true;
             spinner.visible = false;
+            networkErrorScreen.visible = false;
           }
         }
       }
@@ -91,6 +98,13 @@ SplitView {
       id: spinner
       visible: true
       anchors.centerIn: parent
+    }
+
+    NetworkErrorScreen {
+      id: networkErrorScreen
+      visible: false
+      anchors.fill: parent
+      anchors.rightMargin: sideBar.width
     }
 
   }
@@ -163,6 +177,7 @@ SplitView {
 
   function init(source) {
     spinner.visible = true;
+    networkErrorScreen.visible = false;
     image.source = source;
     image.visible = source.length > 0;
     searchText.text = "";

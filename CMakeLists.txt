@@ -77,6 +77,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/LibraryView.qml
     src/qml/Main.qml
     src/qml/MoveDialog.qml
+    src/qml/NetworkErrorScreen.qml
     src/qml/OkCancel.qml
     src/qml/PrettyButton.qml
     src/qml/PrettyLabel.qml
@@ -96,7 +97,9 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/icons/back.png
     src/qml/icons/check.png
     src/qml/icons/color.png
+    src/qml/icons/internet-error.png
     src/qml/icons/language.png
+    src/qml/icons/Lexis.png
     src/qml/icons/plus.png
     src/qml/icons/question.png
     src/qml/icons/search.png

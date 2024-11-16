@@ -21,5 +21,13 @@ void WebService::post(const QNetworkRequest& request, const QByteArray& body) {
   _manager->post(request, body);
 }
 
+bool WebService::hasError(QNetworkReply* reply) {
+  if (reply->error() != QNetworkReply::NoError) {
+    emit errorOccured(reply->errorString());
+    return true;
+  }
+  return false;
+}
+
 }
 

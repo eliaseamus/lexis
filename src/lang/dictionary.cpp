@@ -66,6 +66,10 @@ void Dictionary::get(const QString& query) {
 }
 
 void Dictionary::onFinished(QNetworkReply* reply) {
+  if (hasError(reply)) {
+    return;
+  }
+
   QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
   QJsonObject root = document.object();
   QJsonArray defValues = root["def"].toArray();
