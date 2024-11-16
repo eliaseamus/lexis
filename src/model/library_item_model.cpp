@@ -62,6 +62,8 @@ void LibraryItemModel::removeItem(int id) {
     return;
   }
   auto index = std::distance(_items.begin(), item);
+  (*item)->freeAssets();
+  (*item)->deleteLater();
   beginRemoveRows(QModelIndex(), index, index);
   _items.removeAt(index);
   endRemoveRows();

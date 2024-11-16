@@ -127,8 +127,10 @@ Item {
           onReleased: {
             if (drag.active) {
               dragItems.drop();
-              dragItems.Drag.active = false;
-              dragItems.visible = false;
+              if (dragItems !== undefined) {
+                dragItems.Drag.active = false;
+                dragItems.visible = false;
+              }
             }
           }
           onPositionChanged: (mouse) => {

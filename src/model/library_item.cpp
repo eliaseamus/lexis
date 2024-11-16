@@ -26,6 +26,11 @@ LibraryItem& LibraryItem::operator=(LibraryItem&& item) {
   return *this;
 }
 
+void LibraryItem::freeAssets() {
+  _image.setAutoRemove(true);
+  _audio.setAutoRemove(true);
+}
+
 void LibraryItem::init(LibraryItem&& item) {
   _itemID = item._itemID;
   _title = std::move(item._title);

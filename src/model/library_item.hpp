@@ -67,6 +67,8 @@ class LibraryItem : public QObject {
   void setAudio(QByteArray&& data);
   void setMeaning(const QString& meaning) {_meaning = meaning;}
 
+  void freeAssets();
+
  private:
   void init(LibraryItem&& item);
   QByteArray readFile(const QString& path) const;
