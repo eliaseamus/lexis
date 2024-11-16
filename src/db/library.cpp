@@ -73,16 +73,29 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     return;
   }
 
-  auto oldTitle = getTitle(item->id(), _table);
   QSqlQuery query;
-  query.prepare(
-    QString(
+  QString queryString;
+  auto oldTitle = getTitle(item->id(), _table);
+  bool isWordWasChanged = item->type() == LibrarySectionType::kWord && oldTitle != item->title();
+  if (isWordWasChanged) {
+    _audioItem.table = _table;
+    _audioItem.id = item->id();
+    requestAudio(item->title());
+    queryString = QString(
       "UPDATE %1 "
       "SET title = :title, modification_time = :modification, type = :type, "
-          "image = :image, color = :color "
+      "image = :image, color = :color, audio = :audio "
       "WHERE id = \"%2\""
-    ).arg(_table, QString::number(item->id()))
-  );
+    ).arg(_table, QString::number(item->id()));
+  } else {
+    queryString = QString(
+      "UPDATE %1 "
+      "SET title = :title, modification_time = :modification, type = :type, "
+      "image = :image, color = :color "
+      "WHERE id = \"%2\""
+    ).arg(_table, QString::number(item->id()));
+  }
+  query.prepare(queryString);
 
   item->setModificationTime(QDateTime::currentDateTime());
   query.bindValue(":title", item->title());
@@ -90,6 +103,9 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
+  if (isWordWasChanged) {
+    query.bindValue(":audio", QByteArray{});
+  }
 
   if (!query.exec()) {
     qWarning() << QString("Failed to update '%1' item in '%2' table:")
@@ -97,11 +113,6 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     return;
   }
 
-  if (item->type() == LibrarySectionType::kWord && oldTitle != item->title()) {
-    _audioItem.table = _table;
-    _audioItem.id = item->id();
-    requestAudio(item->title());
-  }
   updateParentModificationTime(_table, item->id());
 
   if (oldType == item->type()) {
