@@ -4,6 +4,8 @@ An audio with the pronunciation of a word is also generated.
 In case dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
 You may also add new words into your library while reading a book or watching a movie by creating corresponding items in Lexis and inserting subject groups and words into them.
 
+[DEMO](https://github.com/user-attachments/assets/6385af8f-7212-4cc7-a876-d07c32a712fb)
+
 There are nine languages available to learn using **Lexis**:
 - english
 - spanish
