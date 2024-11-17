@@ -126,6 +126,11 @@ qt_add_resources(${PROJECT_NAME} "configuration"
     FILES qtquickcontrols2.conf
 )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    WIN32_EXECUTABLE ON
+    MACOSX_BUNDLE ON
+)
+
 qt_add_translations(${PROJECT_NAME}
     TS_FILE_DIR tr)
 
