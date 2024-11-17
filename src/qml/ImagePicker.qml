@@ -74,6 +74,8 @@ SplitView {
         id: searchBar
         visible: false
         Layout.fillWidth: true
+        Layout.topMargin: 5
+        Layout.bottomMargin: 5
         TextField {
           id: searchText
           placeholderText: qsTr("Search")

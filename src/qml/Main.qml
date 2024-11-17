@@ -7,8 +7,8 @@ import QLexis
 
 Window {
   id: main
-  width: 1450
-  height: 950
+  width: 1250
+  height: 700
   visible: true
   Material.accent: settings.accentColor
 
@@ -49,7 +49,7 @@ Window {
   }
 
   Shortcut {
-    sequence: StandardKey.Quit
+    sequence: "Ctrl+Q"
     onActivated: Qt.quit()
   }
 

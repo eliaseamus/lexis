@@ -18,17 +18,19 @@ Dialog {
       Layout.leftMargin: 20
       width: 3 * cellWidth
       height: 3 * cellHeight
-      cellWidth: 215
-      cellHeight: 215
+      cellWidth: 165
+      cellHeight: 165
       model: languages
       interactive: false
       delegate: Rectangle {
         required property string modelData
         property bool isEnabled: disabledLanguages.indexOf(modelData) === -1
-        width: 200
-        height: 200
-        color: selectedLanguage === modelData ? settings.accentColor : palette.base
-        border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
+        width: 150
+        height: 150
+        color: selectedLanguage === modelData ? settings.accentColor : "lightgrey"
+        border.color: mouseArea.containsMouse || selectedLanguage === modelData ?
+                      settings.accentColor :
+                      "lightgrey"
         border.width: 2
         radius: 10
 
@@ -39,7 +41,7 @@ Dialog {
             Layout.fillHeight: true
             Layout.fillWidth: true
             fillMode: Image.PreserveAspectFit
-            source: "icons/flags/%1.png".arg(modelData)
+            source: "qrc:/QLexis/icons/flags/%1.png".arg(modelData)
             isSaturated: isEnabled === false
             ToolTip {
               visible: mouseArea.containsMouse

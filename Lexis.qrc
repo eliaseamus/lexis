@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/audio.png</file>
+        <file>icons/back.png</file>
+        <file>icons/check.png</file>
+        <file>icons/color.png</file>
+        <file>icons/internet-error.png</file>
+        <file>icons/language.png</file>
+        <file>icons/Lexis.ico</file>
+        <file>icons/Lexis.png</file>
+        <file>icons/plus.png</file>
+        <file>icons/question.png</file>
+        <file>icons/search.png</file>
+        <file>icons/sort.png</file>
+        <file>icons/sort-ascending.png</file>
+        <file>icons/sort-descending.png</file>
+        <file>icons/flags/de.png</file>
+        <file>icons/flags/en.png</file>
+        <file>icons/flags/es.png</file>
+        <file>icons/flags/fr.png</file>
+        <file>icons/flags/it.png</file>
+        <file>icons/flags/pl.png</file>
+        <file>icons/flags/ru.png</file>
+        <file>icons/flags/tr.png</file>
+        <file>icons/flags/uk.png</file>
+    </qresource>
+</RCC>

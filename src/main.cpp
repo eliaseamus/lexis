@@ -12,6 +12,7 @@ int main(int argc, char* argv[]) {
   QtWebView::initialize();
   app.setOrganizationName("Lexis");
   app.setOrganizationDomain("");
+  app.setWindowIcon(QIcon(":/QLexis/icons/Lexis.png"));
 
   QString workingDirectory = qgetenv("LEXIS_WORKDIR");
   if (!workingDirectory.isEmpty()) {

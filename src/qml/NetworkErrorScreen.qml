@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 Item {
@@ -12,13 +11,13 @@ Item {
       Layout.preferredWidth: 200
       Layout.preferredHeight: 200
       Layout.alignment: Qt.AlignHCenter
-      source: "icons/internet-error.png"
+      source: "qrc:/QLexis/icons/internet-error.png"
     }
     PrettyLabel {
       id: message
       Layout.alignment: Qt.AlignHCenter
       Layout.topMargin: 20
-      title: qsTr("Network connection problem:\n") + errorString
+      title: qsTr("Network connection problem:\n") + screen.errorString
     }
   }
 

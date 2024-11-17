@@ -191,9 +191,9 @@ Pane {
 
   RowLayout {
     id: dragItems
-    spacing: -195
-    width: 200
-    height: 200
+    spacing: -145
+    width: 150
+    height: 150
     visible: false
     property var items: []
     signal drop
@@ -204,7 +204,7 @@ Pane {
       SectionItem {
         required property int index
         backgroundColor: dragItems.items[index]["itemColor"]
-        borderColor: palette.base
+        borderColor: "lightgrey"
         itemTitle: dragItems.items[index]["title"]
         imageSource: dragItems.items[index]["imageUrl"]
         MouseArea {

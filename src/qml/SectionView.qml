@@ -46,8 +46,8 @@ Item {
         function getIconSource() {
           var order = librarySection.model.sortOrder;
           return order === Qt.AscendingOrder ?
-            "icons/sort-ascending.png" :
-            "icons/sort-descending.png";
+            "qrc:/QLexis/icons/sort-ascending.png" :
+            "qrc:/QLexis/icons/sort-descending.png";
         }
       }
       Connections {
@@ -94,7 +94,7 @@ Item {
         }
         borderColor: (mouseArea.containsMouse && !mouseArea.drag.active) || dropArea.containsDrop ?
                      settings.accentColor :
-                     palette.base
+                     "lightgrey"
         itemTitle: title
         imageSource: imageUrl
         MouseArea {

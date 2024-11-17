@@ -15,7 +15,7 @@ Rectangle {
   property int currentType
   property string title
   property string image
-  property color backgroundColor: palette.base
+  property color backgroundColor: "whitesmoke"
   property string meaning
 
   function init() {
@@ -33,7 +33,7 @@ Rectangle {
     titleItem.clear()
     imageItem.source = ""
     imageItem.visible = false
-    cover.color = palette.base
+    cover.color = "whitesmoke"
     customColor.Material.background = "white";
     customColor.icon.color = "black";
   }
@@ -64,7 +64,7 @@ Rectangle {
       spacing: 20
       Repeater {
         id: backgroundColors
-        model: [palette.base, "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
+        model: ["whitesmoke", "#a8e6cf", "#dcedc1", "#ffd3b6", "#ffaaa5",
                 "#ff8b94", "#1b85b8", "#c3cb71", "#ffd4e5", "#e4ddd7",
                 "#d4ffea", "#eecbff", "#feffa3", "#dbdcff", "#e3dfa4"]
         RoundButton {
@@ -76,7 +76,7 @@ Rectangle {
 
       RoundButton {
         id: customColor
-        icon.source: "icons/plus.png"
+        icon.source: "qrc:/QLexis/icons/plus.png"
         icon.color: "black"
         Material.background: "white"
         onClicked: colorDialog.open()

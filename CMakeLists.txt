@@ -11,6 +11,8 @@ find_package(Qt6 REQUIRED COMPONENTS
 include_directories(src src/db src/gui src/lang src/model)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
 
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Lexis.rc")
+
 qt_add_executable(${PROJECT_NAME}
   src/lang/dictionary.cpp
   src/lang/dictionary.hpp
@@ -43,6 +45,7 @@ qt_add_executable(${PROJECT_NAME}
   src/app_settings.cpp
   src/db/library.cpp
   src/db/library.hpp
+  ${app_icon_resource_windows}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -93,28 +96,28 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/ToolBar.qml
     src/qml/utils.js
   RESOURCES
-    src/qml/icons/audio.png
-    src/qml/icons/back.png
-    src/qml/icons/check.png
-    src/qml/icons/color.png
-    src/qml/icons/internet-error.png
-    src/qml/icons/language.png
-    src/qml/icons/Lexis.png
-    src/qml/icons/plus.png
-    src/qml/icons/question.png
-    src/qml/icons/search.png
-    src/qml/icons/sort.png
-    src/qml/icons/sort-ascending.png
-    src/qml/icons/sort-descending.png
-    src/qml/icons/flags/de.png
-    src/qml/icons/flags/en.png
-    src/qml/icons/flags/es.png
-    src/qml/icons/flags/fr.png
-    src/qml/icons/flags/it.png
-    src/qml/icons/flags/pl.png
-    src/qml/icons/flags/ru.png
-    src/qml/icons/flags/tr.png
-    src/qml/icons/flags/uk.png
+    icons/audio.png
+    icons/back.png
+    icons/check.png
+    icons/color.png
+    icons/internet-error.png
+    icons/language.png
+    icons/Lexis.png
+    icons/plus.png
+    icons/question.png
+    icons/search.png
+    icons/sort.png
+    icons/sort-ascending.png
+    icons/sort-descending.png
+    icons/flags/de.png
+    icons/flags/en.png
+    icons/flags/es.png
+    icons/flags/fr.png
+    icons/flags/it.png
+    icons/flags/pl.png
+    icons/flags/ru.png
+    icons/flags/tr.png
+    icons/flags/uk.png
     qtquickcontrols2.conf
 )
 

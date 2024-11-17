@@ -19,10 +19,12 @@ Dialog {
         model: ["en", "ru"]
         Rectangle {
           required property string modelData
-          width: 200
-          height: 200
-          color: selectedLanguage === modelData ? settings.accentColor : palette.base
-          border.color: mouseArea.containsMouse ? settings.accentColor : palette.base
+          width: 150
+          height: 150
+          color: selectedLanguage === modelData ? settings.accentColor : "lightgrey"
+          border.color: selectedLanguage === modelData || mouseArea.containsMouse ?
+                        settings.accentColor :
+                        "lightgrey"
           border.width: 2
           radius: 10
 
@@ -33,7 +35,7 @@ Dialog {
               Layout.fillHeight: true
               Layout.fillWidth: true
               fillMode: Image.PreserveAspectFit
-              source: "icons/flags/%1.png".arg(modelData)
+              source: "qrc:/QLexis/icons/flags/%1.png".arg(modelData)
             }
             ToolTip {
               visible: mouseArea.containsMouse

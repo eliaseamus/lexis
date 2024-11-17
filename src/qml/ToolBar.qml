@@ -12,7 +12,7 @@ RowLayout {
 
   RoundButton {
     id: back
-    icon.source: "icons/back.png"
+    icon.source: "qrc:/QLexis/icons/back.png"
     icon.color: settings.fgColor
     enabled: false
     Material.background: settings.accentColor
@@ -30,7 +30,7 @@ RowLayout {
     Layout.rightMargin: sideBar.width
     RoundButton {
       id: search
-      icon.source: "icons/search.png"
+      icon.source: "qrc:/QLexis/icons/search.png"
       icon.color: settings.fgColor
       enabled: library.sections.length > 0
       Material.background: settings.accentColor
@@ -88,7 +88,7 @@ RowLayout {
   RoundButton {
     id: addLibraryItem
     enabled: settings.currentLanguage.length > 0
-    icon.source: "icons/plus.png"
+    icon.source: "qrc:/QLexis/icons/plus.png"
     icon.color: settings.fgColor
     Material.background: settings.accentColor
     onClicked: addNewItem()
