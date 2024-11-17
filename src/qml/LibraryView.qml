@@ -191,7 +191,7 @@ Pane {
 
   RowLayout {
     id: dragItems
-    spacing: -145
+    spacing: -195
     width: 150
     height: 150
     visible: false
