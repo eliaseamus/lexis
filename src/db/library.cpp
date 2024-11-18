@@ -119,6 +119,9 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     auto* section = getSection(item->type());
     section->updateItem(std::move(*item));
   } else {
+    if (oldType == LibrarySectionType::kWord) {
+      createChildTable(item->id());
+    }
     auto* section = getSection(oldType);
     section->removeItem(item->id());
     if (section->isEmpty()) {
