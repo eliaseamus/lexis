@@ -123,10 +123,11 @@ Item {
                   text: qsTr("Delete")
                   onTriggered: {
                     languageToDelete = modelData;
-                    deleteLanguageDialog.target =
-                      "%1 ".arg(Utils.getFullLanguageName(modelData).toLowerCase()) +
-                      qsTr("language");
-                    deleteLanguageDialog.imageUrl = "qrc:/QLexis/icons/flags/%1.png".arg(modelData);
+                    var target = [];
+                    target["title"] = "%1 ".arg(Utils.getFullLanguageName(modelData)
+                                                     .toLowerCase()) + qsTr("language");
+                    target["imageUrl"] = "qrc:/QLexis/icons/flags/%1.png".arg(modelData);
+                    deleteLanguageDialog.targets = [target];
                     deleteLanguageDialog.open();
                   }
                 }
