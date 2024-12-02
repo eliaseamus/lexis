@@ -4,7 +4,7 @@ An audio with the pronunciation of a word is also generated.
 In case dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
 You may also add new words into your library while reading a book or watching a movie by creating corresponding items in Lexis and inserting subject groups and words into them.
 
-[DEMO](https://github.com/user-attachments/assets/6385af8f-7212-4cc7-a876-d07c32a712fb)
+![Main page](https://github.com/user-attachments/assets/3953a171-f643-49c6-bf27-b6ca79a6a28d)
 
 There are nine languages available to learn using **Lexis**:
 - english
@@ -16,6 +16,8 @@ There are nine languages available to learn using **Lexis**:
 - polish
 - ukranian
 - turkish
+
+![Screenshot from 2024-12-02 19-58-35](https://github.com/user-attachments/assets/6cc33810-fefd-44a6-8aa5-06d98970c1bd)
 
 **Lexis** uses several third-party services which you need to get API_KEY to:
 - [Yandex predictor](https://yandex.com/dev/predictor/)
