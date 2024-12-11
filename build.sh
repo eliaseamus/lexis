@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set all environment variables here
-# QT_PATH
+# QT_PATH (e.g. ~/Qt/6.7.2/gcc_64/)
 # PREDICTOR_API_KEY
 # DICTIONARY_API_KEY
 # GOOGLE_CUSTOM_SEARCH_ENGINE_ID (CSE_ID)

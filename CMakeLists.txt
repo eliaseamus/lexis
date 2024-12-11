@@ -8,18 +8,20 @@ find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
              Qml Quick QuickControls2 WebView LinguistTools REQUIRED)
 
-include_directories(src src/db src/gui src/lang src/model)
+include_directories(src src/db src/gui src/model src/web)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
 
 set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Lexis.rc")
 
 qt_add_executable(${PROJECT_NAME}
-  src/lang/dictionary.cpp
-  src/lang/dictionary.hpp
-  src/lang/predictor.cpp
-  src/lang/predictor.hpp
-  src/lang/pronunciation.cpp
-  src/lang/pronunciation.hpp
+  src/web/dictionary.cpp
+  src/web/dictionary.hpp
+  src/web/predictor.cpp
+  src/web/predictor.hpp
+  src/web/pronunciation.cpp
+  src/web/pronunciation.hpp
+  src/web/web_service.cpp
+  src/web/web_service.hpp
   src/main.cpp
   src/model/library_item.hpp
   src/model/library_item.cpp
@@ -35,8 +37,6 @@ qt_add_executable(${PROJECT_NAME}
   src/model/tree_item.cpp
   src/model/tree_model.hpp
   src/model/tree_model.cpp
-  src/web_service.cpp
-  src/web_service.hpp
   src/utils.hpp
   src/utils.cpp
   src/app_manager.hpp
