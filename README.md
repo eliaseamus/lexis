@@ -9,7 +9,7 @@
    <img alt="CPP standard" src="https://img.shields.io/badge/C%2B%2B_standard-23-lightblue?style=for-the-badge">
  </a>
  <a href="https://github.com/eliaseamus/lexis/blob/main/LICENSE">
-   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-lightblue?style=for-the-badge">
+   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge">
  </a>
 </p>
 
