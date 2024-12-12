@@ -6,6 +6,9 @@ TreeItem::TreeItem(QVariantList data, TreeItem* parent) : _data(std::move(data))
 
 void TreeItem::appendChild(std::unique_ptr<TreeItem>&& child) {
   _childItems.emplace_back(std::move(child));
+  std::sort(_childItems.begin(), _childItems.end(), [](const auto& lhs, const auto& rhs) {
+    return lhs->data(0).toString() < rhs->data(0).toString();
+  });
 }
 
 TreeItem* TreeItem::child(int row) {
