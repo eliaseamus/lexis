@@ -1,11 +1,57 @@
-**Lexis** is a vocabulary-builder desktop app, which helps to organize a library of words to learn.
-The app provides means to group words by subject together with choosing a picture representing a word.
-An audio with the pronunciation of a word is also generated.
-In case dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
-You may also add new words into your library while reading a book or watching a movie by creating corresponding items in Lexis and inserting subject groups and words into them.
+<p align="center">
+ <a href="https://www.qt.io/download-open-source">
+   <img alt="Framework" src="https://img.shields.io/badge/Framework-Qt-59F722">
+ </a>
+ <a href="https://cmake.org/">
+   <img alt="Build system" src="https://img.shields.io/badge/Build_system-CMake-F72422">
+ </a>
+ <a href="https://en.cppreference.com/w/cpp/23">
+   <img alt="CPP standard" src="https://img.shields.io/badge/C%2B%2B_standard-23-lightblue">
+ </a>
+ <a href="https://github.com/eliaseamus/lexis/blob/main/LICENSE">
+   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-lightblue">
+ </a>
+</p>
 
-![Main page](https://github.com/user-attachments/assets/3953a171-f643-49c6-bf27-b6ca79a6a28d)
+**Lexis** is a vocabulary-builder desktop app, which helps you to organize a library of words to learn.
+Using **Lexis**, you can create your own collections of words, grouping them as you wish.
 
+## Example of use
+Lets pretend you're reading some book and encounter an unknown word *pugnacious*.
+You'd like to learn it, but instead of writing it down to some piece of paper, you can add it to your word
+collection in **Lexis**. This way you'll get a dictionary definition of the word with a picture associated with
+its meaning, plus an audiable pronunciation - pretty much handy, isn't it?
+
+1. Since the word *pugnacious* may be used to describe a person, you can add it to the *Personality* subject group.
+
+![Collection](docs/images/collection.png)
+
+2. Having opened the group, you can create a new item by pressing a *New item* button at the right bottom corner and type
+the desired word in the language you're learning:
+
+![New word](docs/images/add_new_word.png)
+
+3. Pick an image best associated with the meaning of this word and drag it to the specified area. In case search results don't
+reflect the meaning of the word too good, you can type a different word or phrase in any language in the bottom bar and search again: 
+
+![Pick image](docs/images/pick_image.png)
+
+4. Assign a background color just for fun:
+
+![Assign color](docs/images/assign_color.png)
+
+5. You can see a new word added into the collection:
+
+![New word](docs/images/new_word_added.png)
+
+6. Open it, and voilà!
+
+![Word card](docs/images/word_card.png)
+
+In case the dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
+You may also revise the groups added into the collection by moving them or their contents around the library.
+
+## Supported languages
 There are nine languages available to learn using **Lexis**:
 - english
 - spanish
@@ -17,8 +63,7 @@ There are nine languages available to learn using **Lexis**:
 - ukranian
 - turkish
 
-![Screenshot from 2024-12-02 19-58-35](https://github.com/user-attachments/assets/6cc33810-fefd-44a6-8aa5-06d98970c1bd)
-
+## Dependencies
 **Lexis** uses several third-party services which you need to get API_KEY to:
 - [Yandex predictor](https://yandex.com/dev/predictor/)
 - [Yandex dictionary](https://yandex.com/dev/dictionary)
@@ -26,6 +71,4 @@ There are nine languages available to learn using **Lexis**:
 - [Eleven labs](https://elevenlabs.io/)
 - [PlayHT](https://play.ht/)
 
-These keys are used as compile definitions, which makes them necessary to build an executable program file.
-
-Explore language universes with Lexis!
+These keys are currently used as compile definitions, which makes them necessary to build an executable program file.
