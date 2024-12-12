@@ -1,9 +1,9 @@
 <p align="center">
  <a href="https://www.qt.io/download-open-source">
-   <img alt="Framework" src="https://img.shields.io/badge/Framework-Qt-59F722?style=for-the-badge">
+   <img alt="Framework" src="https://img.shields.io/badge/Framework-Qt-green?style=for-the-badge">
  </a>
  <a href="https://cmake.org/">
-   <img alt="Build system" src="https://img.shields.io/badge/Build_system-CMake-F72422?style=for-the-badge">
+   <img alt="Build system" src="https://img.shields.io/badge/Build_system-CMake-red?style=for-the-badge">
  </a>
  <a href="https://en.cppreference.com/w/cpp/23">
    <img alt="CPP standard" src="https://img.shields.io/badge/C%2B%2B_standard-23-lightblue?style=for-the-badge">
@@ -62,6 +62,9 @@ There are nine languages available to learn using **Lexis**:
 - polish
 - ukranian
 - turkish
+
+## Target platform
+So far, build configuration for Linux and Windows platforms has been done. A build for MacOS is also achievable due to Qt's cross-platform support.
 
 ## Dependencies
 **Lexis** uses several third-party services which you need to get API_KEY to:
