@@ -17,12 +17,12 @@
 Using **Lexis**, you can create your own collections of words, grouping them as you wish.
 
 ## Example of use
-Lets pretend you're reading some book and encounter an unknown word *pugnacious*.
+Lets pretend you're reading some book and encounter an unknown word *ingenious*.
 You'd like to learn it, but instead of writing it down to some piece of paper, you can add it to your word
 collection in **Lexis**. This way you'll get a dictionary definition of the word with a picture associated with
-its meaning, plus an audiable pronunciation - pretty much handy, isn't it?
+its meaning, plus the transcription with an audiable pronunciation - pretty much handy, isn't it?
 
-1. Since the word *pugnacious* may be used to describe a person, you can add it to the *Personality* subject group.
+1. Since the word *ingenious* may be used to describe a person, you can add it to the *Personality* subject group.
 
 ![Collection](docs/images/collection.png)
 
@@ -32,7 +32,7 @@ the desired word in the language you're learning:
 ![New word](docs/images/add_new_word.png)
 
 3. Pick an image best associated with the meaning of this word and drag it to the specified area. In case search results don't
-reflect the meaning of the word too good, you can type a different word or phrase in any language in the bottom bar and search again: 
+reflect the meaning of the word too good, you can type a different word or phrase in any language in the bottom bar and search again:
 
 ![Pick image](docs/images/pick_image.png)
 
