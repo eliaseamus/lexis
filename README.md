@@ -36,7 +36,7 @@ reflect the meaning of the word too good, you can type a different word or phras
 
 ![Pick image](docs/images/pick_image.png)
 
-4. Assign a background color just for fun:
+4. Assign a background color to make a new item more distinguishable from the rest of the collection:
 
 ![Assign color](docs/images/assign_color.png)
 
