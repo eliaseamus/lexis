@@ -6,10 +6,11 @@ set(CMAKE_CXX_STANDARD 23)
 
 find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network WebEngineWidgets Multimedia Sql
-             Qml Quick QuickControls2 WebView LinguistTools REQUIRED)
+             Qml Quick QuickControls2 WebView LinguistTools Test REQUIRED)
 
 include_directories(src src/db src/gui src/model src/web)
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
+enable_testing(true)
 
 set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Lexis.rc")
 
@@ -133,6 +134,46 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 qt_add_translations(${PROJECT_NAME}
     TS_FILE_DIR tr)
+
+# TESTS
+
+qt_add_executable(test_predictor
+  tests/test_predictor.cpp
+  src/web/predictor.cpp
+  src/web/web_service.cpp
+  src/app_settings.cpp
+)
+
+target_link_libraries(test_predictor PRIVATE
+  Qt6::Core
+  Qt6::Network
+  Qt6::Test
+  Qt6::Qml
+  Qt6::Gui
+)
+
+add_test(test_predictor test_predictor)
+
+set_target_properties(test_predictor PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+install(TARGETS test_predictor
+  BUNDLE  DESTINATION .
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+qt_generate_deploy_app_script(
+  TARGET test_predictor
+  OUTPUT_SCRIPT deploy_script
+  NO_UNSUPPORTED_PLATFORM_ERROR
+)
+
+install(SCRIPT ${deploy_script})
+
+# DEFINITIONS
 
 add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
 add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})

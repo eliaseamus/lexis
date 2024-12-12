@@ -14,11 +14,11 @@ void Predictor::get(const QString& query) {
   static const auto limit = 10;
   static const auto urlFormat = QString(
                                   "https://predictor.yandex.net/api/v1/ \
-                                         predict.json/complete?               \
+                                         predict.json/complete?           \
                                          key=%1&q=%2&lang=%3&limit=%4")
                                   .remove(' ');
 
-  _query = query;
+  setQuery(query);
   auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY), QString(query).replace(' ', '+'),
                                     _settings.getCurrentLanguage(), QString::number(limit));
   WebService::get(url);
@@ -29,8 +29,11 @@ void Predictor::onFinished(QNetworkReply* reply) {
     return;
   }
 
-  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-  QJsonObject root = document.object();
+  retrievePredictions(QJsonDocument::fromJson(reply->readAll()));
+}
+
+void Predictor::retrievePredictions(const QJsonDocument& doc) const {
+  QJsonObject root = doc.object();
   QJsonArray values = root["text"].toArray();
   int pos = root["pos"].toInt();
   bool isEndOfWord = root["endOfWord"].toBool();

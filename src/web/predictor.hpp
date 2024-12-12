@@ -18,11 +18,15 @@ class Predictor : public WebService {
  public:
   explicit Predictor(QObject* parent = nullptr) : WebService(parent) {}
   Q_INVOKABLE void get(const QString& query) override;
+  void setQuery(const QString& query) {
+    _query = query;
+  }
+  void retrievePredictions(const QJsonDocument& doc) const;
 
  signals:
-  void predictionsReceived(const QStringList& predictions);
+  void predictionsReceived(const QStringList& predictions) const;
 
- private slots:
+ public slots:
   void onFinished(QNetworkReply* reply) override;
 };
 
