@@ -7,8 +7,8 @@ namespace lexis {
 QHash<QString, LibraryItemModel::LibraryItemRole> AppSettings::sectionSortRoles() {
   static QHash<QString, LibraryItemModel::LibraryItemRole> roles = {
     {"Modification time", LibraryItemModel::ModificationTimeRole},
-    {"Creation time", LibraryItemModel::CreationTimeRole},
-    {"Title", LibraryItemModel::TitleRole}
+    {"Creation time",     LibraryItemModel::CreationTimeRole    },
+    {"Title",             LibraryItemModel::TitleRole           }
   };
   return roles;
 }
@@ -36,4 +36,4 @@ QString AppSettings::getCurrentInterfaceLanguagePair() const {
   return QString("%1-%2").arg(getCurrentLanguage(), getInterfaceLanguage());
 }
 
-}
+}  // namespace lexis

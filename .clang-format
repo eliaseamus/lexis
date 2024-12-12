@@ -1,0 +1,11 @@
+BasedOnStyle: google
+ColumnLimit: 100
+IndentWidth: 2
+ContinuationIndentWidth: 2
+AllowShortIfStatementsOnASingleLine: Never
+AlignArrayOfStructures: Left
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: false
+DerivePointerAlignment: false
+PointerAlignment: Left

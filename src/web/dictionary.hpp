@@ -2,8 +2,8 @@
 
 #include <qqml.h>
 
-#include "web_service.hpp"
 #include "app_settings.hpp"
+#include "web_service.hpp"
 
 namespace lexis {
 
@@ -22,16 +22,42 @@ class Translation : public QObject {
 
  public:
   explicit Translation(QObject* parent = nullptr) : QObject(parent) {}
-  QString text() const {return _text;}
-  QStringList synonyms() const {return _synonyms;}
-  QStringList meanings() const {return _meanings;}
 
-  void setText(const QString& text) {_text = text;}
-  void setText(QString&& text) {_text = std::move(text);}
-  void setSynonyms(const QStringList& synonyms) {_synonyms = synonyms;}
-  void setSynonyms(QStringList&& synonyms) {_synonyms = std::move(synonyms);}
-  void setMeanings(const QStringList& meanings) {_meanings = meanings;}
-  void setMeanings(QStringList&& meanings) {_meanings = std::move(meanings);}
+  QString text() const {
+    return _text;
+  }
+
+  QStringList synonyms() const {
+    return _synonyms;
+  }
+
+  QStringList meanings() const {
+    return _meanings;
+  }
+
+  void setText(const QString& text) {
+    _text = text;
+  }
+
+  void setText(QString&& text) {
+    _text = std::move(text);
+  }
+
+  void setSynonyms(const QStringList& synonyms) {
+    _synonyms = synonyms;
+  }
+
+  void setSynonyms(QStringList&& synonyms) {
+    _synonyms = std::move(synonyms);
+  }
+
+  void setMeanings(const QStringList& meanings) {
+    _meanings = meanings;
+  }
+
+  void setMeanings(QStringList&& meanings) {
+    _meanings = std::move(meanings);
+  }
 
  signals:
   void dummy();
@@ -44,7 +70,8 @@ class Definition : public QObject {
   Q_PROPERTY(QString text READ text WRITE setText NOTIFY dummy);
   Q_PROPERTY(QString partOfSpeech READ partOfSpeech WRITE setPartOfSpeech NOTIFY dummy);
   Q_PROPERTY(QString transcription READ transcription WRITE setTranscription NOTIFY dummy);
-  Q_PROPERTY(QVector<Translation*> translations READ translations WRITE setTranslations NOTIFY dummy);
+  Q_PROPERTY(
+    QVector<Translation*> translations READ translations WRITE setTranslations NOTIFY dummy);
 
  private:
   QString _text;
@@ -54,26 +81,61 @@ class Definition : public QObject {
 
  public:
   explicit Definition(QObject* parent = nullptr) : QObject(parent) {}
-  QString text() const {return _text;}
-  QString partOfSpeech() const {return _partOfSpeech;}
-  QString transcription() const {return _transcription;}
-  QVector<Translation*> translations() const {return _translations;}
 
-  void setText(const QString& text) {_text = text;}
-  void setText(QString&& text) {_text = std::move(text);}
-  void setPartOfSpeech(const QString& partOfSpeech) {_partOfSpeech = partOfSpeech;}
-  void setPartOfSpeech(QString&& partOfSpeech) {_partOfSpeech = std::move(partOfSpeech);}
-  void setTranscription(const QString& transcription) {_transcription = transcription;}
-  void setTranscription(QString&& transcription) {_transcription = std::move(transcription);}
-  void setTranslations(const QVector<Translation*>& translations) {_translations = translations;}
-  void setTranslations(QVector<Translation*>&& translations) {_translations = std::move(translations);}
+  QString text() const {
+    return _text;
+  }
+
+  QString partOfSpeech() const {
+    return _partOfSpeech;
+  }
+
+  QString transcription() const {
+    return _transcription;
+  }
+
+  QVector<Translation*> translations() const {
+    return _translations;
+  }
+
+  void setText(const QString& text) {
+    _text = text;
+  }
+
+  void setText(QString&& text) {
+    _text = std::move(text);
+  }
+
+  void setPartOfSpeech(const QString& partOfSpeech) {
+    _partOfSpeech = partOfSpeech;
+  }
+
+  void setPartOfSpeech(QString&& partOfSpeech) {
+    _partOfSpeech = std::move(partOfSpeech);
+  }
+
+  void setTranscription(const QString& transcription) {
+    _transcription = transcription;
+  }
+
+  void setTranscription(QString&& transcription) {
+    _transcription = std::move(transcription);
+  }
+
+  void setTranslations(const QVector<Translation*>& translations) {
+    _translations = translations;
+  }
+
+  void setTranslations(QVector<Translation*>&& translations) {
+    _translations = std::move(translations);
+  }
 
  signals:
   void dummy();
 };
 
 class DictionaryCache : public QObject {
- Q_OBJECT
+  Q_OBJECT
 
  private:
   struct DictionaryEntry {
@@ -94,8 +156,8 @@ class DictionaryCache : public QObject {
 };
 
 class Dictionary : public WebService {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
  private:
   AppSettings _settings;
@@ -110,8 +172,6 @@ class Dictionary : public WebService {
 
  public slots:
   void onFinished(QNetworkReply* reply) override;
-
 };
 
-}
-
+}  // namespace lexis

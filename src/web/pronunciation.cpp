@@ -1,10 +1,9 @@
 #include "pronunciation.hpp"
 
-#include <QNetworkReply>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QJsonArray>
-
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkReply>
 #include <random>
 #include <thread>
 
@@ -54,9 +53,7 @@ void TTSService::onFinished(QNetworkReply* reply) {
   }
 }
 
-ElevenLabs::ElevenLabs(QObject* parent) :
-  TTSService(parent)
-{
+ElevenLabs::ElevenLabs(QObject* parent) : TTSService(parent) {
   _apiKey = MAKE_STR(ELEVEN_LABS_API_KEY);
 }
 
@@ -97,9 +94,7 @@ void ElevenLabs::retrieveVoices(QNetworkReply* reply) {
   setVoices(voices);
 }
 
-PlayHT::PlayHT(QObject* parent) :
-  TTSService(parent)
-{
+PlayHT::PlayHT(QObject* parent) : TTSService(parent) {
   _userID = MAKE_STR(PLAY_HT_USER);
   _apiKey = MAKE_STR(PLAY_HT_API_KEY);
 }
@@ -145,14 +140,14 @@ void PlayHT::retrieveVoices(QNetworkReply* reply) {
 
 QString PlayHT::getLanguage() {
   static QHash<QString, QString> languages = {
-    {"de", "german"},
-    {"en", "english"},
-    {"es", "spanish"},
-    {"fr", "french"},
-    {"it", "italian"},
-    {"pl", "polish"},
-    {"ru", "russian"},
-    {"tr", "turkish"},
+    {"de", "german"  },
+    {"en", "english" },
+    {"es", "spanish" },
+    {"fr", "french"  },
+    {"it", "italian" },
+    {"pl", "polish"  },
+    {"ru", "russian" },
+    {"tr", "turkish" },
     {"uk", "ukranian"}
   };
 
@@ -165,11 +160,8 @@ QString PlayHT::getLanguage() {
   return languages[currentLanguage];
 }
 
-Pronunciation::Pronunciation(QObject* parent) :
-  QObject(parent),
-  _elevenLabs(new ElevenLabs(this)),
-  _playHT(new PlayHT(this))
-{
+Pronunciation::Pronunciation(QObject* parent)
+    : QObject(parent), _elevenLabs(new ElevenLabs(this)), _playHT(new PlayHT(this)) {
   _elevenLabs->requestVoices();
   _playHT->requestVoices();
   connect(_elevenLabs, &ElevenLabs::audioReady, this, &Pronunciation::sendAudio);
@@ -182,18 +174,17 @@ void Pronunciation::get(const QString& query) {
     std::uniform_int_distribution<int> di(1, 10);
     return di(dre);
   };
-  static bool isEleven = generator() & 1; // randomly assign service for the first-time use
+  static bool isEleven = generator() & 1;  // randomly assign service for the first-time use
   if (isEleven) {
     _elevenLabs->textToSpeech(query);
   } else {
     _playHT->textToSpeech(query);
   }
-  isEleven = !isEleven; // interchange service in use
+  isEleven = !isEleven;  // interchange service in use
 }
 
 void Pronunciation::sendAudio(const QByteArray& audio) {
   emit audioReady(audio);
 }
 
-}
-
+}  // namespace lexis

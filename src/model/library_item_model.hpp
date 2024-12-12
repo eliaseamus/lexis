@@ -10,8 +10,8 @@
 namespace lexis {
 
 class LibraryItemModel : public QAbstractListModel {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
  private:
   QVector<LibraryItem*> _items;
@@ -35,11 +35,12 @@ class LibraryItemModel : public QAbstractListModel {
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
   void removeItem(int id);
-  bool isEmpty() const {return _items.isEmpty();}
+  bool isEmpty() const {
+    return _items.isEmpty();
+  }
   int rowCount(const QModelIndex& parent = {}) const override;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
   QHash<int, QByteArray> roleNames() const override;
 };
 
-
-}
+}  // namespace lexis

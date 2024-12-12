@@ -1,25 +1,26 @@
 #include "predictor.hpp"
-#include "utils.hpp"
 
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QInputMethod>
 #include <QGuiApplication>
+#include <QInputMethod>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
+#include "utils.hpp"
 
 namespace lexis {
 
 void Predictor::get(const QString& query) {
   static const auto limit = 10;
-  static const auto urlFormat = QString("https://predictor.yandex.net/api/v1/ \
+  static const auto urlFormat = QString(
+                                  "https://predictor.yandex.net/api/v1/ \
                                          predict.json/complete?               \
-                                         key=%1&q=%2&lang=%3&limit=%4").remove(' ');
+                                         key=%1&q=%2&lang=%3&limit=%4")
+                                  .remove(' ');
 
   _query = query;
-  auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY),
-                                      QString(query).replace(' ', '+'),
-                                      _settings.getCurrentLanguage(),
-                                      QString::number(limit));
+  auto url = QString(urlFormat).arg(MAKE_STR(PREDICTOR_API_KEY), QString(query).replace(' ', '+'),
+                                    _settings.getCurrentLanguage(), QString::number(limit));
   WebService::get(url);
 }
 
@@ -49,5 +50,4 @@ void Predictor::onFinished(QNetworkReply* reply) {
   emit predictionsReceived(predictions);
 }
 
-}
-
+}  // namespace lexis

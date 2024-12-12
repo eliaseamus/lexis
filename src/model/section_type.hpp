@@ -23,8 +23,8 @@ enum class LibrarySectionType {
 Q_ENUM_NS(LibrarySectionType);
 
 class SectionTypeManager : public QObject {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
  private:
   QHash<LibrarySectionType, QString> _typeNames;
@@ -35,7 +35,6 @@ class SectionTypeManager : public QObject {
   Q_INVOKABLE QString librarySectionTypeName(LibrarySectionType type) const;
   Q_INVOKABLE LibrarySectionType librarySectionType(const QString& name) const;
   Q_INVOKABLE LibrarySectionType librarySectionType(int type) const;
-
 };
 
-}
+}  // namespace lexis

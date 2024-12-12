@@ -4,10 +4,8 @@
 
 namespace lexis {
 
-LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent) :
-  QSortFilterProxyModel(parent),
-  _source(new LibraryItemModel(this))
-{
+LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent)
+    : QSortFilterProxyModel(parent), _source(new LibraryItemModel(this)) {
   AppSettings settings;
   setSourceModel(_source);
   setSortingRole(settings.getSortRole());
@@ -50,8 +48,8 @@ void LibraryItemProxyModel::reSort(const QString& role) {
 void LibraryItemProxyModel::setSortingRole(const QString& role) {
   static QHash<QString, LibraryItemModel::LibraryItemRole> roles = {
     {"Modification time", LibraryItemModel::ModificationTimeRole},
-    {"Creation time", LibraryItemModel::CreationTimeRole},
-    {"Title", LibraryItemModel::TitleRole}
+    {"Creation time",     LibraryItemModel::CreationTimeRole    },
+    {"Title",             LibraryItemModel::TitleRole           }
   };
 
   if (!roles.contains(role)) {
@@ -91,4 +89,4 @@ bool LibraryItemProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& s
   return title.contains(filter);
 }
 
-}
+}  // namespace lexis

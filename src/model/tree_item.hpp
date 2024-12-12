@@ -20,7 +20,9 @@ class TreeItem {
   int columnCount() const;
   QVariant data(int column) const;
   int row() const;
-  TreeItem* parent() {return _parent;}
+  TreeItem* parent() {
+    return _parent;
+  }
 };
 
-}
+}  // namespace lexis

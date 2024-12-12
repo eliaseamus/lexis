@@ -5,18 +5,18 @@
 #include <QObject>
 #include <QUrl>
 
+#include "app_settings.hpp"
 #include "library_section.hpp"
 #include "pronunciation.hpp"
-#include "app_settings.hpp"
 #include "tree_model.hpp"
 
 namespace lexis {
 
 class Library : public QObject {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
- Q_PROPERTY(QVector<LibrarySection*> sections READ sections NOTIFY dummy);
+  Q_PROPERTY(QVector<LibrarySection*> sections READ sections NOTIFY dummy);
 
  private:
   // used for async operations on database
@@ -46,7 +46,9 @@ class Library : public QObject {
   Q_INVOKABLE QUrl readAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE TreeModel* getStructure();
-  QVector<LibrarySection*> sections() const {return _sections;}
+  QVector<LibrarySection*> sections() const {
+    return _sections;
+  }
 
  private:
   LibraryItem readItem(int id, const QString& table);
@@ -76,5 +78,4 @@ class Library : public QObject {
   void dummy();
 };
 
-}
-
+}  // namespace lexis

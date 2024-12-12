@@ -1,15 +1,15 @@
 #pragma once
 
 #include <qqml.h>
-#include <QAbstractItemModel>
 
+#include <QAbstractItemModel>
 #include <tree_item.hpp>
 
 namespace lexis {
 
 class TreeModel : public QAbstractItemModel {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
  private:
   std::unique_ptr<TreeItem> _root;
@@ -26,4 +26,4 @@ class TreeModel : public QAbstractItemModel {
   Q_INVOKABLE int columnCount(const QModelIndex& parent = {}) const override;
 };
 
-}
+}  // namespace lexis

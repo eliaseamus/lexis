@@ -2,12 +2,8 @@
 
 namespace lexis {
 
-AppManager::AppManager(QGuiApplication& app, QQmlApplicationEngine& engine, QObject* parent) :
-  QObject(parent),
-  _app(app),
-  _engine(engine),
-  _translator(new QTranslator(this))
-{
+AppManager::AppManager(QGuiApplication& app, QQmlApplicationEngine& engine, QObject* parent)
+    : QObject(parent), _app(app), _engine(engine), _translator(new QTranslator(this)) {
   if (!_translator->load(":i18n/Lexis_ru.qm")) {
     qWarning() << "Failed to load translation file";
   }
@@ -22,4 +18,4 @@ void AppManager::changeLanguage(const QString& language) {
   _engine.retranslate();
 }
 
-}
+}  // namespace lexis

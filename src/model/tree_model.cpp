@@ -2,9 +2,7 @@
 
 namespace lexis {
 
-TreeModel::TreeModel(QObject* parent) :
-  QAbstractItemModel(parent)
-{}
+TreeModel::TreeModel(QObject* parent) : QAbstractItemModel(parent) {}
 
 void TreeModel::setRoot(std::unique_ptr<TreeItem>&& root) {
   _root = std::move(root);
@@ -37,9 +35,8 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) con
     return {};
   }
 
-  TreeItem* parentItem = parent.isValid() ?
-                         static_cast<TreeItem*>(parent.internalPointer()) :
-                         _root.get();
+  TreeItem* parentItem =
+    parent.isValid() ? static_cast<TreeItem*>(parent.internalPointer()) : _root.get();
 
   if (auto* childItem = parentItem->child(row)) {
     return createIndex(row, column, childItem);
@@ -56,9 +53,7 @@ QModelIndex TreeModel::parent(const QModelIndex& index) const {
   auto* childItem = static_cast<TreeItem*>(index.internalPointer());
   TreeItem* parentItem = childItem->parent();
 
-  return parentItem != _root.get() ?
-                       createIndex(parentItem->row(), 0, parentItem) :
-                       QModelIndex{};
+  return parentItem != _root.get() ? createIndex(parentItem->row(), 0, parentItem) : QModelIndex{};
 }
 
 int TreeModel::rowCount(const QModelIndex& parent) const {
@@ -66,9 +61,8 @@ int TreeModel::rowCount(const QModelIndex& parent) const {
     return 0;
   }
 
-  const TreeItem* parentItem = parent.isValid() ?
-                               static_cast<const TreeItem*>(parent.internalPointer()) :
-                               _root.get();
+  const TreeItem* parentItem =
+    parent.isValid() ? static_cast<const TreeItem*>(parent.internalPointer()) : _root.get();
 
   return parentItem->childCount();
 }
@@ -80,4 +74,4 @@ int TreeModel::columnCount(const QModelIndex& parent) const {
   return _root->columnCount();
 }
 
-}
+}  // namespace lexis

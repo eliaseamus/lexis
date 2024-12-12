@@ -1,20 +1,19 @@
 #pragma once
 
-#include "web_service.hpp"
-
 #include "app_settings.hpp"
+#include "web_service.hpp"
 
 namespace lexis {
 
 class TTSService : public WebService {
- Q_OBJECT
+  Q_OBJECT
 
  private:
   QStringList _voices;
 
  public:
   explicit TTSService(QObject* parent = nullptr) : WebService(parent) {}
-  void textToSpeech (const QString& query);
+  void textToSpeech(const QString& query);
   virtual void requestVoices() = 0;
 
  protected:
@@ -26,14 +25,16 @@ class TTSService : public WebService {
   void onFinished(QNetworkReply* reply) override;
 
  protected:
-  void setVoices(const QStringList& voices) {_voices = voices;}
+  void setVoices(const QStringList& voices) {
+    _voices = voices;
+  }
 
  signals:
   void audioReady(const QByteArray& audio);
 };
 
 class ElevenLabs : public TTSService {
- Q_OBJECT
+  Q_OBJECT
 
  private:
   QString _apiKey;
@@ -49,7 +50,7 @@ class ElevenLabs : public TTSService {
 };
 
 class PlayHT : public TTSService {
- Q_OBJECT
+  Q_OBJECT
 
  private:
   QString _userID;
@@ -69,8 +70,8 @@ class PlayHT : public TTSService {
   QString getLanguage();
 };
 
-class Pronunciation: public QObject {
- Q_OBJECT
+class Pronunciation : public QObject {
+  Q_OBJECT
 
  private:
   ElevenLabs* _elevenLabs = nullptr;
@@ -87,5 +88,4 @@ class Pronunciation: public QObject {
   void audioReady(const QByteArray& audio);
 };
 
-}
-
+}  // namespace lexis

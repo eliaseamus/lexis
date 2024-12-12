@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qqml.h>
+
 #include <QSortFilterProxyModel>
 
 #include "library_item_model.hpp"
@@ -8,10 +9,10 @@
 namespace lexis {
 
 class LibraryItemProxyModel : public QSortFilterProxyModel {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
- Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder NOTIFY dummy)
+  Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder NOTIFY dummy)
 
  private:
   LibraryItemModel* _source = nullptr;
@@ -24,12 +25,18 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
   void removeItem(int id);
-  bool isEmpty() const {return _source->isEmpty();}
-  Qt::SortOrder sortOrder() const {return _sortOrder;}
+  bool isEmpty() const {
+    return _source->isEmpty();
+  }
+  Qt::SortOrder sortOrder() const {
+    return _sortOrder;
+  }
   void reSort(const QString& role);
   Q_INVOKABLE void setSortingRole(const QString& role);
   Q_INVOKABLE void toggleSort();
-  Q_INVOKABLE int size() const {return _source->rowCount();}
+  Q_INVOKABLE int size() const {
+    return _source->rowCount();
+  }
 
  protected:
   bool lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const override;
@@ -40,4 +47,4 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
   void changed();
 };
 
-}
+}  // namespace lexis

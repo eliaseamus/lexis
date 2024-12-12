@@ -6,9 +6,7 @@
 
 namespace lexis {
 
-LibraryItem::LibraryItem(QObject* parent) :
-  QObject(parent)
-{
+LibraryItem::LibraryItem(QObject* parent) : QObject(parent) {
   const auto fileTemplate = temporaryFileTemplate();
   _image.setFileTemplate(fileTemplate);
   _audio.setFileTemplate(fileTemplate);
@@ -112,4 +110,4 @@ void LibraryItem::writeFile(QTemporaryFile& file, QByteArray&& data) {
   file.close();
 }
 
-}
+}  // namespace lexis

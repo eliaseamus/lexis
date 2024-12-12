@@ -2,9 +2,7 @@
 
 namespace lexis {
 
-WebService::WebService(QObject* parent) :
-  QObject(parent)
-{
+WebService::WebService(QObject* parent) : QObject(parent) {
   _manager = new QNetworkAccessManager(this);
   connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
 }
@@ -29,5 +27,4 @@ bool WebService::hasError(QNetworkReply* reply) {
   return false;
 }
 
-}
-
+}  // namespace lexis

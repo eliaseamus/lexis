@@ -1,18 +1,15 @@
 #include "dictionary.hpp"
 
-#include "utils.hpp"
-
-#include <QNetworkReply>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkReply>
+
+#include "utils.hpp"
 
 namespace lexis {
 
-DictionaryCache::DictionaryCache(qsizetype size, QObject* parent) :
-  QObject(parent),
-  _size(size)
-{
+DictionaryCache::DictionaryCache(qsizetype size, QObject* parent) : QObject(parent), _size(size) {
   _cache.reserve(_size);
 }
 
@@ -45,24 +42,23 @@ void DictionaryCache::addDefinitions(const QVector<Definition*>& definitions) {
   }
 }
 
-Dictionary::Dictionary(QObject* parent) :
-  WebService(parent),
-  _cache(new DictionaryCache(20, this))
-{
-}
+Dictionary::Dictionary(QObject* parent)
+    : WebService(parent), _cache(new DictionaryCache(20, this)) {}
 
 void Dictionary::get(const QString& query) {
-  static const auto urlFormat = QString("https://dictionary.yandex.net/api/v1/ \
+  static const auto urlFormat = QString(
+                                  "https://dictionary.yandex.net/api/v1/ \
                                          dicservice.json/lookup?               \
-                                         key=%1&lang=%2&text=%3").remove(' ');
+                                         key=%1&lang=%2&text=%3")
+                                  .remove(' ');
   if (auto definitions = _cache->getDefinitions(query); definitions != std::nullopt) {
     emit definitionsReady(definitions.value());
     return;
   }
 
   WebService::get(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
-                                             _settings.getCurrentInterfaceLanguagePair(),
-                                             QString(query).replace(' ', '+')));
+                                         _settings.getCurrentInterfaceLanguagePair(),
+                                         QString(query).replace(' ', '+')));
 }
 
 void Dictionary::onFinished(QNetworkReply* reply) {
@@ -126,5 +122,4 @@ void Dictionary::onFinished(QNetworkReply* reply) {
   emit definitionsReady(definitions);
 }
 
-}
-
+}  // namespace lexis

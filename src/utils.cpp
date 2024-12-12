@@ -10,4 +10,4 @@ QString temporaryFileTemplate() {
   return dir.path() + fileTemplate;
 }
 
-}
+}  // namespace lexis

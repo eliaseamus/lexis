@@ -6,19 +6,17 @@
 
 namespace lexis {
 
-SectionTypeManager::SectionTypeManager(QObject* parent) :
-  QObject(parent)
-{
+SectionTypeManager::SectionTypeManager(QObject* parent) : QObject(parent) {
   using enum LibrarySectionType;
   _typeNames = {
-    {kWord,         "Word"},
+    {kWord,         "Word"         },
     {kSubjectGroup, "Subject group"},
-    {kBook,         "Book"},
-    {kArticle,      "Article"},
-    {kMovie,        "Movie"},
-    {kSeries,       "Series"},
-    {kAlbum,        "Album"},
-    {kSong,         "Song"}
+    {kBook,         "Book"         },
+    {kArticle,      "Article"      },
+    {kMovie,        "Movie"        },
+    {kSeries,       "Series"       },
+    {kAlbum,        "Album"        },
+    {kSong,         "Song"         }
   };
 }
 
@@ -55,4 +53,4 @@ LibrarySectionType SectionTypeManager::librarySectionType(int type) const {
   return static_cast<LibrarySectionType>(type);
 }
 
-}
+}  // namespace lexis

@@ -2,14 +2,14 @@
 
 #include <qqml.h>
 
-#include "web_service.hpp"
 #include "app_settings.hpp"
+#include "web_service.hpp"
 
 namespace lexis {
 
 class Predictor : public WebService {
- Q_OBJECT
- QML_ELEMENT
+  Q_OBJECT
+  QML_ELEMENT
 
  private:
   QString _query;
@@ -24,8 +24,6 @@ class Predictor : public WebService {
 
  private slots:
   void onFinished(QNetworkReply* reply) override;
-
 };
 
-}
-
+}  // namespace lexis

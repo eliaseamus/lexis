@@ -6,15 +6,10 @@
 
 namespace lexis {
 
-LibrarySection::LibrarySection(QObject* parent) :
-  QObject(parent),
-  _model(new LibraryItemProxyModel(this))
-{
-}
+LibrarySection::LibrarySection(QObject* parent)
+    : QObject(parent), _model(new LibraryItemProxyModel(this)) {}
 
-LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) :
-  LibrarySection(parent)
-{
+LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) : LibrarySection(parent) {
   setType(type);
 }
 
@@ -48,5 +43,4 @@ void LibrarySection::removeItem(int id) {
   _model->removeItem(id);
 }
 
-}
-
+}  // namespace lexis

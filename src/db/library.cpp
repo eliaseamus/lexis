@@ -4,10 +4,7 @@
 
 namespace lexis {
 
-Library::Library(QObject* parent) :
-  QObject(parent),
-  _pronunciation(new Pronunciation(this))
-{
+Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunciation(this)) {
   openDatabase("lexis.db");
   openTable(_settings.getCurrentLanguage());
   connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
@@ -31,13 +28,10 @@ void Library::addItem(LibraryItem* item) {
   }
 
   QSqlQuery query;
-  query.prepare(
-    QString(
-      "INSERT INTO %1"
-      "(title, creation_time, modification_time, type, image, color)"
-      "VALUES (:title, :creation, :modification, :type, :image, :color)"
-    ).arg(_table)
-  );
+  query.prepare(QString("INSERT INTO %1"
+                        "(title, creation_time, modification_time, type, image, color)"
+                        "VALUES (:title, :creation, :modification, :type, :image, :color)")
+                  .arg(_table));
 
   auto now = QDateTime::currentDateTime();
   item->setCreationTime(now);
@@ -82,18 +76,18 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     _audioItem.id = item->id();
     requestAudio(item->title());
     queryString = QString(
-      "UPDATE %1 "
-      "SET title = :title, modification_time = :modification, type = :type, "
-      "image = :image, color = :color, audio = :audio "
-      "WHERE id = \"%2\""
-    ).arg(_table, QString::number(item->id()));
+                    "UPDATE %1 "
+                    "SET title = :title, modification_time = :modification, type = :type, "
+                    "image = :image, color = :color, audio = :audio "
+                    "WHERE id = \"%2\"")
+                    .arg(_table, QString::number(item->id()));
   } else {
     queryString = QString(
-      "UPDATE %1 "
-      "SET title = :title, modification_time = :modification, type = :type, "
-      "image = :image, color = :color "
-      "WHERE id = \"%2\""
-    ).arg(_table, QString::number(item->id()));
+                    "UPDATE %1 "
+                    "SET title = :title, modification_time = :modification, type = :type, "
+                    "image = :image, color = :color "
+                    "WHERE id = \"%2\"")
+                    .arg(_table, QString::number(item->id()));
   }
   query.prepare(queryString);
 
@@ -108,8 +102,8 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   }
 
   if (!query.exec()) {
-    qWarning() << QString("Failed to update '%1' item in '%2' table:")
-                  .arg(item->title(), _table) << query.lastError();
+    qWarning() << QString("Failed to update '%1' item in '%2' table:").arg(item->title(), _table)
+               << query.lastError();
     return;
   }
 
@@ -129,7 +123,6 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     }
     insertItem(std::move(*item));
   }
-
 }
 
 void Library::moveItem(int id, const QString& sourceTable, const QString& targetTable) {
@@ -155,7 +148,8 @@ void Library::deleteItem(int id, LibrarySectionType type) {
   query.prepare(QString("DELETE FROM %1 WHERE id = \"%2\"").arg(_table, QString::number(id)));
   if (!query.exec()) {
     qWarning() << QString("Failed to delete item of id = '%1' from '%2' table:")
-                  .arg(QString::number(id), _table) << query.lastError();
+                    .arg(QString::number(id), _table)
+               << query.lastError();
     return;
   }
   if (type != LibrarySectionType::kWord) {
@@ -171,7 +165,7 @@ void Library::deleteItem(int id, LibrarySectionType type) {
 void Library::createTable() {
   QSqlQuery query;
   auto createTableQuery = QString(
-    "CREATE TABLE IF NOT EXISTS %1                        \
+                            "CREATE TABLE IF NOT EXISTS %1                        \
     (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
      creation_time     TEXT,                              \
      modification_time TEXT,                              \
@@ -180,8 +174,8 @@ void Library::createTable() {
      image             BLOB,                              \
      color             TEXT,                              \
      audio             BLOB,                              \
-     meaning           TEXT)"
-  ).arg(_table);
+     meaning           TEXT)")
+                            .arg(_table);
   if (!query.exec(createTableQuery)) {
     qWarning() << QString("failed to create %1 table").arg(_table) << query.lastError();
   }
@@ -192,7 +186,7 @@ void Library::createChildTable(int parentID) {
   auto parentIDString = QString::number(parentID);
   auto childTable = QString("%1_%2").arg(_table, parentIDString);
   auto createTableQuery = QString(
-    "CREATE TABLE IF NOT EXISTS %1                        \
+                            "CREATE TABLE IF NOT EXISTS %1                        \
     (id                INTEGER PRIMARY KEY AUTOINCREMENT, \
      parent_table      TEXT DEFAULT %2,                   \
      parent_id         INTEGER DEFAULT %3,                \
@@ -203,8 +197,8 @@ void Library::createChildTable(int parentID) {
      image             BLOB,                              \
      color             TEXT,                              \
      audio             BLOB,                              \
-     meaning           TEXT)"
-  ).arg(childTable, _table, parentIDString);
+     meaning           TEXT)")
+                            .arg(childTable, _table, parentIDString);
   if (!query.exec(createTableQuery)) {
     qWarning() << QString("failed to create %1 table").arg(childTable) << query.lastError();
   }
@@ -236,10 +230,7 @@ void Library::dropTableRecursively(const QString& root) {
 
 QUrl Library::readAudio(int id) {
   QSqlQuery query(
-    QString(
-      "SELECT audio FROM %1 WHERE id = \"%2\""
-    ).arg(_table, QString::number(id))
-  );
+    QString("SELECT audio FROM %1 WHERE id = \"%2\"").arg(_table, QString::number(id)));
 
   QByteArray audio;
   while (query.next()) {
@@ -252,19 +243,17 @@ QUrl Library::readAudio(int id) {
 
 void Library::updateMeaning(int id, const QString& meaning) {
   QSqlQuery query;
-  query.prepare(
-    QString(
-      "UPDATE %1 "
-      "SET meaning = :meaning "
-      "WHERE id = \"%2\""
-    ).arg(_table, QString::number(id))
-  );
+  query.prepare(QString("UPDATE %1 "
+                        "SET meaning = :meaning "
+                        "WHERE id = \"%2\"")
+                  .arg(_table, QString::number(id)));
 
   query.bindValue(":meaning", meaning);
 
   if (!query.exec()) {
-    qWarning() << QString("Failed to update '%1' item in '%2' table:")
-                  .arg(QString::number(id), _table) << query.lastError();
+    qWarning()
+      << QString("Failed to update '%1' item in '%2' table:").arg(QString::number(id), _table)
+      << query.lastError();
     return;
   }
 
@@ -293,12 +282,9 @@ TreeModel* Library::getStructure() {
 }
 
 LibraryItem Library::readItem(int id, const QString& table) {
-  QSqlQuery query(
-    QString(
-      "SELECT id, title, creation_time, modification_time, type, image, color, "
-      "meaning, audio FROM %1 WHERE id = %2"
-    ).arg(table, QString::number(id))
-  );
+  QSqlQuery query(QString("SELECT id, title, creation_time, modification_time, type, image, color, "
+                          "meaning, audio FROM %1 WHERE id = %2")
+                    .arg(table, QString::number(id)));
 
   LibraryItem item;
   if (query.next()) {
@@ -312,8 +298,8 @@ LibraryItem Library::readItem(int id, const QString& table) {
     item.setAudio(query.value("audio").toByteArray());
     item.setMeaning(query.value("meaning").toString());
   } else {
-    qWarning() << QString("Failed to read item of id = %1 from %2 table")
-                .arg(QString::number(id), table);
+    qWarning()
+      << QString("Failed to read item of id = %1 from %2 table").arg(QString::number(id), table);
   }
   return item;
 }
@@ -321,11 +307,11 @@ LibraryItem Library::readItem(int id, const QString& table) {
 bool Library::removeItem(int id, LibrarySectionType type, const QString& table) {
   updateParentModificationTime(table, id);
   QSqlQuery query;
-  query.prepare(QString("DELETE FROM %1 WHERE id = %2")
-                .arg(table, QString::number(id)));
+  query.prepare(QString("DELETE FROM %1 WHERE id = %2").arg(table, QString::number(id)));
   if (!query.exec()) {
     qWarning() << QString("Failed to delete item of id = '%1' from '%2' table:")
-                  .arg(QString::number(id), table) << query.lastError();
+                    .arg(QString::number(id), table)
+               << query.lastError();
     return false;
   }
   if (table == _table) {
@@ -341,12 +327,10 @@ bool Library::removeItem(int id, LibrarySectionType type, const QString& table) 
 bool Library::insertItem(LibraryItem& item, const QString& table) {
   QSqlQuery query;
   query.prepare(
-    QString(
-      "INSERT INTO %1"
-      "(title, creation_time, modification_time, type, image, color, audio, meaning)"
-      "VALUES (:title, :creation, :modification, :type, :image, :color, :audio, :meaning)"
-    ).arg(table)
-  );
+    QString("INSERT INTO %1"
+            "(title, creation_time, modification_time, type, image, color, audio, meaning)"
+            "VALUES (:title, :creation, :modification, :type, :image, :color, :audio, :meaning)")
+      .arg(table));
 
   item.setModificationTime(QDateTime::currentDateTime());
   query.bindValue(":title", item.title());
@@ -359,8 +343,7 @@ bool Library::insertItem(LibraryItem& item, const QString& table) {
   query.bindValue(":meaning", item.meaning());
 
   if (!query.exec()) {
-    qWarning() << QString("Failed to insert item into '%1' table:").arg(table)
-               << query.lastError();
+    qWarning() << QString("Failed to insert item into '%1' table:").arg(table) << query.lastError();
     return false;
   }
   return true;
@@ -390,9 +373,8 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
 void Library::populateSections() {
   QSqlQuery query(
     QString(
-      "SELECT id, title, creation_time, modification_time, type, image, color, meaning FROM %1"
-    ).arg(_table)
-  );
+      "SELECT id, title, creation_time, modification_time, type, image, color, meaning FROM %1")
+      .arg(_table));
 
   while (query.next()) {
     LibraryItem item;
@@ -425,11 +407,7 @@ QStringList Library::getTablesList() const {
 }
 
 int Library::getItemID(const QString& title, const QString& table) const {
-  QSqlQuery query(
-    QString(
-      "SELECT id FROM %1 WHERE title = \"%2\""
-    ).arg(table, title)
-  );
+  QSqlQuery query(QString("SELECT id FROM %1 WHERE title = \"%2\"").arg(table, title));
   int id = -1;
   while (query.next()) {
     id = query.value("id").toInt();
@@ -439,10 +417,7 @@ int Library::getItemID(const QString& title, const QString& table) const {
 
 QString Library::getTitle(int id, const QString& table) const {
   QSqlQuery query(
-    QString(
-      "SELECT title FROM %1 WHERE id = \"%2\""
-    ).arg(table, QString::number(id))
-  );
+    QString("SELECT title FROM %1 WHERE id = \"%2\"").arg(table, QString::number(id)));
   QString title;
   while (query.next()) {
     title = query.value("title").toString();
@@ -471,34 +446,29 @@ void Library::requestAudio(const QString& title) {
 }
 
 void Library::updateParentModificationTime(const QString& table, int id) {
-  QSqlQuery query(
-    QString(
-      "SELECT parent_table, parent_id FROM %1 WHERE id = \"%2\""
-    ).arg(table, QString::number(id))
-  );
+  QSqlQuery query(QString("SELECT parent_table, parent_id FROM %1 WHERE id = \"%2\"")
+                    .arg(table, QString::number(id)));
   while (query.next()) {
     auto parentTable = query.value("parent_table").toString();
     auto parentID = query.value("parent_id").toInt();
     QSqlQuery updateQuery;
-    updateQuery.prepare(
-      QString(
-        "UPDATE %1 "
-        "SET modification_time = :modification "
-        "WHERE id = \"%2\""
-      ).arg(parentTable, QString::number(parentID))
-    );
+    updateQuery.prepare(QString("UPDATE %1 "
+                                "SET modification_time = :modification "
+                                "WHERE id = \"%2\"")
+                          .arg(parentTable, QString::number(parentID)));
     updateQuery.bindValue(":modification", QDateTime::currentDateTime().toString());
     if (!updateQuery.exec()) {
       qWarning() << QString("Failed to update '%1' item in '%2' table:")
-                    .arg(QString::number(parentID), parentTable) << query.lastError();
+                      .arg(QString::number(parentID), parentTable)
+                 << query.lastError();
       return;
     }
     updateParentModificationTime(parentTable, parentID);
   }
 }
 
-void Library::renameTableRecursively(const QString& oldName,
-                                     const QString& parentTable, int parentId) {
+void Library::renameTableRecursively(const QString& oldName, const QString& parentTable,
+                                     int parentId) {
   const auto newName = QString("%1_%2").arg(parentTable, QString::number(parentId));
   if (!renameTable(oldName, newName)) {
     return;
@@ -520,11 +490,7 @@ void Library::renameTableRecursively(const QString& oldName,
 
 bool Library::renameTable(const QString& oldName, const QString& newName) {
   QSqlQuery query;
-  query.prepare(
-    QString(
-      "ALTER TABLE %1 RENAME TO %2"
-    ).arg(oldName, newName)
-  );
+  query.prepare(QString("ALTER TABLE %1 RENAME TO %2").arg(oldName, newName));
 
   if (!query.exec()) {
     qWarning() << QString("Failed to rename %1 table to %2:").arg(oldName, newName)
@@ -536,12 +502,9 @@ bool Library::renameTable(const QString& oldName, const QString& newName) {
 
 bool Library::updateParentInfo(const QString& table, const QString& parentTable, int parentId) {
   QSqlQuery query;
-  query.prepare(
-    QString(
-      "UPDATE %1 "
-      "SET parent_table = :parent_table, parent_id = :parent_id"
-    ).arg(table)
-  );
+  query.prepare(QString("UPDATE %1 "
+                        "SET parent_table = :parent_table, parent_id = :parent_id")
+                  .arg(table));
 
   query.bindValue(":parent_table", parentTable);
   query.bindValue(":parent_id", QString::number(parentId));
@@ -572,18 +535,16 @@ void Library::addChildItems(const QString& table, TreeItem* parent) {
 
 void Library::updateAudio(QByteArray audio) {
   QSqlQuery query;
-  query.prepare(
-    QString(
-      "UPDATE %1 SET audio = :audio WHERE id = \"%2\""
-    ).arg(_audioItem.table, QString::number(_audioItem.id))
-  );
+  query.prepare(QString("UPDATE %1 SET audio = :audio WHERE id = \"%2\"")
+                  .arg(_audioItem.table, QString::number(_audioItem.id)));
 
   query.bindValue(":audio", audio);
 
   if (!query.exec()) {
     qWarning() << QString("Failed to update '%1' item in '%2' table:")
-                  .arg(QString::number(_audioItem.id), _audioItem.table) << query.lastError();
+                    .arg(QString::number(_audioItem.id), _audioItem.table)
+               << query.lastError();
   }
 }
 
-}
+}  // namespace lexis

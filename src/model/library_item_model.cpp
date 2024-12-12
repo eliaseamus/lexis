@@ -2,10 +2,7 @@
 
 namespace lexis {
 
-LibraryItemModel::LibraryItemModel(QObject* parent) :
-  QAbstractListModel(parent)
-{
-}
+LibraryItemModel::LibraryItemModel(QObject* parent) : QAbstractListModel(parent) {}
 
 void LibraryItemModel::addItem(LibraryItem&& item) {
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
@@ -21,7 +18,7 @@ void LibraryItemModel::updateItem(LibraryItem&& item) {
   });
   if (target == _items.end()) {
     qWarning() << QString("Failed to update %1: no item with such id %2")
-                  .arg(item.title(), QString::number(item.id()));
+                    .arg(item.title(), QString::number(item.id()));
     return;
   }
   item.setCreationTime((*target)->creationTime());
@@ -31,7 +28,7 @@ void LibraryItemModel::updateItem(LibraryItem&& item) {
 }
 
 QUrl LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
-  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
     return item->id() == id;
   });
   if (item == _items.end()) {
@@ -43,7 +40,7 @@ QUrl LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
 }
 
 void LibraryItemModel::updateMeaning(int id, const QString& meaning) {
-  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
     return item->id() == id;
   });
   if (item == _items.end()) {
@@ -54,7 +51,7 @@ void LibraryItemModel::updateMeaning(int id, const QString& meaning) {
 }
 
 void LibraryItemModel::removeItem(int id) {
-  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item){
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
     return item->id() == id;
   });
   if (item == _items.end()) {
@@ -119,4 +116,4 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   return roles;
 }
 
-}
+}  // namespace lexis

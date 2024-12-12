@@ -1,13 +1,13 @@
 #pragma once
 
-#include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QObject>
 
 namespace lexis {
 
 class WebService : public QObject {
- Q_OBJECT
+  Q_OBJECT
 
  private:
   QNetworkAccessManager* _manager = nullptr;
@@ -26,8 +26,6 @@ class WebService : public QObject {
 
  signals:
   void errorOccured(QString);
-
 };
 
-}
-
+}  // namespace lexis
