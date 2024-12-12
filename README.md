@@ -1,15 +1,15 @@
 <p align="center">
  <a href="https://www.qt.io/download-open-source">
-   <img alt="Framework" src="https://img.shields.io/badge/Framework-Qt-59F722">
+   <img alt="Framework" src="https://img.shields.io/badge/Framework-Qt-59F722?style=for-the-badge">
  </a>
  <a href="https://cmake.org/">
-   <img alt="Build system" src="https://img.shields.io/badge/Build_system-CMake-F72422">
+   <img alt="Build system" src="https://img.shields.io/badge/Build_system-CMake-F72422?style=for-the-badge">
  </a>
  <a href="https://en.cppreference.com/w/cpp/23">
-   <img alt="CPP standard" src="https://img.shields.io/badge/C%2B%2B_standard-23-lightblue">
+   <img alt="CPP standard" src="https://img.shields.io/badge/C%2B%2B_standard-23-lightblue?style=for-the-badge">
  </a>
  <a href="https://github.com/eliaseamus/lexis/blob/main/LICENSE">
-   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-lightblue">
+   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-lightblue?style=for-the-badge">
  </a>
 </p>
 
