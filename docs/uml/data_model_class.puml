@@ -1,0 +1,110 @@
+@startuml
+
+title Data model classes
+
+class "Library" as lib {
+  -sections : LibrarySection[]
+  -table : QString
+  -settings : AppSettings
+  -pronunciation : Pronunciation
+  +sections() : QVector<LibrarySection*>
+  +addItem(LibraryItem* item) : void
+  +updateItem(LibraryItem* item, LibrarySectionType oldType) : void
+  +moveItem(int id, const QString& sourceTable, const QString& targetTable) : void
+  +deleteItem(int id, LibrarySectionType type) : void
+  +openTable(const QString& name) : void
+  +dropTableRecursively(const QString& root) : void
+  -populateSections() : void
+  -clearSections() : void
+  -createTable() : void
+  -dropTable(const QString& name) : void
+  -renameTable(const QString& oldName, const QString& newName) : bool
+}
+
+class "LibrarySection" as libSection {
+  -model : LibraryItemProxyModel
+  -type : LibrarySectionType
+  -name : QString
+  __
+  .. Getter methods ..
+  .. Setter methods ..
+  __
+  +sort(const QString& sortRole) : void
+  +addItem(LibraryItem&& item) : void
+  +updateItem(LibraryItem&& item : void
+  +updateAudio(int id, QByteArray&& audio) : QUrl
+  +updateMeaning(int id, const QString& meaning) : void
+  +removeItem(int id) : void
+  +isEmpty() : bool
+}
+
+enum "LibrarySectionType" as sectionType {
+  kWord
+  kSubjectGroup
+  kBook
+  kArticle
+  kMovie
+  kSeries
+  kAlbum
+  kSong
+}
+
+interface QSortFilterProxyModel
+
+class "LibraryItemProxyModel" as proxyModel {
+  -source : LibraryItemModel
+  -sortOrder : Qt::SortOrder
+  +addItem(LibraryItem&& item) : void
+  +updateItem(LibraryItem&& item) : void
+  +updateAudio(int id, QByteArray&& audio) : QUrl
+  +updateMeaning(int id, const QString& meaning) : void
+  +removeItem(int id) : void
+  +isEmpty() : bool
+  +setSortingRole(const QString& role) : void
+  +toggleSort() : void
+  #lessThan(const QModelIndex& lhs, const QModelIndex& rhs) : bool
+  #filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent)  : bool
+}
+
+class "LibraryItemModel" as itemModel {
+  -items : QVector<LibraryItem*>
+  +addItem(LibraryItem&& item) : void
+  +updateItem(LibraryItem&& item) : void
+  +updateAudio(int id, QByteArray&& audio) : QUrl
+  +updateMeaning(int id, const QString& meaning) : void
+  +removeItem(int id) : void
+  +isEmpty() : bool
+  +rowCount(const QModelIndex& parent) : int
+  +data(const QModelIndex& index, int role) : QVariant
+  +roleNames() : QHash<int, QByteArray>
+}
+
+class "LibraryItem" as libItem {
+  -itemID : int
+  -title : QString
+  -creationTime : QDateTime
+  -modificationTime : QDateTime
+  -type : LibrarySectionType
+  -image : QTemporaryFile
+  -imageUrl : QUrl
+  -color : QColor
+  -audio : QTemporaryFile
+  -audioUrl : QUrl
+  -meaning : QString
+  __
+  .. Getter methods ..
+  .. Setter methods ..
+  __
+  -init(LibraryItem&& item) : void
+  -readFile(const QString& path) : QByteArray
+  -writeFile(QTemporaryFile& file, QByteArray&& data) : void
+}
+
+QSortFilterProxyModel <|-- proxyModel
+lib *-- libSection
+libSection *-- proxyModel
+libSection o-- sectionType
+proxyModel *-- itemModel
+itemModel *-- libItem
+
+@enduml

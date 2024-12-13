@@ -1,0 +1,117 @@
+@startuml
+
+title GUI classes
+
+class "MainWindow" as main {
+  +stackView : StackView
+  +sideBar : SideBar
+  +library : Library
+  +settings : Settings
+  +libraryView : LibraryView
+}
+
+class "LibraryView" as libView {
+  +pageTitle : PrettyLabel
+  +sections : SectionView[]
+  +toolBar : ToolBar
+  +itemConfiguration : LibraryItemConfiguration
+  +itemView : ItemView
+  +refresh() : void
+  +loadPage(parentTable, parentID, page) : void
+  +displayItem(item) : void
+  +editItem(item) : void
+  +deleteItem(item) : void
+  +selectItem(item) : void
+  +moveItems(ids, sourceTable, targetTable) : void
+  +changeLanguage(language) : void
+}
+
+class "SectionView" as sectionView {
+  +title : PrettyLabel
+  +sortOrder : RoundButton
+  +grid : GridView
+}
+
+class "SectionItem" as sectionItem {
+  +icon : Icon
+  +text : Text
+  +backgroundColor : Color
+  +isSelected : RoundButton
+  +buildItemDict() : var
+  +toggleSelection() : void
+}
+
+class "ItemView" as itemView {
+  +dictionary : Dictionary
+  +inputDialog : ImputDialog
+  +spinner : BusyIndicator
+  +networkErrorScreen : NetworkErrorScreen
+  +title : Text
+  +speaker : RoundButton
+  +transcription : PrettyLabel
+  +dictionaryPage : Text
+  +back : RoundButton
+  +insertMeaning : RoundButton
+  +itemIcon : Icon
+  +pronunciation : MediaPlayer
+  +init() : void
+}
+
+class "LibraryItemConfiguration" as itemConfig {
+  +type : ComboBox
+  +title : TextComplete
+  +backgroundColors : RoundButton[]
+  +pickImage : PrettyButton
+  +imagePicker : ImagePicker
+  +actionBox : OkCancel
+  +init() : void
+  +clear() : void
+}
+
+class "ImagePicker" as imagePicker {
+  +query : String
+  +searchResults : WebView
+  +searchBar : SearchBar
+  +spinner : BusyIndicator
+  +networkErrorScreen : NetworkErrorScreen
+  +dropArea : DropArea
+  +init(source) : void
+}
+
+class "TextComplete" as textComplete {
+  +textField : TextField
+  +completionsBox : Popup
+  +predictor : Predictor
+}
+
+class "SideBar" as sideBar {
+  +interfaceLanguage : RoundButton
+  +sortRole : RoundButton
+  +appColor : RoundButton
+  +help : RoundButton
+  +newLanguage : RoundButton
+  +languages : RoundImage[]
+  +shortcuts : Shortcut[]
+}
+
+class "ToolBar" as toolBar {
+  +back : RoundButton
+  +search : RoundButton
+  +searchLine : TextField
+  +newItem : RoundButton
+  +shortcuts : Shortcut[]
+  +refresh() : void
+  +toggleSearchLine() : void
+}
+
+main *-- sideBar
+main *-- libView
+libView *-- sectionView
+libView *-- toolBar
+libView o-- itemConfig
+libView o-- itemView
+sectionView *-- sectionItem
+itemConfig o-- textComplete
+itemConfig o-- imagePicker
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+
+title Lexis components
+
+skinparam component {
+  backgroundColor Yellow
+}
+
+skinparam cloud {
+  backgroundColor Lightblue
+}
+
+skinparam database {
+  backgroundColor Lightgreen
+}
+
+skinparam interface {
+  backgroundColor Red
+}
+
+skinparam node {
+  backgroundColor Orange
+}
+
+() Use as use
+[QML GUI] as gui
+
+[Library] as lib
+database SQLite as db
+
+node Settings as settings
+
+cloud "Web API" as web {
+  [Predictor]
+  [Dictionary]
+  [Pronunciation]
+}
+
+use -> gui
+gui ..> lib
+lib -> db
+
+gui -> settings
+web <.. gui
+settings <- lib
+settings <- web
+
+@enduml

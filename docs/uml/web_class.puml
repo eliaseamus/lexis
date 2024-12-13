@@ -1,0 +1,129 @@
+@startuml
+
+title Web classes
+
+interface "WebService" as web {
+  -manager : QNetworkAccessManager
+  __
+  +get(const QString& query) : void
+  +get(const QNetworkRequest& request) : void
+  +post(const QNetworkRequest& request, const QByteArray& body) : void
+  +{abstract} onFinished(QNetworkReply* reply) : void
+  #hasError(QNetworkReply* reply) : bool
+  -- Signals --
+  +errorOccured(QString) : void
+}
+
+class "Dictionary" as dict {
+  -settings : AppSettings
+  -cache : DictionaryCache
+  __
+  +get(const QString& query) : void
+  +onFinished(QNetworkReply* reply) : void
+  -- Signals --
+  +definitionsReady(const QVector<Definition*>& definitions) : void
+}
+
+class "DictionaryCache" as dictCache {
+  -settings : AppSettings
+  -size : qsizetype
+  -cache : QVector<DictionaryEntry>
+  +getDefinitions(const QString& query) : std::optional<QVector<Definition*>>
+  +addDefinitions(const QVector<Definition*>& definitions) : void
+}
+
+class "DictionaryEntry" as dictEntry {
+  +query : QString
+  +language : QString
+  +definitions : QVector<Definition*>
+}
+
+class "Definition" as def {
+  -text : QString
+  -partOfSpeech : QString
+  -transcription : QString
+  -translations : QVector<Translation*>
+  __
+  .. Getter methods ..
+  .. Setter methods ..
+}
+
+class "Translation" as trans {
+  -_text : QString
+  -_synonyms : QStringList
+  -_meanings : QStringList
+  __
+  .. Getter methods ..
+  .. Setter methods ..
+}
+
+class "Predictor" as predict {
+  -query : QString
+  -settings : AppSettings
+  __
+  +get(const QString& query) : void
+  +setQuery(const QString& query) : void
+  +retrievePredictions(const QJsonDocument& doc) : void
+  +onFinished(QNetworkReply* reply) : void
+  -- Signals --
+  +predictionsReceived(const QStringList& predictions) : void
+}
+
+interface "TTSService" as tts {
+  -voices : QStringList
+  __
+  +textToSpeech(const QString& query) : void
+  +onFinished(QNetworkReply* reply) : void
+  #setVoices(const QStringList& voices) : void
+  #retrieveAudio(QNetworkReply* reply) : void
+  +{abstract} requestVoices() : void
+  #{abstract} requestAudio(const QString& query, const QString& voice) : void
+  #{abstract} retrieveVoices(QNetworkReply* reply) : void
+  -- Signals --
+  +audioReady(const QByteArray& audio) : void
+}
+
+class "ElevenLabs" as ell {
+  -apiKey : QString
+  -model : QString
+  +requestVoices() : void
+  #requestAudio(const QString& query, const QString& voice) : void
+  #retrieveVoices(QNetworkReply* reply) : void
+}
+
+class "PlayHT" as pht {
+  -userID : QString
+  -apiKey : QString
+  -voiceEngine : QString
+  -settings : AppSettings
+  +requestVoices() : void
+  #requestAudio(const QString& query, const QString& voice) : void
+  #retrieveVoices(QNetworkReply* reply) : void
+  -getLanguage() : QString
+}
+
+class "Pronunciation" as pronun {
+  -elevenLabs : ElevenLabs*
+  -playHT : PlayHT*
+  __
+  +get(const QString& query) : void
+  -sendAudio(const QByteArray& audio) : void
+  -- Signals --
+  +audioReady(const QByteArray& audio) : void
+}
+
+web <|-- dict
+dict *-- dictCache
+dictCache *-- dictEntry
+dictEntry *-- def
+def *-- trans
+
+web <|-- predict
+
+web <|-- tts
+tts <|-- ell
+tts <|-- pht
+pronun *-- ell
+pronun *-- pht
+
+@enduml
