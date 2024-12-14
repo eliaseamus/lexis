@@ -1,0 +1,24 @@
+@startuml
+
+title Open library item
+
+actor User as user
+
+box "Qt QML" #LightGreen
+  boundary "GUI" as gui
+end box
+
+box "Web services C++" #LightBlue
+  control Dictionary as dict
+end box
+
+user -> gui : Open ItemView
+activate gui
+gui -> gui : Add ItemView\nto the StackView
+gui -> dict : Get definitions
+activate dict
+dict --> gui : Definitions ready
+deactivate dict
+deactivate gui
+
+@enduml

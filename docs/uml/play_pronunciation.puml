@@ -1,0 +1,26 @@
+@startuml
+
+title Play pronunciation
+
+actor User as user
+
+box "Qt QML" #LightGreen
+  boundary "GUI" as gui
+end box
+
+box "Data model C++" #Red
+  control Library as lib
+end box
+
+user -> gui : Play pronunciation
+activate gui
+alt Audio wasn't uploaded yet
+  gui -> lib : Get audio
+  activate lib
+  lib --> gui : Audio
+  deactivate lib
+end
+gui -> gui : Play audio
+deactivate gui
+
+@enduml

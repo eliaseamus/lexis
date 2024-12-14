@@ -1,0 +1,63 @@
+@startuml
+
+title Add a new library item
+
+actor User as user
+
+box "Qt QML" #LightGreen
+  boundary "GUI" as gui
+end box
+
+box "Web services C++" #LightBlue
+  control Predictor as pred
+  control Pronunciation as pronun
+end box
+
+box "Data model C++" #Red
+  control Library as lib
+end box
+
+database SQLite as db
+
+user -> gui : Add a new item
+activate gui
+gui -> gui : Add LibraryItemConfiguration\nto the StackView
+deactivate gui
+
+loop
+  user -> gui : Type a new word
+  activate gui
+  gui -> pred : Get predictions\n(autocomplete)
+  deactivate gui
+  activate pred
+  pred --> gui : Predictions ready
+  deactivate pred
+end
+
+user -> gui : Pick an image
+activate gui
+gui -> gui : Add ImagePicker\n to the StackView
+deactivate gui
+
+user -> gui : Confirm the choice
+activate gui
+gui -> gui : Remove ImagePicker\n from the StackView
+deactivate gui
+
+user -> gui : Save a new item
+activate gui
+gui -> lib : Add a new item
+activate lib
+lib -> db : Add a new item
+lib -> pronun : Request audio
+activate pronun
+gui -> gui : Remove LibraryItemConfiguration\n from the StackView
+lib --> gui : Updated Library Sections
+pronun --> lib : Audio ready
+deactivate pronun
+lib -> db : Update audio
+deactivate lib
+gui -> gui : Upload an updated LibraryView
+deactivate gui
+
+@enduml
