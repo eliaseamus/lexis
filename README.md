@@ -24,29 +24,41 @@ its meaning, plus the transcription with an audiable pronunciation - pretty much
 
 1. Since the word *ingenious* may be used to describe a person, you can add it to the *Personality* subject group.
 
-![Collection](docs/images/library_view.png)
+<p align="center">
+  <img alt="Collection" src="docs/images/library_view.png">
+</p>
 
 2. Having opened the group, you can create a new item by pressing a *New item* button at the right bottom corner and type
 the desired word in the language you're learning:
 
-![New word](docs/images/predictor.png)
+<p align="center">
+  <img alt="New word" src="docs/images/predictor.png">
+</p>
 
 3. Pick an image best associated with the meaning of this word and drag it to the specified area. In case search results don't
 reflect the meaning of the word too good, you can type a different word or phrase in any language in the bottom bar and search again:
 
-![Pick image](docs/images/image_picker.png)
+<p align="center">
+  <img alt="Pick image" src="docs/images/image_picker.png">
+</p>
 
 4. Assign a background color to make a new item more distinguishable from the rest of the collection:
 
-![Assign color](docs/images/library_item_configuration.png)
+<p align="center">
+  <img alt="Assign color" src="docs/images/library_item_configuration.png">
+</p>
 
 5. You can see a new word added into the collection:
 
-![New word](docs/images/section_item.png)
+<p align="center">
+  <img alt="New word" src="docs/images/section_item.png">
+</p>
 
 6. Open it, and voilà!
 
-![Word card](docs/images/item_view.png)
+<p align="center">
+  <img alt="Word card" src="docs/images/item_view.png">
+</p>
 
 In case the dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
 You may also revise the groups added into the collection by moving them or their contents around the library.
