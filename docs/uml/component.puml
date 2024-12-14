@@ -1,7 +1,5 @@
 @startuml
 
-title Lexis components
-
 skinparam component {
   backgroundColor Yellow
 }

@@ -1,7 +1,5 @@
 @startuml
 
-title GUI classes
-
 class "MainWindow" as main {
   +stackView : StackView
   +sideBar : SideBar

@@ -1,7 +1,5 @@
 @startuml
 
-title Play pronunciation
-
 actor User as user
 
 box "Qt QML" #LightGreen

@@ -1,7 +1,5 @@
 @startuml
 
-title Data model classes
-
 class "Library" as lib {
   -sections : LibrarySection[]
   -table : QString

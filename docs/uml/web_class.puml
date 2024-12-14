@@ -1,7 +1,5 @@
 @startuml
 
-title Web classes
-
 interface "WebService" as web {
   -manager : QNetworkAccessManager
   __

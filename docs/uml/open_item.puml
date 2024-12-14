@@ -1,7 +1,5 @@
 @startuml
 
-title Open library item
-
 actor User as user
 
 box "Qt QML" #LightGreen

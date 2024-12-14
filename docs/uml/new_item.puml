@@ -1,7 +1,5 @@
 @startuml
 
-title Add a new library item
-
 actor User as user
 
 box "Qt QML" #LightGreen
