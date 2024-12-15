@@ -137,6 +137,7 @@ qt_add_translations(${PROJECT_NAME}
 
 # TESTS
 
+# predictor
 qt_add_executable(test_predictor
   tests/test_predictor.cpp
   src/web/predictor.cpp
@@ -159,19 +160,28 @@ set_target_properties(test_predictor PROPERTIES
   MACOSX_BUNDLE TRUE
 )
 
-install(TARGETS test_predictor
-  BUNDLE  DESTINATION .
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+# dictionary_cache
+qt_add_executable(test_dictionary_cache
+  tests/test_dictionary_cache.cpp
+  src/web/dictionary.cpp
+  src/web/web_service.cpp
+  src/app_settings.cpp
 )
 
-qt_generate_deploy_app_script(
-  TARGET test_predictor
-  OUTPUT_SCRIPT deploy_script
-  NO_UNSUPPORTED_PLATFORM_ERROR
+target_link_libraries(test_dictionary_cache PRIVATE
+  Qt6::Core
+  Qt6::Network
+  Qt6::Test
+  Qt6::Qml
+  Qt6::Gui
 )
 
-install(SCRIPT ${deploy_script})
+add_test(test_dictionary_cache test_dictionary_cache)
+
+set_target_properties(test_dictionary_cache PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
 
 # DEFINITIONS
 

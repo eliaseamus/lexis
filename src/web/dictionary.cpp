@@ -13,8 +13,8 @@ DictionaryCache::DictionaryCache(qsizetype size, QObject* parent) : QObject(pare
   _cache.reserve(_size);
 }
 
-std::optional<QVector<Definition*>> DictionaryCache::getDefinitions(const QString& query) {
-  const auto language = _settings.getCurrentInterfaceLanguagePair();
+std::optional<QVector<Definition*>> DictionaryCache::getDefinitions(const QString& query,
+                                                                    const QString& language) {
   auto findEntry = [&query, &language](const auto& entry) {
     return entry.query.toLower() == query.toLower() && entry.language == language;
   };
@@ -26,20 +26,20 @@ std::optional<QVector<Definition*>> DictionaryCache::getDefinitions(const QStrin
   return std::nullopt;
 }
 
-void DictionaryCache::addDefinitions(const QVector<Definition*>& definitions) {
+void DictionaryCache::addDefinitions(const QVector<Definition*>& definitions,
+                                     const QString& language) {
   if (definitions.empty()) {
     return;
   }
 
   DictionaryEntry entry;
   entry.query = definitions.first()->text();
-  entry.language = _settings.getCurrentInterfaceLanguagePair();
+  entry.language = language;
   entry.definitions = definitions;
-  if (_cache.size() < _size) {
-    _cache.emplaceBack(std::move(entry));
-  } else {
-    _cache.emplaceBack(std::move(entry));
+  if (_cache.size() == _size) {
+    _cache.pop_back();
   }
+  _cache.emplaceFront(std::move(entry));
 }
 
 Dictionary::Dictionary(QObject* parent)
@@ -51,13 +51,13 @@ void Dictionary::get(const QString& query) {
                                          dicservice.json/lookup?               \
                                          key=%1&lang=%2&text=%3")
                                   .remove(' ');
-  if (auto definitions = _cache->getDefinitions(query); definitions != std::nullopt) {
+  auto language = _settings.getCurrentInterfaceLanguagePair();
+  if (auto definitions = _cache->getDefinitions(query, language); definitions != std::nullopt) {
     emit definitionsReady(definitions.value());
     return;
   }
 
-  WebService::get(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY),
-                                         _settings.getCurrentInterfaceLanguagePair(),
+  WebService::get(QString(urlFormat).arg(MAKE_STR(DICTIONARY_API_KEY), language,
                                          QString(query).replace(' ', '+')));
 }
 
@@ -118,7 +118,7 @@ void Dictionary::onFinished(QNetworkReply* reply) {
     definitions.emplaceBack(std::move(def));
   }
 
-  _cache->addDefinitions(definitions);
+  _cache->addDefinitions(definitions, _settings.getCurrentInterfaceLanguagePair());
   emit definitionsReady(definitions);
 }
 

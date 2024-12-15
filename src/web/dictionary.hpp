@@ -137,7 +137,7 @@ class Definition : public QObject {
 class DictionaryCache : public QObject {
   Q_OBJECT
 
- private:
+ public:
   struct DictionaryEntry {
     QString query;
     QString language;
@@ -145,14 +145,21 @@ class DictionaryCache : public QObject {
   };
 
  private:
-  AppSettings _settings;
   qsizetype _size;
   QVector<DictionaryEntry> _cache;
 
  public:
   DictionaryCache(qsizetype size, QObject* parent = nullptr);
-  std::optional<QVector<Definition*>> getDefinitions(const QString& query);
-  void addDefinitions(const QVector<Definition*>& definitions);
+  std::optional<QVector<Definition*>> getDefinitions(const QString& query, const QString& language);
+  void addDefinitions(const QVector<Definition*>& definitions, const QString& language);
+
+  void clear() {
+    _cache.clear();
+  }
+
+  QVector<DictionaryEntry> getCache() const {
+    return _cache;
+  }
 };
 
 class Dictionary : public WebService {
