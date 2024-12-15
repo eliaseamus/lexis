@@ -322,7 +322,9 @@ Pane {
     if (toolBar.isSearchActive) {
       toolBar.toggleSearchLine();
     } else if (isSelectMode) {
-      clearSelectedItems();
+      if (!dragItems.Drag.active) {
+        clearSelectedItems();
+      }
     } else if (tables.length > 1) {
       tables.pop();
       var table = tables[tables.length - 1];
