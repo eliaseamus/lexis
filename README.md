@@ -18,9 +18,11 @@ Using **Lexis**, you can create your own collections of words, grouping them as 
 
 ## Example of use
 Lets pretend you're reading some book and encounter an unknown word *ingenious*.
-You'd like to learn it, but instead of writing it down to some piece of paper, you can add it to your word
+You'd like to learn it, but instead of writing it down to some piece of paper or a note-taking app, you can add it to your word
 collection in **Lexis**. This way you'll get a dictionary definition of the word with a picture associated with
 its meaning, plus the transcription with an audiable pronunciation - pretty much handy, isn't it?
+Using Lexis, you can combine words into groups by subject, create an entry in your collection for any source you learn the new word from:
+it can be a book or a song, or something else.
 
 1. Since the word *ingenious* may be used to describe a person, you can add it to the *Personality* subject group.
 
@@ -74,6 +76,8 @@ There are nine languages available to learn using **Lexis**:
 - polish
 - ukranian
 - turkish
+
+Also, two languages can be used as interface language: english and russian.
 
 ## Target platform
 So far, build configuration for Linux and Windows platforms has been done. A build for MacOS is also achievable due to Qt's cross-platform support.
