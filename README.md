@@ -13,6 +13,10 @@
  </a>
 </p>
 
+<p align="center">
+  <img alt="Logo" src="/icons/Lexis.png" width="256" height="256">
+</p>
+
 **Lexis** is a vocabulary-builder desktop app, which helps you to organize a library of words to learn.
 Using **Lexis**, you can create your own collections of words, grouping them as you wish.
 
