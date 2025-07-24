@@ -5,11 +5,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 23)
 
 find_package(Qt6 REQUIRED COMPONENTS
-             Core Gui Widgets Network WebEngineWidgets Multimedia Sql
+             Core Gui Widgets Network Multimedia Sql
              Qml Quick QuickControls2 WebView LinguistTools Test REQUIRED)
 
 include_directories(src src/db src/gui src/model src/web)
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ru)
+qt_standard_project_setup(REQUIRES 6.8 I18N_TRANSLATED_LANGUAGES ru)
 enable_testing(true)
 
 set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Lexis.rc")
@@ -54,7 +54,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Gui
   Qt6::Network
   Qt6::Widgets
-  Qt6::WebEngineWidgets
   Qt6::Multimedia
   Qt6::Sql
   Qt6::Qml
@@ -135,6 +134,42 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 qt_add_translations(${PROJECT_NAME}
     TS_FILE_DIR tr)
 
+if(ANDROID)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
+        QT_ANDROID_PACKAGE_NAME "org.lexis"
+        QT_ANDROID_TARGET_SDK_VERSION 34
+        QT_ANDROID_VERSION_CODE 10
+        QT_ANDROID_VERSION_NAME "1.0"
+    )
+
+    qt_import_plugins(${PROJECT_NAME}
+        INCLUDE_BY_TYPE imageformats Qt::QSvgPlugin
+        INCLUDE_BY_TYPE qmltooling
+        INCLUDE_BY_TYPE iconengines
+        INCLUDE_BY_TYPE networkinformation
+        INCLUDE_BY_TYPE tls
+        INCLUDE_BY_TYPE platforminputcontexts
+    )
+
+    # Download & link to OpenSSL libs
+    include(FetchContent)
+    FetchContent_Declare(
+        android_openssl
+        DOWNLOAD_EXTRACT_TIMESTAMP true
+        URL https://github.com/KDAB/android_openssl/archive/refs/heads/master.zip
+    )
+    FetchContent_MakeAvailable(android_openssl)
+
+    include(${android_openssl_SOURCE_DIR}/android_openssl.cmake)
+    add_android_openssl_libraries(${PROJECT_NAME})
+    set(ssl_libs
+        ${android_openssl_SOURCE_DIR}/no-asm/ssl_3/${CMAKE_ANDROID_ARCH_ABI}/libssl.so
+        ${android_openssl_SOURCE_DIR}/no-asm/ssl_3/${CMAKE_ANDROID_ARCH_ABI}/libcrypto.so
+    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES QT_ANDROID_EXTRA_LIBS "${ssl_libs}")
+endif()
+
 # TESTS
 
 # predictor
@@ -185,9 +220,9 @@ set_target_properties(test_dictionary_cache PROPERTIES
 
 # DEFINITIONS
 
-add_definitions(-DPREDICTOR_API_KEY=${PREDICTOR_API_KEY})
-add_definitions(-DDICTIONARY_API_KEY=${DICTIONARY_API_KEY})
-add_definitions(-DCSE_ID=${CSE_ID})
-add_definitions(-DELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY})
-add_definitions(-DPLAY_HT_USER=${PLAY_HT_USER})
-add_definitions(-DPLAY_HT_API_KEY=${PLAY_HT_API_KEY})
+add_definitions(-DPREDICTOR_API_KEY=$ENV{PREDICTOR_API_KEY})
+add_definitions(-DDICTIONARY_API_KEY=$ENV{DICTIONARY_API_KEY})
+add_definitions(-DCSE_ID=$ENV{CSE_ID})
+add_definitions(-DELEVEN_LABS_API_KEY=$ENV{ELEVEN_LABS_API_KEY})
+add_definitions(-DPLAY_HT_USER=$ENV{PLAY_HT_USER})
+add_definitions(-DPLAY_HT_API_KEY=$ENV{PLAY_HT_API_KEY})

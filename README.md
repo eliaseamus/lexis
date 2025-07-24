@@ -84,7 +84,7 @@ There are nine languages available to learn using **Lexis**:
 Also, two languages can be used as interface language: english and russian.
 
 ## Target platform
-So far, build configuration for Linux and Windows platforms has been done. A build for MacOS is also achievable due to Qt's cross-platform support.
+So far, build configuration for Linux, Windows and Android platforms has been done. A build for MacOS is also achievable due to Qt's cross-platform support.
 
 ## Dependencies
 **Lexis** uses several third-party services which you need to get API_KEY to:

@@ -17,7 +17,7 @@ Item {
       RoundButton {
         id: interfaceLanguage
         flat: true
-        icon.source: "qrc:/QLexis/icons/language.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/language.png"
         ToolTip {
           visible: interfaceLanguage.hovered
           text: qsTr("Interface language")
@@ -30,7 +30,7 @@ Item {
       RoundButton {
         id: sortRole
         flat: true
-        icon.source: "qrc:/QLexis/icons/sort.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/sort.png"
         ToolTip {
           visible: sortRole.hovered
           text: qsTr("Sort rule")
@@ -43,7 +43,7 @@ Item {
       RoundButton {
         id: appColor
         flat: true
-        icon.source: "qrc:/QLexis/icons/color.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/color.png"
         ToolTip {
           visible: appColor.hovered
           text: qsTr("Color")
@@ -53,7 +53,7 @@ Item {
       RoundButton {
         id: help
         flat: true
-        icon.source: "qrc:/QLexis/icons/question.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/question.png"
         ToolTip {
           visible: help.hovered
           text: qsTr("Help")
@@ -67,7 +67,7 @@ Item {
         id: newLanguage
         visible: settings.languages.length < 9
         flat: true
-        icon.source: "qrc:/QLexis/icons/plus.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/plus.png"
         ToolTip {
           visible: newLanguage.hovered
           text: qsTr("New language")
@@ -97,7 +97,7 @@ Item {
             imageFillMode: Image.Stretch
             anchors.fill: parent
             anchors.margins: 5
-            source: modelData ? "qrc:/QLexis/icons/flags/%1.png".arg(modelData) : ""
+            source: modelData ? "qrc:/qt/qml/QLexis/icons/flags/%1.png".arg(modelData) : ""
             ToolTip {
               visible: mouseArea.containsMouse
               text: Utils.getFullLanguageName(modelData)
@@ -126,7 +126,7 @@ Item {
                     var target = [];
                     target["title"] = "%1 ".arg(Utils.getFullLanguageName(modelData)
                                                      .toLowerCase()) + qsTr("language");
-                    target["imageUrl"] = "qrc:/QLexis/icons/flags/%1.png".arg(modelData);
+                    target["imageUrl"] = "qrc:/qt/qml/QLexis/icons/flags/%1.png".arg(modelData);
                     deleteLanguageDialog.targets = [target];
                     deleteLanguageDialog.open();
                   }

@@ -11,7 +11,7 @@ Item {
       Layout.preferredWidth: 200
       Layout.preferredHeight: 200
       Layout.alignment: Qt.AlignHCenter
-      source: "qrc:/QLexis/icons/internet-error.png"
+      source: "qrc:/qt/qml/QLexis/icons/internet-error.png"
     }
     PrettyLabel {
       id: message

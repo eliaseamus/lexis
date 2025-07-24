@@ -19,7 +19,7 @@ Rectangle {
   RoundButton {
     flat: true
     visible: isSelected
-    icon.source: "qrc:/QLexis/icons/check.png"
+    icon.source: "qrc:/qt/qml/QLexis/icons/check.png"
     icon.color: settings.fgColor
     Material.background: settings.accentColor
   }

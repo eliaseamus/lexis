@@ -52,7 +52,7 @@ Pane {
             Layout.leftMargin: 10
             icon.color: settings.fgColor
             Material.background: settings.accentColor
-            icon.source: "qrc:/QLexis/icons/audio.png"
+            icon.source: "qrc:/qt/qml/QLexis/icons/audio.png"
             ToolTip {
               visible: speaker.hovered
               text: qsTr("Pronunciation")
@@ -95,7 +95,7 @@ Pane {
           Layout.alignment: Qt.AlignBottom
           RoundButton {
             id: back
-            icon.source: "qrc:/QLexis/icons/back.png"
+            icon.source: "qrc:/qt/qml/QLexis/icons/back.png"
             icon.color: settings.fgColor
             Material.background: settings.accentColor
             onClicked: popStack()
@@ -108,7 +108,7 @@ Pane {
           Item {Layout.fillWidth: true}
           RoundButton {
             id: insertMeaning
-            icon.source: "qrc:/QLexis/icons/plus.png"
+            icon.source: "qrc:/qt/qml/QLexis/icons/plus.png"
             icon.color: settings.fgColor
             Material.background: settings.accentColor
             onClicked: {

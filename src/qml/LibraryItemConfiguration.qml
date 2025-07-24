@@ -76,7 +76,7 @@ Rectangle {
 
       RoundButton {
         id: customColor
-        icon.source: "qrc:/QLexis/icons/plus.png"
+        icon.source: "qrc:/qt/qml/QLexis/icons/plus.png"
         icon.color: "black"
         Material.background: "white"
         onClicked: colorDialog.open()

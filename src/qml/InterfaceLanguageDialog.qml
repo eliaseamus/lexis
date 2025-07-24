@@ -35,7 +35,7 @@ Dialog {
               Layout.fillHeight: true
               Layout.fillWidth: true
               fillMode: Image.PreserveAspectFit
-              source: "qrc:/QLexis/icons/flags/%1.png".arg(modelData)
+              source: "qrc:/qt/qml/QLexis/icons/flags/%1.png".arg(modelData)
             }
             ToolTip {
               visible: mouseArea.containsMouse

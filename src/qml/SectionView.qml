@@ -46,8 +46,8 @@ Item {
         function getIconSource() {
           var order = librarySection.model.sortOrder;
           return order === Qt.AscendingOrder ?
-            "qrc:/QLexis/icons/sort-ascending.png" :
-            "qrc:/QLexis/icons/sort-descending.png";
+            "qrc:/qt/qml/QLexis/icons/sort-ascending.png" :
+            "qrc:/qt/qml/QLexis/icons/sort-descending.png";
         }
       }
       Connections {
