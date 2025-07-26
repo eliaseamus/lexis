@@ -9,6 +9,7 @@ RowLayout {
   signal goBack
   signal searchRequest(query: string)
   signal addNewItem
+  signal displaySettings
 
   RoundButton {
     id: back
@@ -80,6 +81,28 @@ RowLayout {
       onTextChanged: {
         searchRequest(searchLine.text)
       }
+    }
+  }
+
+  Item {
+    visible: Qt.platform.os === "android"
+    Layout.fillWidth: true
+  }
+
+  RoundButton {
+    id: itemSettings
+    visible: Qt.platform.os === "android"
+    enabled: libraryView.isSelectMode
+    icon.source: "qrc:/qt/qml/QLexis/icons/settings.png"
+    icon.color: settings.fgColor
+    Material.background: settings.accentColor
+    onClicked: {
+      displaySettings();
+    }
+
+    ToolTip {
+      visible: itemSettings.hovered
+      text: qsTr("Settings")
     }
   }
 

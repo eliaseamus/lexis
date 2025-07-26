@@ -52,6 +52,7 @@ Item {
       }
       RoundButton {
         id: help
+        visible: Qt.platform.os !== "android"
         flat: true
         icon.source: "qrc:/qt/qml/QLexis/icons/question.png"
         ToolTip {

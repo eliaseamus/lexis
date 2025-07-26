@@ -106,6 +106,7 @@ qt_add_qml_module(${PROJECT_NAME}
     icons/plus.png
     icons/question.png
     icons/search.png
+    icons/settings.png
     icons/sort.png
     icons/sort-ascending.png
     icons/sort-descending.png

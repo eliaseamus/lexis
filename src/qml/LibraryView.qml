@@ -24,6 +24,7 @@ Pane {
   property var itemToDelete
   property var selectedItems: []
   property bool isSelectMode
+  property alias toolBar: toolBar
   signal quitSelectMode
 
   ColumnLayout {

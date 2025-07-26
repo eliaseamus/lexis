@@ -182,6 +182,15 @@ Item {
           }
         }
 
+         Connections {
+           target: libraryView.toolBar
+           function onDisplaySettings() {
+             if (gridItem.isSelected) {
+               contextMenu.popup()
+             }
+           }
+         }
+
         DropArea {
           id: dropArea
           anchors.fill: parent

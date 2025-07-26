@@ -8,7 +8,7 @@ Menu {
   }
   MenuItem {
     text: qsTr("Edit")
-    enabled: !gridItem.isSelected
+    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
     onTriggered: {
       libraryView.editItem(buildItemDict());
     }
@@ -40,7 +40,7 @@ Menu {
   }
   MenuItem {
     text: qsTr("Time info")
-    enabled: !gridItem.isSelected
+    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
     onTriggered: {
       timeInfoDialog.creationTime = creationTime;
       timeInfoDialog.modificationTime = modificationTime;

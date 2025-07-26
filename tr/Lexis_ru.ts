@@ -65,13 +65,13 @@
 <context>
     <name>ImagePicker</name>
     <message>
-        <location filename="../src/qml/ImagePicker.qml" line="72"/>
         <location filename="../src/qml/ImagePicker.qml" line="81"/>
+        <location filename="../src/qml/ImagePicker.qml" line="90"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/ImagePicker.qml" line="125"/>
+        <location filename="../src/qml/ImagePicker.qml" line="141"/>
         <source>Pick an image
 and drop it in this area</source>
         <translation>Выберите изображение
@@ -174,12 +174,12 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="51"/>
+        <location filename="../src/qml/LibraryView.qml" line="52"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="66"/>
+        <location filename="../src/qml/LibraryView.qml" line="67"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -191,7 +191,7 @@ in the right bottom corner.</source>
 <context>
     <name>NetworkErrorScreen</name>
     <message>
-        <location filename="../src/qml/NetworkErrorScreen.qml" line="12"/>
+        <location filename="../src/qml/NetworkErrorScreen.qml" line="20"/>
         <source>Network connection problem:
 </source>
         <translation>Ошибка сетевого соединения:
@@ -329,18 +329,23 @@ in the right bottom corner.</source>
 <context>
     <name>ToolBar</name>
     <message>
-        <location filename="../src/qml/ToolBar.qml" line="23"/>
+        <location filename="../src/qml/ToolBar.qml" line="24"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/ToolBar.qml" line="41"/>
-        <location filename="../src/qml/ToolBar.qml" line="52"/>
+        <location filename="../src/qml/ToolBar.qml" line="42"/>
+        <location filename="../src/qml/ToolBar.qml" line="53"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/ToolBar.qml" line="98"/>
+        <location filename="../src/qml/ToolBar.qml" line="105"/>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ToolBar.qml" line="121"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
@@ -348,7 +353,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="270"/>
+        <location filename="../src/db/library.cpp" line="269"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
