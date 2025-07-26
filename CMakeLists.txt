@@ -144,7 +144,7 @@ if(ANDROID)
     )
 
     qt_import_plugins(${PROJECT_NAME}
-        INCLUDE_BY_TYPE imageformats Qt::QSvgPlugin
+        INCLUDE_BY_TYPE imageformats Qt::QSvgPlugin Qt::QJpegPlugin Qt::QWebpPlugin Qt::QGifPlugin
         INCLUDE_BY_TYPE qmltooling
         INCLUDE_BY_TYPE iconengines
         INCLUDE_BY_TYPE networkinformation
