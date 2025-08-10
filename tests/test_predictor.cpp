@@ -3,7 +3,6 @@
 #include <QJsonObject>
 #include <QSignalSpy>
 #include <QTest>
-#include <ranges>
 
 #include "predictor.hpp"
 

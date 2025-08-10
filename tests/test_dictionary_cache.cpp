@@ -15,7 +15,8 @@ class DictionaryCache : public QObject {
 
  private slots:
   void initTestCase() {
-    _cache = new lexis::DictionaryCache(2, this);
+    qsizetype cacheSize = 2;
+    _cache = new lexis::DictionaryCache(cacheSize, this);
 
     _defFoo = new Definition(this);
     _defFoo->setText("foo");
@@ -34,10 +35,12 @@ class DictionaryCache : public QObject {
   void lastAddedGoesOnTop() {
     QString language = "en-ru";
     _cache->addDefinitions({_defFoo}, language);
-    QVERIFY(_cache->getCache().first().query == _defFoo->text());
+    auto cacheValues = _cache->getCache();
+    QVERIFY(cacheValues.first().query == _defFoo->text());
 
     _cache->addDefinitions({_defBar}, language);
-    QVERIFY(_cache->getCache().first().query == _defBar->text());
+    cacheValues = _cache->getCache();
+    QVERIFY(cacheValues.first().query == _defBar->text());
   }
 
   void lastAccessedGoesOnTop() {
@@ -45,7 +48,8 @@ class DictionaryCache : public QObject {
     _cache->addDefinitions({_defFoo}, language);
     _cache->addDefinitions({_defBar}, language);
     QVERIFY(_cache->getDefinitions(_defFoo->text(), language) != std::nullopt);
-    QVERIFY(_cache->getCache().first().query == _defFoo->text());
+    auto cacheValues = _cache->getCache();
+    QVERIFY(cacheValues.first().query == _defFoo->text());
   }
 
   void leastRecentlyUsedIsRemoved() {
