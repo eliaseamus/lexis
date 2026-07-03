@@ -46,6 +46,8 @@ qt_add_executable(${PROJECT_NAME}
   src/app_settings.cpp
   src/db/library.cpp
   src/db/library.hpp
+  src/db/schema_migration.cpp
+  src/db/schema_migration.hpp
   ${app_icon_resource_windows}
 )
 
@@ -215,6 +217,27 @@ target_link_libraries(test_dictionary_cache PRIVATE
 add_test(test_dictionary_cache test_dictionary_cache)
 
 set_target_properties(test_dictionary_cache PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# schema_migration
+qt_add_executable(test_schema_migration
+  tests/test_schema_migration.cpp
+  src/db/schema_migration.cpp
+)
+
+target_link_libraries(test_schema_migration PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+)
+
+target_include_directories(test_schema_migration PRIVATE src src/model src/db)
+
+add_test(test_schema_migration test_schema_migration)
+
+set_target_properties(test_schema_migration PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

@@ -7,7 +7,7 @@ import "utils.js" as Utils
 Item {
   id: librarySection
   property string title
-  property string parentTable
+  property int currentParentId
   property LibraryItemProxyModel model
   Layout.fillWidth: true
   Layout.preferredHeight: grid.rowCount * grid.cellHeight + titleShelf.height + 30
@@ -117,7 +117,7 @@ Item {
                   library.readAudio(itemID);
                   libraryView.displayItem(buildItemDict());
                 } else {
-                  libraryView.loadPage(parentTable, itemID, title)
+                  libraryView.loadPage(itemID, title)
                 }
               }
             } else if (mouse.button === Qt.RightButton) {
@@ -214,8 +214,7 @@ Item {
                   libraryView.clearSelectedItems();
                 }
                 const ids = dragItems.items.map((item) => item["itemID"]);
-                const targetTable = "%1_%2".arg(parentTable).arg(itemID);
-                libraryView.moveItems(ids, parentTable, targetTable);
+                libraryView.moveItems(ids, itemID);
               }
             }
           }

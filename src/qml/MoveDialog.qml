@@ -5,7 +5,7 @@ import QtQuick.Layouts
 Dialog {
   id: moveDialog
   property list<int> ids
-  property string sourceTable
+  property int sourceParentId
   property alias model: view.model
   property alias view: view
 
@@ -26,13 +26,7 @@ Dialog {
         delegate: TreeViewDelegate {
           contentItem: Label {
             clip: false
-            text: {
-              if (model.display === sourceTable) {
-                view.selectionModel.setCurrentIndex(treeView.index(row, 0),
-                                                    ItemSelectionModel.Select);
-              }
-              return column > 0 ? "" : model.display
-            }
+            text: column > 0 ? "" : model.display
             elide: Text.ElideRight
             color: row === treeView.currentRow ? settings.fgColor : "black"
           }
@@ -47,9 +41,9 @@ Dialog {
 
     OkCancel {
       okay: function () {
-        const targetTable = view.model.columnData(view.selectionModel.currentIndex, 1);
-        if (sourceTable !== targetTable) {
-          libraryView.moveItems(ids, sourceTable, targetTable);
+        const targetParentId = view.model.columnData(view.selectionModel.currentIndex, 1);
+        if (sourceParentId !== targetParentId) {
+          libraryView.moveItems(ids, targetParentId);
         } else {
           libraryView.clearSelectedItems();
         }

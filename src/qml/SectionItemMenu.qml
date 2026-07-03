@@ -22,7 +22,7 @@ Menu {
       } else {
         moveDialog.ids = [itemID];
       }
-      moveDialog.sourceTable = parentTable;
+      moveDialog.sourceParentId = librarySection.currentParentId;
       moveDialog.model = library.getStructure();
       moveDialog.view.expandRecursively();
       moveDialog.open();

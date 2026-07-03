@@ -18,7 +18,7 @@ Pane {
     qsTr("Song")
   ]
   property var movableTypes: ["Word", "Subject group"]
-  property var tables: []
+  property var parentStack: []
   property bool isStartPage: true
   property var pages: []
   property var itemToDelete
@@ -89,9 +89,7 @@ Pane {
           SectionView {
             required property LibrarySection modelData
             title: sectionNames[modelData.type]
-            parentTable: tables.length == 0 ?
-                         settings.currentLanguage :
-                         tables[tables.length - 1]
+            currentParentId: parentStack.length === 0 ? 0 : parentStack[parentStack.length - 1]
             model: modelData.model
 
             Connections {
@@ -286,24 +284,24 @@ Pane {
     pages = [];
     pageTitle.title = "";
     pageTitle.visible = false;
-    tables = [];
+    parentStack = [];
     itemConfiguration.typesNum = 8;
-    library.openTable(language);
+    library.openLanguage(language);
     refresh();
   }
 
-  function moveItems(ids, sourceTable, targetTable) {
-    ids.forEach((id) => library.moveItem(id, sourceTable, targetTable));
+  function moveItems(ids, targetParentId) {
+    ids.forEach((id) => library.moveItem(id, targetParentId));
     dragItems.visible = false;
     clearSelectedItems();
     refresh();
   }
 
-  function loadPage(parentTable, parentID, page) {
-    tables.push(`${parentTable}_${parentID}`);
+  function loadPage(parentID, page) {
+    parentStack.push(parentID);
     isStartPage = false;
     itemConfiguration.typesNum = 2;
-    library.openChildTable(parentID);
+    library.openFolder(parentID);
     pages.push(page);
     pageTitle.title = page;
     pageTitle.visible = true;
@@ -326,12 +324,19 @@ Pane {
       if (!dragItems.Drag.active) {
         clearSelectedItems();
       }
-    } else if (tables.length > 1) {
-      tables.pop();
-      var table = tables[tables.length - 1];
+    } else if (parentStack.length > 0) {
+      parentStack.pop();
       pages.pop();
-      pageTitle.title = pages[pages.length - 1];
-      library.openTable(table);
+      if (parentStack.length > 0) {
+        library.openFolder(parentStack[parentStack.length - 1]);
+        pageTitle.title = pages[pages.length - 1];
+        pageTitle.visible = true;
+      } else {
+        library.openRoot();
+        pageTitle.title = "";
+        pageTitle.visible = false;
+        isStartPage = true;
+      }
       refresh();
     } else if (!isStartPage) {
       changeLanguage(settings.currentLanguage);
