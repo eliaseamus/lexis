@@ -21,6 +21,29 @@ QString matchedSnippet(const QString& query, const QString& title, const QString
   return meaning;
 }
 
+QVariantMap makeResultMap(const QSqlQuery& row, const LibrarySearch::ItemIndex& index,
+                          const SectionTypeManager& typeManager, const QString& snippetQuery) {
+  const auto id = row.value("id").toInt();
+  const auto title = row.value("title").toString();
+  const auto meaning = row.value("meaning").toString();
+  const auto type = typeManager.librarySectionType(row.value("type").toInt());
+  const auto image = row.value("image").toByteArray();
+
+  QVariantMap result;
+  result.insert(QStringLiteral("itemId"), id);
+  result.insert(QStringLiteral("parentId"), parentIdFromVariant(row.value("parent_id")));
+  result.insert(QStringLiteral("title"), title);
+  result.insert(QStringLiteral("meaning"), meaning);
+  result.insert(QStringLiteral("snippet"), matchedSnippet(snippetQuery, title, meaning));
+  result.insert(QStringLiteral("type"), typeManager.librarySectionTypeName(type));
+  result.insert(QStringLiteral("typeEnum"), static_cast<int>(type));
+  result.insert(QStringLiteral("itemColor"), row.value("color").toString());
+  result.insert(QStringLiteral("hasImage"), !image.isEmpty());
+  result.insert(QStringLiteral("breadcrumb"), LibrarySearch::breadcrumb(index, id));
+  result.insert(QStringLiteral("parentPath"), LibrarySearch::parentPath(index, id));
+  return result;
+}
+
 }  // namespace
 
 LibrarySearch::ItemIndex LibrarySearch::loadItemIndex(const QSqlDatabase& db,
@@ -57,6 +80,14 @@ QString LibrarySearch::breadcrumb(const ItemIndex& index, int itemId) {
   return parts.join(QStringLiteral(" \u203a "));
 }
 
+QString LibrarySearch::parentPath(const ItemIndex& index, int itemId) {
+  const auto it = index.constFind(itemId);
+  if (it == index.constEnd() || it->parentId == kRootParentId) {
+    return {};
+  }
+  return breadcrumb(index, it->parentId);
+}
+
 QVariantList LibrarySearch::ancestorPath(const ItemIndex& index, int itemId) {
   QVariantList path;
   int currentId = itemId;
@@ -85,7 +116,7 @@ QVariantList LibrarySearch::search(const QSqlDatabase& db, const QString& langua
 
   QSqlQuery sqlQuery(db);
   sqlQuery.prepare(
-    "SELECT id, parent_id, title, meaning, type, color "
+    "SELECT id, parent_id, title, meaning, type, color, image "
     "FROM items "
     "WHERE language_code = :language_code "
     "  AND (title LIKE :pattern COLLATE NOCASE "
@@ -103,22 +134,74 @@ QVariantList LibrarySearch::search(const QSqlDatabase& db, const QString& langua
 
   const auto index = loadItemIndex(db, languageCode);
   while (sqlQuery.next()) {
-    const auto id = sqlQuery.value("id").toInt();
-    const auto title = sqlQuery.value("title").toString();
-    const auto meaning = sqlQuery.value("meaning").toString();
-    const auto type = typeManager.librarySectionType(sqlQuery.value("type").toInt());
+    results.append(makeResultMap(sqlQuery, index, typeManager, trimmed));
+  }
+  return results;
+}
 
-    QVariantMap result;
-    result.insert(QStringLiteral("itemId"), id);
-    result.insert(QStringLiteral("parentId"), parentIdFromVariant(sqlQuery.value("parent_id")));
-    result.insert(QStringLiteral("title"), title);
-    result.insert(QStringLiteral("meaning"), meaning);
-    result.insert(QStringLiteral("snippet"), matchedSnippet(trimmed, title, meaning));
-    result.insert(QStringLiteral("type"), typeManager.librarySectionTypeName(type));
-    result.insert(QStringLiteral("typeEnum"), static_cast<int>(type));
-    result.insert(QStringLiteral("itemColor"), sqlQuery.value("color").toString());
-    result.insert(QStringLiteral("breadcrumb"), breadcrumb(index, id));
-    results.append(result);
+QVariantList LibrarySearch::findByTitle(const QSqlDatabase& db, const QString& languageCode,
+                                        const QString& title, const SectionTypeManager& typeManager,
+                                        int excludeItemId) {
+  QVariantList results;
+  const auto trimmed = title.trimmed();
+  if (languageCode.isEmpty() || trimmed.isEmpty()) {
+    return results;
+  }
+
+  QSqlQuery sqlQuery(db);
+  sqlQuery.prepare(
+    "SELECT id, parent_id, title, meaning, type, color, image "
+    "FROM items "
+    "WHERE language_code = :language_code "
+    "  AND title = :title COLLATE NOCASE "
+    "  AND (:exclude_id < 0 OR id != :exclude_id) "
+    "ORDER BY title");
+  sqlQuery.bindValue(":language_code", languageCode);
+  sqlQuery.bindValue(":title", trimmed);
+  sqlQuery.bindValue(":exclude_id", excludeItemId);
+
+  if (!sqlQuery.exec()) {
+    qWarning() << "Duplicate lookup failed:" << sqlQuery.lastError();
+    return results;
+  }
+
+  const auto index = loadItemIndex(db, languageCode);
+  while (sqlQuery.next()) {
+    results.append(makeResultMap(sqlQuery, index, typeManager, trimmed));
+  }
+  return results;
+}
+
+QVariantList LibrarySearch::findAllDuplicates(const QSqlDatabase& db, const QString& languageCode,
+                                              const SectionTypeManager& typeManager) {
+  QVariantList results;
+  if (languageCode.isEmpty()) {
+    return results;
+  }
+
+  QSqlQuery sqlQuery(db);
+  sqlQuery.prepare(
+    "SELECT id, parent_id, title, meaning, type, color, image "
+    "FROM items "
+    "WHERE language_code = :language_code "
+    "  AND lower(title) IN ("
+    "    SELECT lower(title) FROM items "
+    "    WHERE language_code = :language_code "
+    "    GROUP BY lower(title) "
+    "    HAVING COUNT(*) > 1"
+    "  ) "
+    "ORDER BY lower(title), id");
+  sqlQuery.bindValue(":language_code", languageCode);
+
+  if (!sqlQuery.exec()) {
+    qWarning() << "Duplicate scan failed:" << sqlQuery.lastError();
+    return results;
+  }
+
+  const auto index = loadItemIndex(db, languageCode);
+  while (sqlQuery.next()) {
+    const auto title = sqlQuery.value("title").toString();
+    results.append(makeResultMap(sqlQuery, index, typeManager, title));
   }
   return results;
 }

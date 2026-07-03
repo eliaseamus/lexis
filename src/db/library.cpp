@@ -2,6 +2,7 @@
 
 #include "library_archive.hpp"
 #include "library_search.hpp"
+#include "utils.hpp"
 
 #include <QtSql/QtSql>
 
@@ -145,6 +146,7 @@ void Library::addItem(LibraryItem* item) {
     requestAudio(item->title());
   }
   updateParentModificationTime(item->id());
+  invalidateImageCache(item->id());
   insertItem(std::move(*item));
 }
 
@@ -202,6 +204,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     }
     insertItem(std::move(*item));
   }
+  invalidateImageCache(item->id());
 }
 
 void Library::moveItem(int id, int targetParentId) {
@@ -248,6 +251,7 @@ void Library::deleteItem(int id, LibrarySectionType type) {
   if (section->isEmpty()) {
     _sections.removeOne(section);
   }
+  invalidateImageCache(id);
 }
 
 void Library::deleteLanguage(const QString& language) {
@@ -323,6 +327,7 @@ void Library::clearSections() {
     section->deleteLater();
   }
   _sections.clear();
+  invalidateImageCache();
 }
 
 LibrarySection* Library::getSection(LibrarySectionType type) {
@@ -533,6 +538,21 @@ QVariantList Library::search(const QString& query) const {
   return LibrarySearch::search(QSqlDatabase::database(), _language, query, _typeManager);
 }
 
+QVariantList Library::findByTitle(const QString& title, int excludeItemId) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibrarySearch::findByTitle(QSqlDatabase::database(), _language, title, _typeManager,
+                                    excludeItemId);
+}
+
+QVariantList Library::duplicateItems() const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibrarySearch::findAllDuplicates(QSqlDatabase::database(), _language, _typeManager);
+}
+
 QVariantList Library::ancestorPath(int itemId) const {
   if (_language.isEmpty() || itemId <= 0) {
     return {};
@@ -568,6 +588,88 @@ LibraryItem* Library::getItem(int id) {
   item->setColor(query.value("color").toString());
   item->setMeaning(query.value("meaning").toString());
   return item;
+}
+
+void Library::invalidateImageCache(int id) {
+  if (id < 0) {
+    for (auto* file : _imageFiles) {
+      file->deleteLater();
+    }
+    _imageFiles.clear();
+    _imageUrlCache.clear();
+    return;
+  }
+
+  if (auto* file = _imageFiles.take(id)) {
+    file->deleteLater();
+  }
+  _imageUrlCache.remove(id);
+}
+
+QUrl Library::itemImageUrl(int id) {
+  if (id <= 0 || _language.isEmpty()) {
+    return {};
+  }
+
+  if (_imageUrlCache.contains(id)) {
+    return _imageUrlCache[id];
+  }
+
+  QSqlQuery query;
+  query.prepare("SELECT image FROM items WHERE id = :id AND language_code = :language_code");
+  query.bindValue(":id", id);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec() || !query.next()) {
+    return {};
+  }
+
+  const auto image = query.value("image").toByteArray();
+  if (image.isEmpty()) {
+    return {};
+  }
+
+  auto* file = new QTemporaryFile(this);
+  file->setFileTemplate(temporaryFileTemplate());
+  file->setAutoRemove(true);
+  if (!writeCompressedBlob(*file, image)) {
+    file->deleteLater();
+    return {};
+  }
+
+  const auto url = QUrl::fromLocalFile(file->fileName());
+  _imageFiles.insert(id, file);
+  _imageUrlCache.insert(id, url);
+  return url;
+}
+
+void Library::resolveDuplicateGroup(int keepItemId, const QVariantList& items) {
+  if (_language.isEmpty() || keepItemId <= 0) {
+    return;
+  }
+
+  for (const auto& value : items) {
+    const auto map = value.toMap();
+    const auto id = map.value(QStringLiteral("itemId")).toInt();
+    if (id <= 0 || id == keepItemId) {
+      continue;
+    }
+    const auto type =
+      _typeManager.librarySectionType(map.value(QStringLiteral("typeEnum")).toInt());
+    deleteItem(id, type);
+  }
+}
+
+void Library::reloadCurrentFolder() {
+  if (_language.isEmpty()) {
+    clearSections();
+    return;
+  }
+  if (_currentParentId == kRootParentId) {
+    openRoot();
+  } else {
+    openFolder(_currentParentId);
+  }
 }
 
 }  // namespace lexis

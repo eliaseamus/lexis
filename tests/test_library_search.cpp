@@ -117,6 +117,61 @@ class LibrarySearchTest : public QObject {
     QCOMPARE(path[0].toMap().value("title").toString(), QString("Personality"));
     QCOMPARE(path[1].toMap().value("title").toString(), QString("Traits"));
     QCOMPARE(path[2].toMap().value("title").toString(), QString("ingenious"));
+    QCOMPARE(lexis::LibrarySearch::parentPath(index, 3), QString("Personality \u203a Traits"));
+    QCOMPARE(lexis::LibrarySearch::parentPath(index, 1), QString());
+
+    db.close();
+    QSqlDatabase::removeDatabase("search_test");
+  }
+
+  void findsExactTitleMatchesAndExcludesEditedItem() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/search.db";
+    QVERIFY(createDatabase(dbPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "search_test");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    lexis::SectionTypeManager typeManager;
+    const auto duplicates = lexis::LibrarySearch::findByTitle(db, "en", "ingenious", typeManager);
+    QCOMPARE(duplicates.size(), 1);
+
+    const auto excluded =
+      lexis::LibrarySearch::findByTitle(db, "en", "ingenious", typeManager, 3);
+    QCOMPARE(excluded.size(), 0);
+
+    const auto caseInsensitive =
+      lexis::LibrarySearch::findByTitle(db, "en", "INGENIOUS", typeManager);
+    QCOMPARE(caseInsensitive.size(), 1);
+
+    db.close();
+    QSqlDatabase::removeDatabase("search_test");
+  }
+
+  void findsAllDuplicateTitlesInLibrary() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/search.db";
+    QVERIFY(createDatabase(dbPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "search_test");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    QSqlQuery(db).exec(
+      "INSERT INTO items"
+      "(id, language_code, parent_id, title, creation_time, modification_time, type, color)"
+      "VALUES (6, 'en', 4, 'Apple', '2026-01-01', '2026-01-01', 0, '#ffffff')");
+
+    lexis::SectionTypeManager typeManager;
+    const auto duplicates = lexis::LibrarySearch::findAllDuplicates(db, "en", typeManager);
+    QCOMPARE(duplicates.size(), 2);
+    QCOMPARE(duplicates[0].toMap().value("title").toString(), QString("apple"));
+    QCOMPARE(duplicates[1].toMap().value("title").toString(), QString("Apple"));
 
     db.close();
     QSqlDatabase::removeDatabase("search_test");

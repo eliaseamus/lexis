@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QUrl>
 
+#include <QTemporaryFile>
+
 #include "app_settings.hpp"
 #include "library_item.hpp"
 #include "library_section.hpp"
@@ -34,6 +36,8 @@ class Library : public QObject {
   Pronunciation* _pronunciation = nullptr;
   CurrentItem _audioItem;
   QString _databasePath;
+  QHash<int, QUrl> _imageUrlCache;
+  QHash<int, QTemporaryFile*> _imageFiles;
 
  public:
   explicit Library(QObject* parent = nullptr);
@@ -58,13 +62,22 @@ class Library : public QObject {
   }
   Q_INVOKABLE QStringList registeredLanguages() const;
   Q_INVOKABLE QVariantList search(const QString& query) const;
+  Q_INVOKABLE QVariantList findByTitle(const QString& title, int excludeItemId = -1) const;
+  Q_INVOKABLE QVariantList duplicateItems() const;
+  Q_INVOKABLE QString currentLanguage() const {
+    return _language;
+  }
   Q_INVOKABLE QVariantList ancestorPath(int itemId) const;
   Q_INVOKABLE LibraryItem* getItem(int id);
+  Q_INVOKABLE QUrl itemImageUrl(int id);
+  Q_INVOKABLE void resolveDuplicateGroup(int keepItemId, const QVariantList& items);
+  Q_INVOKABLE void reloadCurrentFolder();
   QVector<LibrarySection*> sections() const {
     return _sections;
   }
 
  private:
+  void invalidateImageCache(int id = -1);
   void closeDatabaseConnection();
   void clearSections();
   LibrarySection* getSection(LibrarySectionType type);

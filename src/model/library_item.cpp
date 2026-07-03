@@ -99,15 +99,7 @@ QByteArray LibraryItem::readFile(const QString& path) const {
 }
 
 void LibraryItem::writeFile(QTemporaryFile& file, QByteArray&& data) {
-  if (!file.open()) {
-    qWarning() << "fail to open temporary file" << file.fileName();
-    return;
-  }
-  file.resize(0);
-  if (-1 == file.write(qUncompress(data))) {
-    qWarning() << "Failed to overwrite file:" << file.errorString();
-  }
-  file.close();
+  writeCompressedBlob(file, data);
 }
 
 }  // namespace lexis

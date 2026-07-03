@@ -151,6 +151,12 @@ Rectangle {
       okTooltipText: qsTr("Insert title")
       okay: function () {
         if (imagePicker.hasQuery) {
+          const duplicates = library.findByTitle(titleItem.text, editMode ? itemID : -1);
+          if (duplicates.length > 0) {
+            duplicateItemDialog.matches = duplicates;
+            duplicateItemDialog.open();
+            return;
+          }
           if (editMode) {
             library.updateItem(newDbRecord, currentType);
           } else {
@@ -192,5 +198,14 @@ Rectangle {
       imageItem.source = url
       imageItem.visible = true
     }
+  }
+
+  DuplicateItemDialog {
+    id: duplicateItemDialog
+    parent: ApplicationWindow.overlay
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+
+    onDuplicatesResolved: libraryView.refresh()
   }
 }

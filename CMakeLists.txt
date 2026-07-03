@@ -73,6 +73,7 @@ qt_add_qml_module(${PROJECT_NAME}
   VERSION 1.0
   QML_FILES
     src/qml/DeleteDialog.qml
+    src/qml/DuplicateItemDialog.qml
     src/qml/HelpDialog.qml
     src/qml/Icon.qml
     src/qml/ImagePicker.qml

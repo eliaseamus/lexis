@@ -57,12 +57,17 @@ Item {
           delegate: ItemDelegate {
             id: resultRow
             required property var modelData
+            property color cardBackground:
+              modelData.itemColor.length > 0 ? modelData.itemColor : "white"
+            property color rowBackground: resultRow.hovered ? settings.accentColor : cardBackground
+            property color rowTextColor: Utils.getFgColor(rowBackground)
+
             width: resultsList.width
             implicitHeight: resultLayout.implicitHeight + 16
             hoverEnabled: true
 
             background: Rectangle {
-              color: resultRow.hovered ? settings.accentColor.darker(1.1) : settings.accentColor
+              color: resultRow.rowBackground
               radius: 8
             }
 
@@ -78,9 +83,9 @@ Item {
                 Layout.preferredWidth: 56
                 Layout.preferredHeight: 56
                 iconRadius: 56
-                iconColor: modelData.itemColor.length > 0 ? modelData.itemColor : "white"
+                iconColor: resultRow.cardBackground
                 iconTitle: modelData.title
-                image: ""
+                image: modelData.hasImage ? library.itemImageUrl(modelData.itemId).toString() : ""
               }
 
               ColumnLayout {
@@ -90,7 +95,7 @@ Item {
                 Text {
                   Layout.fillWidth: true
                   text: modelData.title
-                  color: Utils.getFgColor(settings.accentColor)
+                  color: resultRow.rowTextColor
                   font.bold: true
                   elide: Text.ElideRight
                 }
@@ -99,8 +104,8 @@ Item {
                   Layout.fillWidth: true
                   visible: modelData.breadcrumb.length > 0
                   text: modelData.breadcrumb
-                  color: Utils.getFgColor(settings.accentColor)
-                  opacity: 0.85
+                  color: resultRow.rowTextColor
+                  opacity: 0.75
                   elide: Text.ElideRight
                   font.pixelSize: 12
                 }
@@ -109,7 +114,7 @@ Item {
                   Layout.fillWidth: true
                   visible: modelData.type === "Word" && modelData.meaning.length > 0
                   text: modelData.meaning
-                  color: Utils.getFgColor(settings.accentColor)
+                  color: resultRow.rowTextColor
                   opacity: 0.75
                   elide: Text.ElideRight
                   font.italic: true
@@ -119,8 +124,8 @@ Item {
 
               Text {
                 text: modelData.type
-                color: Utils.getFgColor(settings.accentColor)
-                opacity: 0.7
+                color: resultRow.rowTextColor
+                opacity: 0.75
                 font.pixelSize: 11
               }
             }
@@ -131,6 +136,7 @@ Item {
       PrettyLabel {
         Layout.fillWidth: true
         visible: searchView.active && resultsList.count === 0
+        dimmed: true
         title: qsTr("No matches found")
       }
     }
