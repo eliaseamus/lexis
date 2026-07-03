@@ -6,6 +6,7 @@
 #include <QUrl>
 
 #include "app_settings.hpp"
+#include "library_item.hpp"
 #include "library_section.hpp"
 #include "pronunciation.hpp"
 #include "schema_migration.hpp"
@@ -56,6 +57,9 @@ class Library : public QObject {
     return _databasePath;
   }
   Q_INVOKABLE QStringList registeredLanguages() const;
+  Q_INVOKABLE QVariantList search(const QString& query) const;
+  Q_INVOKABLE QVariantList ancestorPath(int itemId) const;
+  Q_INVOKABLE LibraryItem* getItem(int id);
   QVector<LibrarySection*> sections() const {
     return _sections;
   }

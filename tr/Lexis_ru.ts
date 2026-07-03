@@ -441,6 +441,19 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>SearchView</name>
+    <message>
+        <location filename="../src/qml/SearchView.qml" line="42"/>
+        <source>Search results</source>
+        <translation>Результаты поиска</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SearchView.qml" line="133"/>
+        <source>No matches found</source>
+        <translation>Ничего не найдено</translation>
+    </message>
+</context>
+<context>
     <name>ToolBar</name>
     <message>
         <location filename="../src/qml/ToolBar.qml" line="24"/>
@@ -449,9 +462,13 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/ToolBar.qml" line="42"/>
-        <location filename="../src/qml/ToolBar.qml" line="53"/>
         <source>Search</source>
         <translation>Поиск</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ToolBar.qml" line="53"/>
+        <source>Search library</source>
+        <translation>Поиск по библиотеке</translation>
     </message>
     <message>
         <location filename="../src/qml/ToolBar.qml" line="105"/>

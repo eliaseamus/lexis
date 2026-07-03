@@ -50,6 +50,8 @@ qt_add_executable(${PROJECT_NAME}
   src/db/schema_migration.hpp
   src/db/library_archive.cpp
   src/db/library_archive.hpp
+  src/db/library_search.cpp
+  src/db/library_search.hpp
   ${app_icon_resource_windows}
 )
 
@@ -92,6 +94,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SectionItem.qml
     src/qml/SectionItemMenu.qml
     src/qml/SectionView.qml
+    src/qml/SearchView.qml
     src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
@@ -262,6 +265,30 @@ target_include_directories(test_library_archive PRIVATE src src/db)
 add_test(test_library_archive test_library_archive)
 
 set_target_properties(test_library_archive PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# library_search
+qt_add_executable(test_library_search
+  tests/test_library_search.cpp
+  src/db/schema_migration.cpp
+  src/db/library_search.cpp
+  src/model/section_type.cpp
+)
+
+target_link_libraries(test_library_search PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+  Qt6::Qml
+)
+
+target_include_directories(test_library_search PRIVATE src src/model src/db)
+
+add_test(test_library_search test_library_search)
+
+set_target_properties(test_library_search PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

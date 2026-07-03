@@ -74,7 +74,7 @@ Pane {
     // Library items
     ScrollView {
       id: itemsSection
-      visible: library.sections.length > 0
+      visible: library.sections.length > 0 && !searchView.active
       Layout.fillWidth: true
       Layout.fillHeight: true
       Layout.leftMargin: 20
@@ -91,20 +91,33 @@ Pane {
             title: sectionNames[modelData.type]
             currentParentId: parentStack.length === 0 ? 0 : parentStack[parentStack.length - 1]
             model: modelData.model
-
-            Connections {
-              target: toolBar
-              function onSearchRequest(query) {
-                model.setFilterFixedString(query)
-                visible = model.rowCount() > 0
-              }
-            }
           }
         }
       }
     }
 
     ToolBar {id: toolBar}
+  }
+
+  SearchView {
+    id: searchView
+    anchors.fill: parent
+    anchors.rightMargin: sideBar.width
+
+    Connections {
+      target: toolBar
+      function onSearchRequest(query) {
+        searchView.query = query
+      }
+    }
+
+    onDismissed: {
+      if (toolBar.isSearchActive) {
+        toolBar.toggleSearchLine()
+      }
+    }
+
+    onResultSelected: (result) => openSearchResult(result)
   }
 
   Connections {
@@ -343,9 +356,58 @@ Pane {
     }
   }
 
+  function openSearchResult(result) {
+    if (toolBar.isSearchActive) {
+      toolBar.toggleSearchLine()
+    }
+    clearSelectedItems()
+
+    const path = library.ancestorPath(result.itemId)
+    parentStack = []
+    pages = []
+
+    if (path.length <= 1) {
+      library.openRoot()
+      isStartPage = true
+      pageTitle.title = ""
+      pageTitle.visible = false
+    } else {
+      for (let i = 0; i < path.length - 1; i++) {
+        parentStack.push(path[i].id)
+        pages.push(path[i].title)
+      }
+      library.openFolder(parentStack[parentStack.length - 1])
+      pageTitle.title = pages[pages.length - 1]
+      pageTitle.visible = true
+      isStartPage = false
+    }
+    refresh()
+
+    if (result.type === "Word") {
+      const item = library.getItem(result.itemId)
+      if (item) {
+        library.readAudio(result.itemId)
+        displayItem({
+          "itemID": item.itemID,
+          "title": item.title,
+          "creationTime": item.creationTime,
+          "modificationTime": item.modificationTime,
+          "type": item.type,
+          "imageUrl": item.imageUrl,
+          "itemColor": item.color,
+          "audioUrl": item.audioUrl,
+          "meaning": item.meaning
+        })
+      }
+    } else {
+      loadPage(result.itemId, result.title)
+    }
+  }
+
   function hideSearchLine() {
-    searchLine.display = false
-    searchHide.running = true
+    if (toolBar.isSearchActive) {
+      toolBar.toggleSearchLine()
+    }
   }
 
 }

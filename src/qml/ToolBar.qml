@@ -50,7 +50,7 @@ RowLayout {
       visible: false
       Layout.preferredWidth: length
       Layout.preferredHeight: 40
-      placeholderText: qsTr("Search")
+      placeholderText: qsTr("Search library")
 
       PropertyAnimation {
         id: searchShow

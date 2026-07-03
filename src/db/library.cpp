@@ -1,6 +1,7 @@
 #include "library.hpp"
 
 #include "library_archive.hpp"
+#include "library_search.hpp"
 
 #include <QtSql/QtSql>
 
@@ -523,6 +524,50 @@ QStringList Library::registeredLanguages() const {
     languages.append(query.value(0).toString());
   }
   return languages;
+}
+
+QVariantList Library::search(const QString& query) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibrarySearch::search(QSqlDatabase::database(), _language, query, _typeManager);
+}
+
+QVariantList Library::ancestorPath(int itemId) const {
+  if (_language.isEmpty() || itemId <= 0) {
+    return {};
+  }
+  const auto index = LibrarySearch::loadItemIndex(QSqlDatabase::database(), _language);
+  return LibrarySearch::ancestorPath(index, itemId);
+}
+
+LibraryItem* Library::getItem(int id) {
+  if (_language.isEmpty() || id <= 0) {
+    return nullptr;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    "SELECT id, title, creation_time, modification_time, type, image, color, meaning "
+    "FROM items WHERE id = :id AND language_code = :language_code");
+  query.bindValue(":id", id);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec() || !query.next()) {
+    qWarning() << "Failed to load item" << id << query.lastError();
+    return nullptr;
+  }
+
+  auto* item = new LibraryItem(this);
+  item->setID(query.value("id").toInt());
+  item->setTitle(query.value("title").toString());
+  item->setCreationTime(QDateTime::fromString(query.value("creation_time").toString()));
+  item->setModificationTime(QDateTime::fromString(query.value("modification_time").toString()));
+  item->setType(_typeManager.librarySectionType(query.value("type").toInt()));
+  item->setImage(query.value("image").toByteArray());
+  item->setColor(query.value("color").toString());
+  item->setMeaning(query.value("meaning").toString());
+  return item;
 }
 
 }  // namespace lexis
