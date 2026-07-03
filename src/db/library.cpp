@@ -1,5 +1,7 @@
 #include "library.hpp"
 
+#include "library_archive.hpp"
+
 #include <QtSql/QtSql>
 
 namespace lexis {
@@ -18,15 +20,28 @@ Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunci
   connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
 }
 
+void Library::closeDatabaseConnection() {
+  if (!QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
+    return;
+  }
+  const auto connectionName = QSqlDatabase::defaultConnection;
+  QSqlDatabase db = QSqlDatabase::database(connectionName);
+  db.close();
+  QSqlDatabase::removeDatabase(connectionName);
+}
+
 void Library::openDatabase(const QString& name) {
   QFileInfo info(name);
   QDir dir;
   dir.mkpath(info.dir().path());
+  _databasePath = info.absoluteFilePath();
+
+  closeDatabaseConnection();
 
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(info.filePath());
+  db.setDatabaseName(_databasePath);
   if (!db.open()) {
-    qWarning() << QString("Failed to open %1").arg(info.filePath());
+    qWarning() << QString("Failed to open %1").arg(_databasePath);
     return;
   }
 
@@ -456,6 +471,58 @@ void Library::updateAudio(QByteArray audio) {
     qWarning() << QString("Failed to update audio for item %1:").arg(_audioItem.id)
                << query.lastError();
   }
+}
+
+bool Library::exportLanguage(const QString& language, const QUrl& fileUrl) {
+  if (language.isEmpty()) {
+    return false;
+  }
+  QSqlDatabase db = QSqlDatabase::database();
+  return LibraryArchive::exportLanguage(db, language, fileUrl.toLocalFile());
+}
+
+bool Library::importLanguage(const QUrl& fileUrl) {
+  QSqlDatabase db = QSqlDatabase::database();
+  QString language;
+  if (!LibraryArchive::importLanguage(db, fileUrl.toLocalFile(), &language)) {
+    return false;
+  }
+
+  if (_language == language) {
+    openLanguage(language);
+  }
+  emit languageImported(language);
+  return true;
+}
+
+bool Library::backupDatabase(const QUrl& fileUrl) {
+  return LibraryArchive::backupDatabase(_databasePath, fileUrl.toLocalFile());
+}
+
+bool Library::restoreDatabase(const QUrl& fileUrl) {
+  closeDatabaseConnection();
+  if (!LibraryArchive::restoreDatabase(_databasePath, fileUrl.toLocalFile())) {
+    openDatabase(_databasePath);
+    return false;
+  }
+
+  openDatabase(_databasePath);
+  openLanguage(_settings.getCurrentLanguage());
+  emit databaseRestored();
+  return true;
+}
+
+QStringList Library::registeredLanguages() const {
+  QStringList languages;
+  QSqlQuery query("SELECT code FROM languages ORDER BY code");
+  if (!query.exec()) {
+    qWarning() << "Failed to read registered languages:" << query.lastError();
+    return languages;
+  }
+  while (query.next()) {
+    languages.append(query.value(0).toString());
+  }
+  return languages;
 }
 
 }  // namespace lexis

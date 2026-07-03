@@ -32,6 +32,7 @@ class Library : public QObject {
   AppSettings _settings;
   Pronunciation* _pronunciation = nullptr;
   CurrentItem _audioItem;
+  QString _databasePath;
 
  public:
   explicit Library(QObject* parent = nullptr);
@@ -47,11 +48,20 @@ class Library : public QObject {
   Q_INVOKABLE QUrl readAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE TreeModel* getStructure();
+  Q_INVOKABLE bool exportLanguage(const QString& language, const QUrl& fileUrl);
+  Q_INVOKABLE bool importLanguage(const QUrl& fileUrl);
+  Q_INVOKABLE bool backupDatabase(const QUrl& fileUrl);
+  Q_INVOKABLE bool restoreDatabase(const QUrl& fileUrl);
+  Q_INVOKABLE QString databasePath() const {
+    return _databasePath;
+  }
+  Q_INVOKABLE QStringList registeredLanguages() const;
   QVector<LibrarySection*> sections() const {
     return _sections;
   }
 
  private:
+  void closeDatabaseConnection();
   void clearSections();
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
@@ -69,6 +79,8 @@ class Library : public QObject {
 
  signals:
   void dummy();
+  void languageImported(const QString& language);
+  void databaseRestored();
 };
 
 }  // namespace lexis

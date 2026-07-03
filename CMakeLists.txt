@@ -48,6 +48,8 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library.hpp
   src/db/schema_migration.cpp
   src/db/schema_migration.hpp
+  src/db/library_archive.cpp
+  src/db/library_archive.hpp
   ${app_icon_resource_windows}
 )
 
@@ -238,6 +240,28 @@ target_include_directories(test_schema_migration PRIVATE src src/model src/db)
 add_test(test_schema_migration test_schema_migration)
 
 set_target_properties(test_schema_migration PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# library_archive
+qt_add_executable(test_library_archive
+  tests/test_library_archive.cpp
+  src/db/schema_migration.cpp
+  src/db/library_archive.cpp
+)
+
+target_link_libraries(test_library_archive PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+)
+
+target_include_directories(test_library_archive PRIVATE src src/db)
+
+add_test(test_library_archive test_library_archive)
+
+set_target_properties(test_library_archive PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )
