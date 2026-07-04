@@ -439,7 +439,7 @@ Pane {
     if (!translations || translations.length === 0) {
       return ""
     }
-    return translations.join(", ")
+    return translations.slice(0, 5).join(", ")
   }
 
   function storeTranslations(word, translations) {
