@@ -2,6 +2,7 @@
 
 #include "library_archive.hpp"
 #include "library_search.hpp"
+#include "library_statistics.hpp"
 #include "utils.hpp"
 
 #include <QtSql/QtSql>
@@ -129,8 +130,8 @@ void Library::addItem(LibraryItem* item) {
   query.bindValue(":language_code", _language);
   query.bindValue(":parent_id", parentIdVariant(_currentParentId));
   query.bindValue(":title", item->title());
-  query.bindValue(":creation", item->creationTime().toString());
-  query.bindValue(":modification", item->modificationTime().toString());
+  query.bindValue(":creation", formatDateTimeForDb(item->creationTime()));
+  query.bindValue(":modification", formatDateTimeForDb(item->modificationTime()));
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
@@ -180,7 +181,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
 
   item->setModificationTime(QDateTime::currentDateTime());
   query.bindValue(":title", item->title());
-  query.bindValue(":modification", item->modificationTime().toString());
+  query.bindValue(":modification", formatDateTimeForDb(item->modificationTime()));
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
@@ -217,7 +218,7 @@ void Library::moveItem(int id, int targetParentId) {
     "UPDATE items SET parent_id = :parent_id, modification_time = :modification "
     "WHERE id = :id AND language_code = :language_code");
   query.bindValue(":parent_id", parentIdVariant(targetParentId));
-  query.bindValue(":modification", QDateTime::currentDateTime().toString());
+  query.bindValue(":modification", formatDateTimeForDb(QDateTime::currentDateTime()));
   query.bindValue(":id", id);
   query.bindValue(":language_code", _language);
 
@@ -420,7 +421,7 @@ void Library::updateParentModificationTime(int id) {
   updateQuery.prepare(
     "UPDATE items SET modification_time = :modification "
     "WHERE id = :id AND language_code = :language_code");
-  updateQuery.bindValue(":modification", QDateTime::currentDateTime().toString());
+  updateQuery.bindValue(":modification", formatDateTimeForDb(QDateTime::currentDateTime()));
   updateQuery.bindValue(":id", parentId);
   updateQuery.bindValue(":language_code", _language);
 
@@ -551,6 +552,20 @@ QVariantList Library::duplicateItems() const {
     return {};
   }
   return LibrarySearch::findAllDuplicates(QSqlDatabase::database(), _language, _typeManager);
+}
+
+QVariantMap Library::languageStatistics() const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibraryStatistics::languageStats(QSqlDatabase::database(), _language, _typeManager);
+}
+
+QVariantMap Library::itemStatistics(int itemId) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibraryStatistics::itemStats(QSqlDatabase::database(), _language, itemId, _typeManager);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

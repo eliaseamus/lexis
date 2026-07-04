@@ -11,6 +11,23 @@ QString temporaryFileTemplate() {
   return dir.path() + fileTemplate;
 }
 
+QString formatDateTimeForDb(const QDateTime& dateTime) {
+  return dateTime.toString(Qt::ISODate);
+}
+
+QDateTime parseDateTimeFromDb(const QString& value) {
+  if (value.isEmpty()) {
+    return {};
+  }
+
+  QDateTime dateTime = QDateTime::fromString(value, Qt::ISODate);
+  if (dateTime.isValid()) {
+    return dateTime;
+  }
+
+  return QDateTime::fromString(value, Qt::TextDate);
+}
+
 bool writeCompressedBlob(QTemporaryFile& file, const QByteArray& compressedBlob) {
   if (compressedBlob.isEmpty()) {
     return false;

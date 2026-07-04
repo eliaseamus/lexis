@@ -5,7 +5,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 23)
 
 find_package(Qt6 REQUIRED COMPONENTS
-             Core Gui Widgets Network Multimedia Sql
+             Core Gui Widgets Network Multimedia Sql Charts
              Qml Quick QuickControls2 WebView LinguistTools Test REQUIRED)
 
 include_directories(src src/db src/gui src/model src/web)
@@ -52,6 +52,8 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library_archive.hpp
   src/db/library_search.cpp
   src/db/library_search.hpp
+  src/db/library_statistics.cpp
+  src/db/library_statistics.hpp
   ${app_icon_resource_windows}
 )
 
@@ -66,12 +68,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Quick
   Qt6::QuickControls2
   Qt6::WebView
+  Qt6::Charts
 )
 
 qt_add_qml_module(${PROJECT_NAME}
   URI QLexis
   VERSION 1.0
   QML_FILES
+    src/qml/CategoryPieChart.qml
     src/qml/DeleteDialog.qml
     src/qml/DuplicateItemDialog.qml
     src/qml/HelpDialog.qml
@@ -100,7 +104,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
     src/qml/TextComplete.qml
-    src/qml/TimeInfoDialog.qml
+    src/qml/StatisticsDialog.qml
     src/qml/ToolBar.qml
     src/qml/utils.js
   RESOURCES
@@ -290,6 +294,32 @@ target_include_directories(test_library_search PRIVATE src src/model src/db)
 add_test(test_library_search test_library_search)
 
 set_target_properties(test_library_search PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# library_statistics
+qt_add_executable(test_library_statistics
+  tests/test_library_statistics.cpp
+  src/db/schema_migration.cpp
+  src/db/library_search.cpp
+  src/db/library_statistics.cpp
+  src/model/section_type.cpp
+  src/utils.cpp
+)
+
+target_link_libraries(test_library_statistics PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+  Qt6::Qml
+)
+
+target_include_directories(test_library_statistics PRIVATE src src/model src/db)
+
+add_test(test_library_statistics test_library_statistics)
+
+set_target_properties(test_library_statistics PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

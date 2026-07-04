@@ -39,12 +39,12 @@ Menu {
     }
   }
   MenuItem {
-    text: qsTr("Time info")
+    text: qsTr("Statistics")
     enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
     onTriggered: {
-      timeInfoDialog.creationTime = creationTime;
-      timeInfoDialog.modificationTime = modificationTime;
-      timeInfoDialog.open();
+      statisticsDialog.libraryMode = false
+      statisticsDialog.itemId = itemID
+      statisticsDialog.open()
     }
   }
 }

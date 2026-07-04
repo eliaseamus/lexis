@@ -2,11 +2,63 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>CategoryPieChart</name>
+    <message>
+        <location filename="../src/qml/CategoryPieChart.qml" line="39"/>
+        <location filename="../src/qml/CategoryPieChart.qml" line="100"/>
+        <source>Others</source>
+        <translation>Другие</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/CategoryPieChart.qml" line="42"/>
+        <source>Standalone</source>
+        <translation>Без группы</translation>
+    </message>
+</context>
+<context>
     <name>DeleteDialog</name>
     <message>
         <location filename="../src/qml/DeleteDialog.qml" line="12"/>
         <source>Are you sure you want to&lt;br&gt;delete &lt;b&gt;%1&lt;/b&gt; from your library?</source>
         <translation>Вы уверены что хотите&lt;br&gt;удалить &lt;b&gt;%1&lt;/b&gt; из своей библиотеки?</translation>
+    </message>
+</context>
+<context>
+    <name>DuplicateItemDialog</name>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="11"/>
+        <source>An item with this title already exists in your library.</source>
+        <translation>Элемент с таким названием уже есть в вашей библиотеке.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="83"/>
+        <source>Select the copy to keep in each group. Other copies will be deleted.</source>
+        <translation>Выберите копию, которую нужно оставить в каждой группе. Остальные копии будут удалены.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="114"/>
+        <source>Duplicate word: %1</source>
+        <translation>Дубликат слова: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="45"/>
+        <source>Start page</source>
+        <translation>Стартовая страница</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="221"/>
+        <source>Keep this copy</source>
+        <translation>Оставить эту копию</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="249"/>
+        <source>Keep selected copies</source>
+        <translation>Оставить выбранные копии</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DuplicateItemDialog.qml" line="254"/>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -174,12 +226,12 @@ and drop it in this area</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="52"/>
+        <location filename="../src/qml/LibraryView.qml" line="55"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="67"/>
+        <location filename="../src/qml/LibraryView.qml" line="70"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -217,6 +269,19 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>SearchView</name>
+    <message>
+        <location filename="../src/qml/SearchView.qml" line="43"/>
+        <source>Search results</source>
+        <translation>Результаты поиска</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SearchView.qml" line="140"/>
+        <source>No matches found</source>
+        <translation>Ничего не найдено</translation>
+    </message>
+</context>
+<context>
     <name>SectionItemMenu</name>
     <message>
         <location filename="../src/qml/SectionItemMenu.qml" line="6"/>
@@ -240,8 +305,8 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/SectionItemMenu.qml" line="42"/>
-        <source>Time info</source>
-        <translation>Время</translation>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
     </message>
 </context>
 <context>
@@ -296,110 +361,115 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/SideBar.qml" line="161"/>
+        <source>Statistics…</source>
+        <translation>Статистика…</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="167"/>
         <source>Export language…</source>
         <translation>Экспорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="168"/>
+        <location filename="../src/qml/SideBar.qml" line="174"/>
         <source>Import language…</source>
         <translation>Импорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="173"/>
+        <location filename="../src/qml/SideBar.qml" line="179"/>
         <source>Backup database…</source>
         <translation>Резервная копия базы…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="177"/>
+        <location filename="../src/qml/SideBar.qml" line="183"/>
         <source>Restore database…</source>
         <translation>Восстановить базу…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="184"/>
+        <location filename="../src/qml/SideBar.qml" line="190"/>
         <source>Export language</source>
         <translation>Экспорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="187"/>
-        <location filename="../src/qml/SideBar.qml" line="202"/>
+        <location filename="../src/qml/SideBar.qml" line="193"/>
+        <location filename="../src/qml/SideBar.qml" line="208"/>
         <source>Lexis archive (*.lexis)</source>
         <translation>Архив Lexis (*.lexis)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="190"/>
+        <location filename="../src/qml/SideBar.qml" line="196"/>
         <source>Language exported successfully.</source>
         <translation>Язык успешно экспортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="192"/>
+        <location filename="../src/qml/SideBar.qml" line="198"/>
         <source>Failed to export language.</source>
         <translation>Не удалось экспортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="200"/>
-        <location filename="../src/qml/SideBar.qml" line="260"/>
+        <location filename="../src/qml/SideBar.qml" line="206"/>
+        <location filename="../src/qml/SideBar.qml" line="266"/>
         <source>Import language</source>
         <translation>Импорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="211"/>
+        <location filename="../src/qml/SideBar.qml" line="217"/>
         <source>Backup database</source>
         <translation>Резервная копия базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="214"/>
-        <location filename="../src/qml/SideBar.qml" line="229"/>
+        <location filename="../src/qml/SideBar.qml" line="220"/>
+        <location filename="../src/qml/SideBar.qml" line="235"/>
         <source>SQLite database (*.db)</source>
         <translation>База SQLite (*.db)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="217"/>
+        <location filename="../src/qml/SideBar.qml" line="223"/>
         <source>Database backup created successfully.</source>
         <translation>Резервная копия базы успешно создана.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="219"/>
+        <location filename="../src/qml/SideBar.qml" line="225"/>
         <source>Failed to backup database.</source>
         <translation>Не удалось создать резервную копию базы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="227"/>
-        <location filename="../src/qml/SideBar.qml" line="282"/>
+        <location filename="../src/qml/SideBar.qml" line="233"/>
+        <location filename="../src/qml/SideBar.qml" line="288"/>
         <source>Restore database</source>
         <translation>Восстановление базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="232"/>
+        <location filename="../src/qml/SideBar.qml" line="238"/>
         <source>Database restored successfully.</source>
         <translation>База успешно восстановлена.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="234"/>
+        <location filename="../src/qml/SideBar.qml" line="240"/>
         <source>Failed to restore database.</source>
         <translation>Не удалось восстановить базу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="247"/>
+        <location filename="../src/qml/SideBar.qml" line="253"/>
         <source>Lexis</source>
         <translation>Lexis</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="263"/>
+        <location filename="../src/qml/SideBar.qml" line="269"/>
         <source>Import will replace all items for the language contained in the archive. Continue?</source>
         <translation>Импорт заменит все элементы языка из архива. Продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="269"/>
+        <location filename="../src/qml/SideBar.qml" line="275"/>
         <source>Language imported successfully.</source>
         <translation>Язык успешно импортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="271"/>
+        <location filename="../src/qml/SideBar.qml" line="277"/>
         <source>Failed to import language.</source>
         <translation>Не удалось импортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="285"/>
+        <location filename="../src/qml/SideBar.qml" line="291"/>
         <source>Restore will replace the entire local library database. Continue?</source>
         <translation>Восстановление заменит всю локальную базу библиотеки. Продолжить?</translation>
     </message>
@@ -428,72 +498,131 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
-    <name>TimeInfoDialog</name>
+    <name>StatisticsDialog</name>
     <message>
-        <location filename="../src/qml/TimeInfoDialog.qml" line="16"/>
-        <source>Creation:</source>
-        <translation>Создание:</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="12"/>
+        <source>Word</source>
+        <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/TimeInfoDialog.qml" line="20"/>
-        <source>Last edit:</source>
-        <translation>Изменение:</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="13"/>
+        <source>Subject group</source>
+        <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../src/qml/TimeInfoDialog.qml" line="24"/>
-        <source>Ok</source>
-        <translation>Ок</translation>
-    </message>
-</context>
-<context>
-    <name>DuplicateItemDialog</name>
-    <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="10"/>
-        <source>An item with this title already exists in your library.</source>
-        <translation>Элемент с таким названием уже есть в вашей библиотеке.</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="14"/>
+        <source>Book</source>
+        <translation>Книга</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="68"/>
-        <source>Select the copy to keep in each group. Other copies will be deleted.</source>
-        <translation>Выберите копию, которую нужно оставить в каждой группе. Остальные копии будут удалены.</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="15"/>
+        <source>Article</source>
+        <translation>Статья</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="112"/>
-        <source>Duplicate word: %1</source>
-        <translation>Дубликат слова: %1</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="16"/>
+        <source>Movie</source>
+        <translation>Фильм</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="46"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="17"/>
+        <source>Series</source>
+        <translation>Сериал</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="18"/>
+        <source>Album</source>
+        <translation>Альбом</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="19"/>
+        <source>Song</source>
+        <translation>Песня</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="22"/>
+        <source>Library statistics</source>
+        <translation>Статистика библиотеки</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="22"/>
+        <source>Item statistics</source>
+        <translation>Статистика элемента</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="43"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="219"/>
-        <source>Keep this copy</source>
-        <translation>Оставить эту копию</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="78"/>
+        <source>Type:</source>
+        <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="241"/>
-        <source>Keep selected copies</source>
-        <translation>Оставить выбранные копии</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="84"/>
+        <source>Location:</source>
+        <translation>Расположение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="247"/>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
-    </message>
-</context>
-<context>
-    <name>SearchView</name>
-    <message>
-        <location filename="../src/qml/SearchView.qml" line="42"/>
-        <source>Search results</source>
-        <translation>Результаты поиска</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="90"/>
+        <source>Creation:</source>
+        <translation>Создание:</translation>
     </message>
     <message>
-        <location filename="../src/qml/SearchView.qml" line="133"/>
-        <source>No matches found</source>
-        <translation>Ничего не найдено</translation>
+        <location filename="../src/qml/StatisticsDialog.qml" line="96"/>
+        <source>Last edit:</source>
+        <translation>Изменение:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="102"/>
+        <source>Direct children:</source>
+        <translation>Прямые дочерние элементы:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="108"/>
+        <source>All descendants:</source>
+        <translation>Все вложенные элементы:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="114"/>
+        <source>Total items:</source>
+        <translation>Всего элементов:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="120"/>
+        <source>Words:</source>
+        <translation>Слова:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="126"/>
+        <source>Subject groups:</source>
+        <translation>Группы:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="132"/>
+        <source>Added this month:</source>
+        <translation>Добавлено в этом месяце:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="138"/>
+        <source>Added last 7 days:</source>
+        <translation>Добавлено за 7 дней:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="144"/>
+        <source>Added last 30 days:</source>
+        <translation>Добавлено за 30 дней:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="154"/>
+        <source>Words by subject group</source>
+        <translation>Слова по группам</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="164"/>
+        <source>Ok</source>
+        <translation>Ок</translation>
     </message>
 </context>
 <context>
@@ -527,7 +656,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="305"/>
+        <location filename="../src/db/library.cpp" line="311"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>

@@ -158,6 +158,12 @@ Item {
 
     MenuItem {
       enabled: settings.currentLanguage.length > 0
+      text: qsTr("Statistics…")
+      onTriggered: libraryView.openLibraryStatistics()
+    }
+    MenuSeparator {}
+    MenuItem {
+      enabled: settings.currentLanguage.length > 0
       text: qsTr("Export language…")
       onTriggered: {
         exportLanguageDialog.currentFile = "%1.lexis".arg(settings.currentLanguage)

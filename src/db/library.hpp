@@ -64,6 +64,8 @@ class Library : public QObject {
   Q_INVOKABLE QVariantList search(const QString& query) const;
   Q_INVOKABLE QVariantList findByTitle(const QString& title, int excludeItemId = -1) const;
   Q_INVOKABLE QVariantList duplicateItems() const;
+  Q_INVOKABLE QVariantMap languageStatistics() const;
+  Q_INVOKABLE QVariantMap itemStatistics(int itemId) const;
   Q_INVOKABLE QString currentLanguage() const {
     return _language;
   }

@@ -190,8 +190,8 @@ Pane {
     parent: ApplicationWindow.overlay
   }
 
-  TimeInfoDialog {
-    id: timeInfoDialog
+  StatisticsDialog {
+    id: statisticsDialog
     x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
@@ -444,6 +444,11 @@ Pane {
     if (toolBar.isSearchActive) {
       toolBar.toggleSearchLine()
     }
+  }
+
+  function openLibraryStatistics() {
+    statisticsDialog.libraryMode = true
+    statisticsDialog.open()
   }
 
 }

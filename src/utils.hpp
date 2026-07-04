@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDateTime>
 #include <QString>
 #include <ranges>
 #include <utility>
@@ -20,5 +21,7 @@ constexpr inline auto enumRange = [](auto front, auto back) {
 
 QString temporaryFileTemplate();
 bool writeCompressedBlob(QTemporaryFile& file, const QByteArray& compressedBlob);
+QString formatDateTimeForDb(const QDateTime& dateTime);
+QDateTime parseDateTimeFromDb(const QString& value);
 
 }  // namespace lexis
