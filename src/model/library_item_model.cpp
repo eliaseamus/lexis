@@ -35,7 +35,9 @@ QUrl LibraryItemModel::updateAudio(int id, QByteArray&& audio) {
     qWarning() << QString("Failed to update audio of %1: no item with such id").arg(id);
     return {};
   }
-  (*item)->setAudio(std::move(audio));
+  if (!(*item)->setAudio(std::move(audio))) {
+    return {};
+  }
   return (*item)->audioUrl();
 }
 

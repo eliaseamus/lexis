@@ -114,7 +114,6 @@ Item {
                 toggleSelection();
               } else {
                 if (type == "Word") {
-                  library.readAudio(itemID);
                   libraryView.displayItem(buildItemDict());
                 } else {
                   libraryView.loadPage(itemID, title)

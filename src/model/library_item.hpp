@@ -118,7 +118,7 @@ class LibraryItem : public QObject {
     _audioUrl = audioUrl;
   }
 
-  void setAudio(QByteArray&& data);
+  bool setAudio(QByteArray&& data);
 
   void setMeaning(const QString& meaning) {
     _meaning = meaning;
@@ -129,7 +129,7 @@ class LibraryItem : public QObject {
  private:
   void init(LibraryItem&& item);
   QByteArray readFile(const QString& path) const;
-  void writeFile(QTemporaryFile& file, QByteArray&& data);
+  bool writeFile(QTemporaryFile& file, QByteArray&& data);
 
  signals:
   void dummy();

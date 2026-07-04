@@ -79,12 +79,17 @@ void LibraryItem::setImage(QByteArray&& data) {
   _imageUrl = QUrl::fromLocalFile(_image.fileName());
 }
 
-void LibraryItem::setAudio(QByteArray&& data) {
+bool LibraryItem::setAudio(QByteArray&& data) {
   if (data.isEmpty()) {
-    return;
+    _audioUrl = QUrl{};
+    return true;
   }
-  writeFile(_audio, std::move(data));
+  if (!writeFile(_audio, std::move(data))) {
+    _audioUrl = QUrl{};
+    return false;
+  }
   _audioUrl = QUrl::fromLocalFile(_audio.fileName());
+  return true;
 }
 
 QByteArray LibraryItem::readFile(const QString& path) const {
@@ -98,8 +103,8 @@ QByteArray LibraryItem::readFile(const QString& path) const {
   return qCompress(file.readAll());
 }
 
-void LibraryItem::writeFile(QTemporaryFile& file, QByteArray&& data) {
-  writeCompressedBlob(file, data);
+bool LibraryItem::writeFile(QTemporaryFile& file, QByteArray&& data) {
+  return writeCompressedBlob(file, data);
 }
 
 }  // namespace lexis

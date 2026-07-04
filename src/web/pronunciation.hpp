@@ -10,6 +10,9 @@ class TTSService : public WebService {
 
  private:
   QStringList _voices;
+  QStringList _pendingQueries;
+  bool _voicesRequested = false;
+  qsizetype _voiceIndex = 0;
 
  public:
   explicit TTSService(QObject* parent = nullptr) : WebService(parent) {}
@@ -20,14 +23,17 @@ class TTSService : public WebService {
   virtual void requestAudio(const QString& query, const QString& voice) = 0;
   virtual void retrieveVoices(QNetworkReply* reply) = 0;
   virtual void retrieveAudio(QNetworkReply* reply);
-
- public slots:
-  void onFinished(QNetworkReply* reply) override;
-
- protected:
   void setVoices(const QStringList& voices) {
     _voices = voices;
   }
+  void onVoicesLoaded();
+
+ private:
+  void enqueueQuery(const QString& query);
+  void processPendingQueries();
+
+ public slots:
+  void onFinished(QNetworkReply* reply) override;
 
  signals:
   void audioReady(const QByteArray& audio);
@@ -86,6 +92,7 @@ class Pronunciation : public QObject {
 
  signals:
   void audioReady(const QByteArray& audio);
+  void audioFailed();
 };
 
 }  // namespace lexis

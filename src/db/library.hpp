@@ -35,6 +35,7 @@ class Library : public QObject {
   AppSettings _settings;
   Pronunciation* _pronunciation = nullptr;
   CurrentItem _audioItem;
+  int _pendingAudioItemId = -1;
   QString _databasePath;
   QHash<int, QUrl> _imageUrlCache;
   QHash<int, QTemporaryFile*> _imageFiles;
@@ -51,6 +52,7 @@ class Library : public QObject {
   Q_INVOKABLE void openRoot();
   Q_INVOKABLE void deleteLanguage(const QString& language);
   Q_INVOKABLE QUrl readAudio(int id);
+  Q_INVOKABLE void refreshAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE void updateCachedTranslation(int id, const QString& translation);
   Q_INVOKABLE TreeModel* getStructure();
@@ -97,6 +99,7 @@ class Library : public QObject {
 
  signals:
   void dummy();
+  void audioReady(int itemId, QUrl url);
   void languageImported(const QString& language);
   void databaseRestored();
 };

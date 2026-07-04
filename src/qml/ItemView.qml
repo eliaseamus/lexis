@@ -12,6 +12,9 @@ Pane {
   property alias audioUrl: pronunciation.source
   property string meaning
   property var duplicateWords: []
+  property bool playWhenReady: false
+  property int audioRetryCount: 0
+  readonly property int maxAudioRetries: 3
 
   signal duplicateSelected(int itemId)
 
@@ -48,10 +51,8 @@ Pane {
               text: qsTr("Pronunciation")
             }
             onClicked: {
-              if (audioUrl.toString().length === 0) {
-                audioUrl = library.readAudio(itemID);
-              }
-              pronunciation.play();
+              playWhenReady = true
+              playPronunciation()
             }
           }
           Item {Layout.fillWidth: true}
@@ -186,6 +187,54 @@ Pane {
   MediaPlayer {
     id: pronunciation
     audioOutput: AudioOutput {}
+
+    onErrorOccurred: (error, errorString) => {
+      if (playWhenReady) {
+        retryPronunciation()
+      }
+    }
+
+    onPlaybackStateChanged: {
+      if (playbackState === MediaPlayer.PlayingState) {
+        audioRetryCount = 0
+        playbackCheckTimer.stop()
+      }
+    }
+  }
+
+  Timer {
+    id: playbackCheckTimer
+    interval: 1000
+    onTriggered: {
+      if (!playWhenReady) {
+        return
+      }
+      if (pronunciation.playbackState !== MediaPlayer.PlayingState && pronunciation.position === 0) {
+        retryPronunciation()
+      }
+    }
+  }
+
+  Connections {
+    target: library
+
+    function onAudioReady(itemId, url) {
+      if (itemId !== itemID) {
+        return
+      }
+      if (url.toString().length === 0) {
+        if (playWhenReady) {
+          retryPronunciation()
+        }
+        return
+      }
+      audioUrl = url
+      if (!playWhenReady) {
+        return
+      }
+      pronunciation.play()
+      playbackCheckTimer.restart()
+    }
   }
 
   Connections {
@@ -284,7 +333,30 @@ Pane {
     body.visible = true;
   }
 
+  function playPronunciation() {
+    if (audioUrl.toString().length === 0) {
+      audioUrl = library.readAudio(itemID)
+      if (audioUrl.toString().length === 0) {
+        return
+      }
+    }
+    pronunciation.play()
+    playbackCheckTimer.restart()
+  }
+
+  function retryPronunciation() {
+    if (!playWhenReady || audioRetryCount >= maxAudioRetries) {
+      return
+    }
+    audioRetryCount++
+    audioUrl = ""
+    library.refreshAudio(itemID)
+  }
+
   function init() {
+    audioRetryCount = 0
+    playWhenReady = false
+    playbackCheckTimer.stop()
     spinner.visible = true;
     networkErrorScreen.visible = false;
     body.visible = false;
@@ -293,6 +365,12 @@ Pane {
     duplicateWords = library.findByTitle(title, itemID);
     dictionaryPage.text = "";
     insertMeaning.enabled = false;
+    if (audioUrl.toString().length === 0) {
+      const url = library.readAudio(itemID);
+      if (url.toString().length > 0) {
+        audioUrl = url;
+      }
+    }
     if (meaning.length > 0) {
       showMeaningFallback();
       return;

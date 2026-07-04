@@ -5,47 +5,80 @@
 #include <QJsonObject>
 #include <QNetworkReply>
 #include <random>
-#include <thread>
 
 #include "utils.hpp"
 
 namespace lexis {
 
-void TTSService::textToSpeech(const QString& query) {
-  using namespace std::chrono_literals;
-  static qsizetype voiceIndex = 0;
-
-  int i = 0;
-  const int attempts = 10;
-  while (!_voices.size()) {
-    qWarning() << "No voices saved, request voices once again";
-    requestVoices();
-    if (++i == attempts) {
-      break;
-    }
-    std::this_thread::sleep_for(500ms);
-  }
-
-  if (!_voices.size()) {
-    qWarning() << "No voices found, failed to request audio";
+void TTSService::enqueueQuery(const QString& query) {
+  if (query.isEmpty()) {
     return;
   }
-
-  requestAudio(query, _voices[voiceIndex]);
-
-  if (++voiceIndex >= _voices.size()) {
-    voiceIndex = 0;
+  if (!_pendingQueries.contains(query)) {
+    _pendingQueries.append(query);
+  }
+  if (!_voicesRequested) {
+    _voicesRequested = true;
+    requestVoices();
   }
 }
 
+void TTSService::processPendingQueries() {
+  if (_voices.isEmpty()) {
+    if (!_pendingQueries.isEmpty()) {
+      _pendingQueries.clear();
+      emit errorOccured(QStringLiteral("No voices available"));
+    }
+    return;
+  }
+
+  const auto pending = std::move(_pendingQueries);
+  for (const auto& query : pending) {
+    textToSpeech(query);
+  }
+}
+
+void TTSService::onVoicesLoaded() {
+  _voicesRequested = false;
+  processPendingQueries();
+}
+
+void TTSService::textToSpeech(const QString& query) {
+  if (query.isEmpty()) {
+    return;
+  }
+
+  if (!_voices.isEmpty()) {
+    requestAudio(query, _voices[_voiceIndex]);
+    if (++_voiceIndex >= _voices.size()) {
+      _voiceIndex = 0;
+    }
+    return;
+  }
+
+  enqueueQuery(query);
+}
+
 void TTSService::retrieveAudio(QNetworkReply* reply) {
-  emit audioReady(qCompress(reply->readAll()));
+  const auto data = reply->readAll();
+  if (data.isEmpty()) {
+    qWarning() << "Received empty audio from TTS service";
+    emit errorOccured(QStringLiteral("Empty audio response"));
+    return;
+  }
+  emit audioReady(qCompress(data));
 }
 
 void TTSService::onFinished(QNetworkReply* reply) {
   if (hasError(reply)) {
+    if (_voices.isEmpty() && !_pendingQueries.isEmpty()) {
+      _pendingQueries.clear();
+      _voicesRequested = false;
+      emit errorOccured(reply->errorString());
+    }
     return;
   }
+
   if (_voices.isEmpty()) {
     retrieveVoices(reply);
   } else {
@@ -92,6 +125,7 @@ void ElevenLabs::retrieveVoices(QNetworkReply* reply) {
     voices.append(voiceObject["voice_id"].toString());
   }
   setVoices(voices);
+  onVoicesLoaded();
 }
 
 PlayHT::PlayHT(QObject* parent) : TTSService(parent) {
@@ -136,6 +170,7 @@ void PlayHT::retrieveVoices(QNetworkReply* reply) {
     voices.append(voiceObject["id"].toString());
   }
   setVoices(voices);
+  onVoicesLoaded();
 }
 
 QString PlayHT::getLanguage() {
@@ -166,6 +201,8 @@ Pronunciation::Pronunciation(QObject* parent)
   _playHT->requestVoices();
   connect(_elevenLabs, &ElevenLabs::audioReady, this, &Pronunciation::sendAudio);
   connect(_playHT, &PlayHT::audioReady, this, &Pronunciation::sendAudio);
+  connect(_elevenLabs, &ElevenLabs::errorOccured, this, &Pronunciation::audioFailed);
+  connect(_playHT, &PlayHT::errorOccured, this, &Pronunciation::audioFailed);
 }
 
 void Pronunciation::get(const QString& query) {

@@ -27,6 +27,9 @@ Pane {
   property var pendingResolve: null
   property var lookupQueue: []
   property bool lookupBusy: false
+  property bool playWhenReady: false
+  property int audioRetryCount: 0
+  readonly property int maxAudioRetries: 3
 
   property var currentWord: currentIndex >= 0 && currentIndex < questions.length
                             ? questions[currentIndex] : null
@@ -158,8 +161,8 @@ Pane {
               Material.background: cardColor
               enabled: currentWord !== null
               onClicked: {
-                pronunciation.source = library.readAudio(currentWord.itemId)
-                pronunciation.play()
+                playWhenReady = true
+                playPronunciation()
               }
               ToolTip {
                 visible: parent.hovered
@@ -292,6 +295,54 @@ Pane {
   MediaPlayer {
     id: pronunciation
     audioOutput: AudioOutput {}
+
+    onErrorOccurred: (error, errorString) => {
+      if (playWhenReady) {
+        retryPronunciation()
+      }
+    }
+
+    onPlaybackStateChanged: {
+      if (playbackState === MediaPlayer.PlayingState) {
+        audioRetryCount = 0
+        playbackCheckTimer.stop()
+      }
+    }
+  }
+
+  Timer {
+    id: playbackCheckTimer
+    interval: 1000
+    onTriggered: {
+      if (!playWhenReady || !currentWord) {
+        return
+      }
+      if (pronunciation.playbackState !== MediaPlayer.PlayingState && pronunciation.position === 0) {
+        retryPronunciation()
+      }
+    }
+  }
+
+  Connections {
+    target: library
+
+    function onAudioReady(itemId, url) {
+      if (!currentWord || itemId !== currentWord.itemId) {
+        return
+      }
+      if (url.toString().length === 0) {
+        if (playWhenReady) {
+          retryPronunciation()
+        }
+        return
+      }
+      pronunciation.source = url
+      if (!playWhenReady) {
+        return
+      }
+      pronunciation.play()
+      playbackCheckTimer.restart()
+    }
   }
 
   Dictionary {
@@ -537,9 +588,39 @@ Pane {
     })
   }
 
+  function playPronunciation() {
+    if (!currentWord) {
+      return
+    }
+    playWhenReady = true
+    let url = pronunciation.source.toString()
+    if (url.length === 0) {
+      url = library.readAudio(currentWord.itemId).toString()
+      if (url.length === 0) {
+        return
+      }
+      pronunciation.source = url
+    }
+    pronunciation.play()
+    playbackCheckTimer.restart()
+  }
+
+  function retryPronunciation() {
+    if (!currentWord || !playWhenReady || audioRetryCount >= maxAudioRetries) {
+      return
+    }
+    audioRetryCount++
+    pronunciation.source = ""
+    library.refreshAudio(currentWord.itemId)
+  }
+
   function showQuestion() {
     selectedOption = -1
     currentOptions = []
+    audioRetryCount = 0
+    playWhenReady = false
+    playbackCheckTimer.stop()
+    pronunciation.stop()
 
     if (currentIndex >= questions.length) {
       if (questionsPresented === 0) {
