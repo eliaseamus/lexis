@@ -24,41 +24,21 @@
     </message>
 </context>
 <context>
-    <name>DuplicateItemDialog</name>
+    <name>DuplicateWordConfirmDialog</name>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="11"/>
-        <source>A word with this title already exists in your library.</source>
-        <translation>Слово с таким названием уже есть в вашей библиотеке.</translation>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="27"/>
+        <source>This word already exists in your library.</source>
+        <translation>Это слово уже есть в вашей библиотеке.</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="83"/>
-        <source>Select the copy to keep in each group. Other copies will be deleted.</source>
-        <translation>Выберите копию, которую нужно оставить в каждой группе. Остальные копии будут удалены.</translation>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="36"/>
+        <source>Add another entry with the same title?</source>
+        <translation>Добавить ещё одну запись с таким же названием?</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="114"/>
-        <source>Duplicate word: %1</source>
-        <translation>Дубликат слова: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="45"/>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="17"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="221"/>
-        <source>Keep this copy</source>
-        <translation>Оставить эту копию</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="249"/>
-        <source>Keep selected copies</source>
-        <translation>Оставить выбранные копии</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/DuplicateItemDialog.qml" line="254"/>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -163,6 +143,11 @@ and drop it in this area</source>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
+    <message>
+        <location filename="../src/qml/ItemView.qml" line="271"/>
+        <source>Start page</source>
+        <translation>Стартовая страница</translation>
+    </message>
 </context>
 <context>
     <name>LibraryItemConfiguration</name>
@@ -238,11 +223,6 @@ in the right bottom corner.</source>
         <translation>Библиотека пуста.
 Добавьте первый элемент с помощью кнопки &quot;+&quot;
 в правом нижнем углу.</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/LibraryView.qml" line="218"/>
-        <source>Your library contains items with duplicate titles.</source>
-        <translation>В вашей библиотеке есть элементы с одинаковыми названиями.</translation>
     </message>
 </context>
 <context>

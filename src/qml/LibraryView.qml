@@ -25,10 +25,7 @@ Pane {
   property var selectedItems: []
   property bool isSelectMode
   property alias toolBar: toolBar
-  property var duplicateNotifiedLanguages: []
   signal quitSelectMode
-
-  Component.onCompleted: notifyDuplicatesIfAny()
 
   ColumnLayout {
     id: layout
@@ -178,6 +175,8 @@ Pane {
   ItemView {
     id: itemView
     visible: false
+
+    onDuplicateSelected: (itemId) => openDuplicateWord(itemId)
   }
 
   QuizView {
@@ -211,21 +210,6 @@ Pane {
     x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay
-  }
-
-  DuplicateItemDialog {
-    id: libraryDuplicatesDialog
-    message: qsTr("Your library contains items with duplicate titles.")
-    x: (main.width - width) / 2 - sideBar.width
-    y: (main.height - height) / 2
-    parent: ApplicationWindow.overlay
-
-    onDuplicatesResolved: {
-      refresh();
-      duplicateNotifiedLanguages = duplicateNotifiedLanguages.filter(
-        (language) => language !== library.currentLanguage());
-      notifyDuplicatesIfAny();
-    }
   }
 
   RowLayout {
@@ -272,6 +256,21 @@ Pane {
     itemView.meaning = item["meaning"];
     itemView.init();
     stackView.push(itemView);
+  }
+
+  function openDuplicateWord(itemId) {
+    const item = library.getItem(itemId);
+    if (!item) {
+      return;
+    }
+    library.readAudio(itemId);
+    itemView.itemID = item.itemID;
+    itemView.title = item.title;
+    itemView.imageUrl = item.imageUrl;
+    itemView.itemColor = item.color;
+    itemView.audioUrl = item.audioUrl;
+    itemView.meaning = item.meaning;
+    itemView.init();
   }
 
   function editItem(item) {
@@ -328,24 +327,6 @@ Pane {
     itemConfiguration.typesNum = 8;
     library.openLanguage(language);
     refresh();
-    notifyDuplicatesIfAny();
-  }
-
-  function notifyDuplicatesIfAny() {
-    const language = library.currentLanguage();
-    if (language.length === 0) {
-      return;
-    }
-    if (duplicateNotifiedLanguages.indexOf(language) !== -1) {
-      return;
-    }
-    const duplicates = library.duplicateItems();
-    if (duplicates.length === 0) {
-      return;
-    }
-    duplicateNotifiedLanguages.push(language);
-    libraryDuplicatesDialog.matches = duplicates;
-    libraryDuplicatesDialog.open();
   }
 
   function moveItems(ids, targetParentId) {

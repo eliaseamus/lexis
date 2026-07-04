@@ -151,23 +151,7 @@ Rectangle {
       okTooltipText: qsTr("Insert title")
       okay: function () {
         if (imagePicker.hasQuery) {
-          const itemType = types[type.currentIndex];
-          if (itemType === "Word") {
-            const duplicates = library.findByTitle(titleItem.text, editMode ? itemID : -1);
-            if (duplicates.length > 0) {
-              duplicateItemDialog.matches = duplicates;
-              duplicateItemDialog.open();
-              return;
-            }
-          }
-          if (editMode) {
-            library.updateItem(newDbRecord, currentType);
-          } else {
-            library.addItem(newDbRecord);
-          }
-          libraryView.refresh();
-          popStack();
-          newItem.clear();
+          saveItem();
         }
       }
       cancel: function () {
@@ -203,12 +187,36 @@ Rectangle {
     }
   }
 
-  DuplicateItemDialog {
-    id: duplicateItemDialog
+  function saveItem() {
+    const itemType = types[type.currentIndex];
+    if (itemType === "Word") {
+      const duplicates = library.findByTitle(titleItem.text, editMode ? itemID : -1);
+      if (duplicates.length > 0) {
+        duplicateConfirmDialog.matches = duplicates;
+        duplicateConfirmDialog.open();
+        return;
+      }
+    }
+    commitItem();
+  }
+
+  function commitItem() {
+    if (editMode) {
+      library.updateItem(newDbRecord, currentType);
+    } else {
+      library.addItem(newDbRecord);
+    }
+    libraryView.refresh();
+    popStack();
+    newItem.clear();
+  }
+
+  DuplicateWordConfirmDialog {
+    id: duplicateConfirmDialog
     parent: ApplicationWindow.overlay
     x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
 
-    onDuplicatesResolved: libraryView.refresh()
+    onAccepted: commitItem()
   }
 }

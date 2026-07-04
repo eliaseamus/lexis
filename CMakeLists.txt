@@ -77,7 +77,7 @@ qt_add_qml_module(${PROJECT_NAME}
   QML_FILES
     src/qml/CategoryPieChart.qml
     src/qml/DeleteDialog.qml
-    src/qml/DuplicateItemDialog.qml
+    src/qml/DuplicateWordConfirmDialog.qml
     src/qml/HelpDialog.qml
     src/qml/Icon.qml
     src/qml/ImagePicker.qml

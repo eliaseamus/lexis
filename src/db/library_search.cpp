@@ -176,40 +176,4 @@ QVariantList LibrarySearch::findByTitle(const QSqlDatabase& db, const QString& l
   return results;
 }
 
-QVariantList LibrarySearch::findAllDuplicateWords(const QSqlDatabase& db, const QString& languageCode,
-                                                  const SectionTypeManager& typeManager) {
-  QVariantList results;
-  if (languageCode.isEmpty()) {
-    return results;
-  }
-
-  QSqlQuery sqlQuery(db);
-  sqlQuery.prepare(
-    "SELECT id, parent_id, title, meaning, type, color, image "
-    "FROM items "
-    "WHERE language_code = :language_code "
-    "  AND type = :word_type "
-    "  AND lower(title) IN ("
-    "    SELECT lower(title) FROM items "
-    "    WHERE language_code = :language_code AND type = :word_type "
-    "    GROUP BY lower(title) "
-    "    HAVING COUNT(*) > 1"
-    "  ) "
-    "ORDER BY lower(title), id");
-  sqlQuery.bindValue(":language_code", languageCode);
-  sqlQuery.bindValue(":word_type", kWordType);
-
-  if (!sqlQuery.exec()) {
-    qWarning() << "Duplicate scan failed:" << sqlQuery.lastError();
-    return results;
-  }
-
-  const auto index = loadItemIndex(db, languageCode);
-  while (sqlQuery.next()) {
-    const auto title = sqlQuery.value("title").toString();
-    results.append(makeResultMap(sqlQuery, index, typeManager, title));
-  }
-  return results;
-}
-
 }  // namespace lexis

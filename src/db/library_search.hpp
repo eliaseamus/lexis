@@ -27,8 +27,6 @@ class LibrarySearch {
   static QVariantList findByTitle(const QSqlDatabase& db, const QString& languageCode,
                                   const QString& title, const SectionTypeManager& typeManager,
                                   int excludeItemId = -1);
-  static QVariantList findAllDuplicateWords(const QSqlDatabase& db, const QString& languageCode,
-                                            const SectionTypeManager& typeManager);
 };
 
 }  // namespace lexis

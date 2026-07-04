@@ -151,7 +151,7 @@ class LibrarySearchTest : public QObject {
     QSqlDatabase::removeDatabase("search_test");
   }
 
-  void findsAllDuplicateWordsInLibrary() {
+  void findsMultipleWordsWithSameTitle() {
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());
 
@@ -168,10 +168,19 @@ class LibrarySearchTest : public QObject {
       "VALUES (6, 'en', 4, 'Apple', '2026-01-01', '2026-01-01', 0, '#ffffff')");
 
     lexis::SectionTypeManager typeManager;
-    const auto duplicates = lexis::LibrarySearch::findAllDuplicateWords(db, "en", typeManager);
+    const auto duplicates = lexis::LibrarySearch::findByTitle(db, "en", "apple", typeManager);
     QCOMPARE(duplicates.size(), 2);
-    QCOMPARE(duplicates[0].toMap().value("title").toString(), QString("apple"));
-    QCOMPARE(duplicates[1].toMap().value("title").toString(), QString("Apple"));
+    QStringList titles;
+    for (const auto& duplicate : duplicates) {
+      titles.append(duplicate.toMap().value("title").toString());
+    }
+    QVERIFY(titles.contains("apple"));
+    QVERIFY(titles.contains("Apple"));
+
+    const auto excluded =
+      lexis::LibrarySearch::findByTitle(db, "en", "apple", typeManager, 5);
+    QCOMPARE(excluded.size(), 1);
+    QCOMPARE(excluded[0].toMap().value("title").toString(), QString("Apple"));
 
     db.close();
     QSqlDatabase::removeDatabase("search_test");
@@ -192,7 +201,6 @@ class LibrarySearchTest : public QObject {
     QVERIFY(insertItem(db, 7, "en", std::nullopt, "Food", 1));
 
     lexis::SectionTypeManager typeManager;
-    QCOMPARE(lexis::LibrarySearch::findAllDuplicateWords(db, "en", typeManager).size(), 0);
     QCOMPARE(lexis::LibrarySearch::findByTitle(db, "en", "Personality", typeManager).size(), 0);
     QCOMPARE(lexis::LibrarySearch::findByTitle(db, "en", "Food", typeManager).size(), 0);
 

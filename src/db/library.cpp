@@ -547,13 +547,6 @@ QVariantList Library::findByTitle(const QString& title, int excludeItemId) const
                                     excludeItemId);
 }
 
-QVariantList Library::duplicateItems() const {
-  if (_language.isEmpty()) {
-    return {};
-  }
-  return LibrarySearch::findAllDuplicateWords(QSqlDatabase::database(), _language, _typeManager);
-}
-
 QVariantMap Library::languageStatistics() const {
   if (_language.isEmpty()) {
     return {};
@@ -663,35 +656,6 @@ QUrl Library::itemImageUrl(int id) {
   _imageFiles.insert(id, file);
   _imageUrlCache.insert(id, url);
   return url;
-}
-
-void Library::resolveDuplicateGroup(int keepItemId, const QVariantList& items) {
-  if (_language.isEmpty() || keepItemId <= 0) {
-    return;
-  }
-
-  for (const auto& value : items) {
-    const auto map = value.toMap();
-    const auto id = map.value(QStringLiteral("itemId")).toInt();
-    if (id <= 0 || id == keepItemId) {
-      continue;
-    }
-    const auto type =
-      _typeManager.librarySectionType(map.value(QStringLiteral("typeEnum")).toInt());
-    deleteItem(id, type);
-  }
-}
-
-void Library::reloadCurrentFolder() {
-  if (_language.isEmpty()) {
-    clearSections();
-    return;
-  }
-  if (_currentParentId == kRootParentId) {
-    openRoot();
-  } else {
-    openFolder(_currentParentId);
-  }
 }
 
 }  // namespace lexis

@@ -11,22 +11,12 @@ Pane {
   property color itemColor
   property alias audioUrl: pronunciation.source
   property string meaning
+  property var duplicateWords: []
+
+  signal duplicateSelected(int itemId)
 
   ColumnLayout {
     anchors.fill: parent
-    Item {Layout.fillHeight: true}
-    BusyIndicator {
-      id: spinner
-      visible: true
-      Layout.alignment: Qt.AlignCenter
-    }
-    NetworkErrorScreen {
-      id: networkErrorScreen
-      visible: false
-      Layout.fillWidth: true
-      Layout.fillHeight: true
-      Layout.rightMargin: sideBar.width
-    }
 
     RowLayout {
       id: body
@@ -106,6 +96,39 @@ Pane {
             }
           }
           Item {Layout.fillWidth: true}
+          ColumnLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+            visible: body.visible && duplicateWords.length > 0
+            spacing: 8
+
+            Repeater {
+              model: duplicateWords
+
+              Item {
+                required property var modelData
+                Layout.alignment: Qt.AlignHCenter
+                implicitWidth: pathLink.implicitWidth + 16
+                implicitHeight: pathLink.implicitHeight + 8
+
+                MouseArea {
+                  id: pathLinkArea
+                  anchors.fill: parent
+                  hoverEnabled: true
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: duplicateSelected(modelData.itemId)
+
+                  PrettyLabel {
+                    id: pathLink
+                    anchors.centerIn: parent
+                    dimmed: !pathLinkArea.containsMouse
+                    title: formatDuplicatePath(modelData)
+                  }
+                }
+              }
+            }
+          }
+          Item {Layout.fillWidth: true}
           RoundButton {
             id: insertMeaning
             icon.source: "qrc:/qt/qml/QLexis/icons/plus.png"
@@ -144,7 +167,20 @@ Pane {
         }
       }
     }
-    Item {Layout.fillHeight: true}
+
+    BusyIndicator {
+      id: spinner
+      visible: true
+      Layout.alignment: Qt.AlignCenter
+    }
+
+    NetworkErrorScreen {
+      id: networkErrorScreen
+      visible: false
+      Layout.fillWidth: true
+      Layout.fillHeight: true
+      Layout.rightMargin: sideBar.width
+    }
   }
 
   MediaPlayer {
@@ -225,12 +261,20 @@ Pane {
     }
   }
 
+  function formatDuplicatePath(item) {
+    if (item.breadcrumb && item.breadcrumb.length > 0) {
+      return item.breadcrumb.split(" \u203a ").join(" \u2192 ");
+    }
+    return qsTr("Start page") + " \u2192 " + item.title;
+  }
+
   function init() {
     spinner.visible = true;
     networkErrorScreen.visible = false;
     body.visible = false;
     transcription.title = "";
     transcription.visible = false;
+    duplicateWords = library.findByTitle(title, itemID);
     if (meaning.length > 0) {
       dictionaryPage.textFormat = Text.PlainText;
       dictionaryPage.text = meaning;
@@ -243,5 +287,4 @@ Pane {
       dictionary.get(title);
     }
   }
-
 }
