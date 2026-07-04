@@ -75,7 +75,7 @@ You may also revise the groups added into the collection by moving them or their
 Use the toolbar search button or **Ctrl+F** to find words and folders across the entire library. Results show a breadcrumb path; selecting a word opens its card, selecting a folder navigates into it.
 
 ### Quiz
-Start a multiple-choice quiz from the toolbar (**Ctrl+Shift+Q**), the sidebar *Library data* menu, or an item's context menu. The quiz uses words from the current folder (or the whole language at the root level). You pick the correct translation from four options; results show your score and accuracy at the end.
+Start a multiple-choice quiz from the toolbar (**Ctrl+Shift+Q**), the sidebar *Library data* menu, or an item's context menu. The quiz uses words from the current folder (or the whole language at the root level). Each session mixes **word → translation** and **translation → word** questions. You pick the correct answer from four options; results show your score and accuracy at the end.
 
 ### Statistics
 Open library-wide statistics from *Library data → Statistics*, or per-item statistics from an item's context menu. View word counts, recent additions, and a breakdown of words by subject group.

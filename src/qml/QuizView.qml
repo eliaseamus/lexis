@@ -23,6 +23,8 @@ Pane {
   property string errorMessage: ""
   property var currentOptions: []
   property string correctAnswer: ""
+  property string currentPromptText: ""
+  property bool currentQuestionReverse: false
   property int selectedOption: -1
   property var pendingResolve: null
   property var lookupQueue: []
@@ -32,7 +34,7 @@ Pane {
   readonly property int maxAudioRetries: 3
 
   property var currentWord: currentIndex >= 0 && currentIndex < questions.length
-                            ? questions[currentIndex] : null
+                            ? questions[currentIndex].word : null
   property color cardColor: {
     if (!currentWord || !currentWord.color || currentWord.color.length === 0) {
       return settings.accentColor
@@ -149,12 +151,13 @@ Pane {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             color: cardFgColor
-            font.pointSize: 36
-            text: currentWord ? currentWord.title : ""
+            font.pointSize: currentQuestionReverse ? 28 : 36
+            text: currentQuestionReverse ? currentPromptText : (currentWord ? currentWord.title : "")
           }
 
           RowLayout {
             Layout.alignment: Qt.AlignHCenter
+            visible: !currentQuestionReverse && currentWord !== null
             RoundButton {
               icon.source: "qrc:/qt/qml/QLexis/icons/audio.png"
               icon.color: cardFgColor
@@ -175,7 +178,7 @@ Pane {
             Layout.fillWidth: true
             Layout.topMargin: 8
             color: cardFgColor
-            text: qsTr("Choose the translation:")
+            text: currentQuestionReverse ? qsTr("Choose the word:") : qsTr("Choose the translation:")
           }
 
           Repeater {
@@ -550,7 +553,7 @@ Pane {
     return { correctAnswer: correct, options: options }
   }
 
-  function prepareQuestionOptions(word, attempt) {
+  function prepareForwardQuestionOptions(word, attempt) {
     if (attempt > 10) {
       currentIndex++
       showQuestion()
@@ -570,19 +573,62 @@ Pane {
     resolveWords(wordsNeeded, (answers) => {
       const wordTranslations = answers[word.itemId] || []
       if (wordTranslations.length === 0) {
-        prepareQuestionOptions(word, attempt + 1)
+        prepareForwardQuestionOptions(word, attempt + 1)
         return
       }
 
       const distractorTranslations = distractorWords.map((entry) => answers[entry.itemId] || [])
       const built = buildQuestionOptions(wordTranslations, distractorTranslations, targetOptionCount)
       if (built.options.length < targetOptionCount || uniqueOptionCount(built.options) < targetOptionCount) {
-        prepareQuestionOptions(word, attempt + 1)
+        prepareForwardQuestionOptions(word, attempt + 1)
         return
       }
 
+      currentQuestionReverse = false
+      currentPromptText = ""
       correctAnswer = built.correctAnswer
       currentOptions = shuffle(built.options)
+      questionsPresented++
+      phase = "question"
+    })
+  }
+
+  function prepareReverseQuestionOptions(word, attempt) {
+    if (attempt > 10) {
+      currentIndex++
+      showQuestion()
+      return
+    }
+
+    const targetOptionCount = Math.min(4, scopeWords.length)
+    const distractorCount = targetOptionCount - 1
+    const distractorWords = pickDistractorWords(word, distractorCount)
+    if (distractorWords.length < distractorCount) {
+      currentIndex++
+      showQuestion()
+      return
+    }
+
+    resolveWords([word], (answers) => {
+      const wordTranslations = answers[word.itemId] || []
+      if (wordTranslations.length === 0) {
+        prepareReverseQuestionOptions(word, attempt + 1)
+        return
+      }
+
+      const options = [word.title]
+      for (let i = 0; i < distractorWords.length; i++) {
+        options.push(distractorWords[i].title)
+      }
+      if (options.length < targetOptionCount || uniqueOptionCount(options) < targetOptionCount) {
+        prepareReverseQuestionOptions(word, attempt + 1)
+        return
+      }
+
+      currentQuestionReverse = true
+      currentPromptText = formatOptionText(wordTranslations)
+      correctAnswer = word.title
+      currentOptions = shuffle(options)
       questionsPresented++
       phase = "question"
     })
@@ -633,7 +679,12 @@ Pane {
     }
 
     phase = "loading"
-    prepareQuestionOptions(questions[currentIndex], 0)
+    currentQuestionReverse = questions[currentIndex].reverse
+    if (currentQuestionReverse) {
+      prepareReverseQuestionOptions(questions[currentIndex].word, 0)
+    } else {
+      prepareForwardQuestionOptions(questions[currentIndex].word, 0)
+    }
   }
 
   function selectOption(index) {
@@ -687,7 +738,10 @@ Pane {
       return
     }
 
-    questions = shuffle(scopeWords).slice(0, Math.min(10, scopeWords.length))
+    questions = shuffle(scopeWords).slice(0, Math.min(10, scopeWords.length)).map((word) => ({
+      word: word,
+      reverse: Math.random() >= 0.5
+    }))
     showQuestion()
   }
 }

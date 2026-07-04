@@ -37,7 +37,7 @@ Each SectionView has a [GridView](https://doc.qt.io/qt-6/qml-qtquick-gridview.ht
 `ItemView` displays the dictionary definitions of a chosen word, pronunciation button, transcription and an icon. In case dictionary service doesn't provide any information on a word of interest,
 the user may add their own notes on it using `insertMeaning` button.
 
-`QuizView` is pushed onto the StackView for multiple-choice vocabulary quizzes. It loads translations for words in the current scope via stored meanings, cached translations, and the `Dictionary` service, then presents up to ten questions with immediate feedback.
+`QuizView` is pushed onto the StackView for multiple-choice vocabulary quizzes. It loads translations for words in the current scope via stored meanings, cached translations, and the `Dictionary` service, then presents up to ten questions with immediate feedback. Questions alternate randomly between showing a word and asking for its translation, and showing a translation and asking for the word.
 
 <p align="center">
   <img alt="Open word card" src="uml/diagrams/open_item.png">
