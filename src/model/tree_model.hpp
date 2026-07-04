@@ -18,7 +18,9 @@ class TreeModel : public QAbstractItemModel {
   explicit TreeModel(QObject* parent = nullptr);
   void setRoot(std::unique_ptr<TreeItem>&& root);
   Q_INVOKABLE QVariant data(const QModelIndex& index, int role) const override;
-  Q_INVOKABLE QVariant columnData(const QModelIndex& index, int column);
+  Q_INVOKABLE QVariant columnData(const QModelIndex& index, int column) const;
+  Q_INVOKABLE QModelIndex findIndexById(int itemId) const;
+  Q_INVOKABLE QVariantList findMatches(const QString& query) const;
   Q_INVOKABLE Qt::ItemFlags flags(const QModelIndex& index) const override;
   Q_INVOKABLE QModelIndex index(int row, int column, const QModelIndex& parent = {}) const override;
   Q_INVOKABLE QModelIndex parent(const QModelIndex& index) const override;

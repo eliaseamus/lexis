@@ -66,10 +66,9 @@ Dialog {
     ColumnLayout {
       width: statisticsDialog.availableWidth
       spacing: 12
-
       PrettyLabel {
         visible: !libraryMode && stats.title !== undefined
-        Layout.fillWidth: true
+        Layout.alignment: Qt.AlignHCenter
         title: statText(stats.title)
       }
 
@@ -149,10 +148,6 @@ Dialog {
         visible: stats.wordsByCategory !== undefined && stats.wordsByCategory.length > 0
         Layout.fillWidth: true
         spacing: 8
-
-        PrettyLabel {
-          title: qsTr("Words by subject group")
-        }
 
         CategoryPieChart {
           Layout.fillWidth: true

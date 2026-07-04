@@ -24,7 +24,6 @@ Menu {
       }
       moveDialog.sourceParentId = librarySection.currentParentId;
       moveDialog.model = library.getStructure();
-      moveDialog.view.expandRecursively();
       moveDialog.open();
     }
   }

@@ -226,6 +226,14 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>MoveDialog</name>
+    <message>
+        <location filename="../src/qml/MoveDialog.qml" line="68"/>
+        <source>Filter subject groups</source>
+        <translation>Фильтр групп</translation>
+    </message>
+</context>
+<context>
     <name>NetworkErrorScreen</name>
     <message>
         <location filename="../src/qml/NetworkErrorScreen.qml" line="20"/>
