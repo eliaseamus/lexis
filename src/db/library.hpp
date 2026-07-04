@@ -52,6 +52,7 @@ class Library : public QObject {
   Q_INVOKABLE void deleteLanguage(const QString& language);
   Q_INVOKABLE QUrl readAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
+  Q_INVOKABLE void updateCachedTranslation(int id, const QString& translation);
   Q_INVOKABLE TreeModel* getStructure();
   Q_INVOKABLE bool exportLanguage(const QString& language, const QUrl& fileUrl);
   Q_INVOKABLE bool importLanguage(const QUrl& fileUrl);

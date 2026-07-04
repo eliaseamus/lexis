@@ -275,8 +275,8 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/QuizView.qml" line="88"/>
-        <source>Loading quiz…</source>
-        <translation>Загрузка викторины…</translation>
+        <source>Loading question…</source>
+        <translation>Загрузка вопроса…</translation>
     </message>
     <message>
         <location filename="../src/qml/QuizView.qml" line="97"/>
@@ -342,8 +342,8 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/QuizView.qml" line="525"/>
-        <source>Need at least 4 words with translations in this scope.</source>
-        <translation>Для викторины нужно не менее 4 слов с переводами в выбранной области.</translation>
+        <source>Could not load enough translations for a quiz in this scope.</source>
+        <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
 </context>
 <context>

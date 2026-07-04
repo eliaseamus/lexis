@@ -11,13 +11,14 @@ Pane {
   property string scopeTitle: ""
   property var scopeWords: []
   property var questions: []
-  property var answerCache: ({})
+  property var translationListsCache: ({})
   property int currentIndex: 0
   property int score: 0
   property int wrongCount: 0
   property int loadTotal: 0
   property int loadDone: 0
   property int loadProgress: 0
+  property int questionsPresented: 0
   property string phase: "loading"
   property string errorMessage: ""
   property var currentOptions: []
@@ -80,7 +81,7 @@ Pane {
       PrettyLabel {
         visible: phase === "loading"
         Layout.alignment: Qt.AlignHCenter
-        title: qsTr("Loading quiz…")
+        title: qsTr("Loading question…")
       }
 
       Label {
@@ -294,21 +295,11 @@ Pane {
     target: dictionary
 
     function onDefinitionsReady(definitions) {
-      var text = ""
-      for (let i = 0; i < definitions.length && text.length === 0; i++) {
-        const translations = definitions[i].translations
-        for (let j = 0; j < translations.length; j++) {
-          if (translations[j].text.length > 0) {
-            text = translations[j].text
-            break
-          }
-        }
-      }
-      finishLookup(text)
+      finishLookup(translationsFromDefinitions(definitions))
     }
 
     function onErrorOccured(error) {
-      finishLookup("")
+      finishLookup([])
     }
   }
 
@@ -322,11 +313,49 @@ Pane {
     return idx >= 0 ? plain.substring(0, idx).trim() : plain
   }
 
-  function answerFromMeaning(meaning) {
-    if (!meaning || meaning.length === 0) {
-      return ""
+  function parseCachedTranslations(text) {
+    if (!text || text.length === 0) {
+      return []
     }
-    return firstLine(meaning)
+    const seen = {}
+    const result = []
+    const lines = text.split("\n")
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim()
+      if (line.length > 0 && !seen[line]) {
+        seen[line] = true
+        result.push(line)
+      }
+    }
+    return result
+  }
+
+  function joinCachedTranslations(translations) {
+    return translations.join("\n")
+  }
+
+  function translationsFromDefinitions(definitions) {
+    const seen = {}
+    const result = []
+    for (let i = 0; i < definitions.length; i++) {
+      const translations = definitions[i].translations
+      for (let j = 0; j < translations.length; j++) {
+        const text = stripHtml(translations[j].text).trim()
+        if (text.length > 0 && !seen[text]) {
+          seen[text] = true
+          result.push(text)
+        }
+      }
+    }
+    return result
+  }
+
+  function translationsFromMeaning(meaning) {
+    if (!meaning || meaning.length === 0) {
+      return []
+    }
+    const line = firstLine(meaning)
+    return line.length > 0 ? [line] : []
   }
 
   function shuffle(array) {
@@ -340,27 +369,20 @@ Pane {
     return copy
   }
 
-  function cachedAnswer(word) {
-    const text = answerCache[word.itemId]
-    return text !== undefined ? text : ""
+  function formatOptionText(translations) {
+    if (!translations || translations.length === 0) {
+      return ""
+    }
+    return translations.join(", ")
   }
 
-  function translationPool() {
-    const answers = []
-    const seen = {}
-    scopeWords.forEach((word) => {
-      const text = cachedAnswer(word)
-      if (text.length > 0 && !seen[text]) {
-        seen[text] = true
-        answers.push(text)
-      }
-    })
-    return answers
-  }
-
-  function pickDistractors(correctText, pool, count) {
-    const candidates = pool.filter((text) => text.length > 0 && text !== correctText)
-    return shuffle(candidates).slice(0, count)
+  function storeTranslations(word, translations) {
+    translationListsCache[word.itemId] = translations
+    if (translations.length > 0) {
+      const joined = joinCachedTranslations(translations)
+      library.updateCachedTranslation(word.itemId, joined)
+      word.cachedTranslation = joined
+    }
   }
 
   function enqueueLookup(word, callback) {
@@ -376,24 +398,32 @@ Pane {
     const item = lookupQueue.shift()
     const word = item.word
 
-    if (answerCache[word.itemId] !== undefined) {
-      item.callback(answerCache[word.itemId])
+    if (translationListsCache[word.itemId] !== undefined) {
+      item.callback(translationListsCache[word.itemId])
       processLookupQueue()
       return
     }
 
-    const fromMeaning = answerFromMeaning(word.meaning)
+    const fromMeaning = translationsFromMeaning(word.meaning)
     if (fromMeaning.length > 0) {
-      answerCache[word.itemId] = fromMeaning
+      translationListsCache[word.itemId] = fromMeaning
       item.callback(fromMeaning)
       processLookupQueue()
       return
     }
 
+    const fromCachedTranslation = parseCachedTranslations(word.cachedTranslation)
+    if (fromCachedTranslation.length > 0) {
+      translationListsCache[word.itemId] = fromCachedTranslation
+      item.callback(fromCachedTranslation)
+      processLookupQueue()
+      return
+    }
+
     lookupBusy = true
-    pendingResolve = (text) => {
-      answerCache[word.itemId] = text
-      item.callback(text)
+    pendingResolve = (translations) => {
+      storeTranslations(word, translations)
+      item.callback(translations)
       lookupBusy = false
       pendingResolve = null
       processLookupQueue()
@@ -401,20 +431,20 @@ Pane {
     dictionary.get(word.title)
   }
 
-  function finishLookup(text) {
+  function finishLookup(translations) {
     if (!pendingResolve) {
       return
     }
-    pendingResolve(text)
+    pendingResolve(translations)
   }
 
   function updateLoadProgress() {
     loadProgress = loadTotal > 0 ? Math.round(100 * loadDone / loadTotal) : 0
   }
 
-  function preloadTranslations(words, callback) {
+  function resolveWords(words, callback) {
     if (words.length === 0) {
-      callback()
+      callback({})
       return
     }
 
@@ -422,16 +452,79 @@ Pane {
     loadDone = 0
     updateLoadProgress()
 
+    const answers = {}
     let remaining = words.length
     words.forEach((word) => {
-      enqueueLookup(word, () => {
+      enqueueLookup(word, (translations) => {
+        answers[word.itemId] = translations
         loadDone++
         updateLoadProgress()
         remaining--
         if (remaining === 0) {
-          callback()
+          callback(answers)
         }
       })
+    })
+  }
+
+  function pickDistractorWords(word, count) {
+    const others = scopeWords.filter((entry) => entry.itemId !== word.itemId)
+    return shuffle(others).slice(0, count)
+  }
+
+  function uniqueOptionCount(options) {
+    const seen = {}
+    for (let i = 0; i < options.length; i++) {
+      seen[options[i]] = true
+    }
+    return Object.keys(seen).length
+  }
+
+  function buildQuestionOptions(wordTranslations, distractorTranslations) {
+    const correct = formatOptionText(wordTranslations)
+    const options = [correct]
+    for (let i = 0; i < distractorTranslations.length && options.length < 4; i++) {
+      const text = formatOptionText(distractorTranslations[i])
+      if (text.length > 0) {
+        options.push(text)
+      }
+    }
+    return { correctAnswer: correct, options: options }
+  }
+
+  function prepareQuestionOptions(word, attempt) {
+    if (attempt > 10) {
+      currentIndex++
+      showQuestion()
+      return
+    }
+
+    const distractorWords = pickDistractorWords(word, 3)
+    if (distractorWords.length < 3) {
+      currentIndex++
+      showQuestion()
+      return
+    }
+
+    const wordsNeeded = [word].concat(distractorWords)
+    resolveWords(wordsNeeded, (answers) => {
+      const wordTranslations = answers[word.itemId] || []
+      if (wordTranslations.length === 0) {
+        prepareQuestionOptions(word, attempt + 1)
+        return
+      }
+
+      const distractorTranslations = distractorWords.map((entry) => answers[entry.itemId] || [])
+      const built = buildQuestionOptions(wordTranslations, distractorTranslations)
+      if (built.options.length < 4 || uniqueOptionCount(built.options) < 4) {
+        prepareQuestionOptions(word, attempt + 1)
+        return
+      }
+
+      correctAnswer = built.correctAnswer
+      currentOptions = shuffle(built.options)
+      questionsPresented++
+      phase = "question"
     })
   }
 
@@ -440,29 +533,17 @@ Pane {
     currentOptions = []
 
     if (currentIndex >= questions.length) {
-      phase = "done"
+      if (questionsPresented === 0) {
+        phase = "error"
+        errorMessage = qsTr("Could not load enough translations for a quiz in this scope.")
+      } else {
+        phase = "done"
+      }
       return
     }
 
-    const word = questions[currentIndex]
-    const answer = cachedAnswer(word)
-    if (answer.length === 0) {
-      currentIndex++
-      showQuestion()
-      return
-    }
-
-    correctAnswer = answer
-    const pool = translationPool()
-    const distractors = pickDistractors(answer, pool, 3)
-    if (distractors.length < 3) {
-      currentIndex++
-      showQuestion()
-      return
-    }
-
-    currentOptions = shuffle([answer].concat(distractors))
-    phase = "question"
+    phase = "loading"
+    prepareQuestionOptions(questions[currentIndex], 0)
   }
 
   function selectOption(index) {
@@ -494,11 +575,12 @@ Pane {
     currentIndex = 0
     score = 0
     wrongCount = 0
+    questionsPresented = 0
     loadTotal = 0
     loadDone = 0
     loadProgress = 0
     selectedOption = -1
-    answerCache = {}
+    translationListsCache = {}
     lookupQueue = []
     lookupBusy = false
     pendingResolve = null
@@ -513,17 +595,7 @@ Pane {
       return
     }
 
-    preloadTranslations(scopeWords, () => {
-      const pool = translationPool()
-      if (pool.length < 4) {
-        phase = "error"
-        errorMessage = qsTr("Need at least 4 words with translations in this scope.")
-        return
-      }
-
-      const validWords = scopeWords.filter((word) => cachedAnswer(word).length > 0)
-      questions = shuffle(validWords).slice(0, Math.min(10, validWords.length))
-      showQuestion()
-    })
+    questions = shuffle(scopeWords).slice(0, Math.min(10, scopeWords.length))
+    showQuestion()
   }
 }

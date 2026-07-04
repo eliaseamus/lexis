@@ -304,6 +304,25 @@ void Library::updateMeaning(int id, const QString& meaning) {
   getSection(LibrarySectionType::kWord)->updateMeaning(id, meaning);
 }
 
+void Library::updateCachedTranslation(int id, const QString& translation) {
+  if (_language.isEmpty() || id <= 0) {
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    "UPDATE items SET cached_translation = :translation "
+    "WHERE id = :id AND language_code = :language_code");
+  query.bindValue(":translation", translation);
+  query.bindValue(":id", id);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update cached translation for item %1:").arg(id)
+               << query.lastError();
+  }
+}
+
 TreeModel* Library::getStructure() {
   static TreeModel* prevStructure = nullptr;
   auto headerData = QVariantList{"title", "parentId"};

@@ -192,6 +192,10 @@ Pane {
     target: dictionary
 
     function onErrorOccured(error) {
+      if (meaning.length > 0) {
+        showMeaningFallback()
+        return
+      }
       networkErrorScreen.errorString = error;
       spinner.visible = false;
       networkErrorScreen.visible = true;
@@ -240,8 +244,7 @@ Pane {
         dictionaryPage.textFormat = Text.RichText;
         dictionaryPage.text = dictionaryText;
       } else {
-        dictionaryPage.textFormat = Text.PlainText;
-        insertMeaning.enabled = true;
+        showMeaningFallback();
       }
     }
   }
@@ -268,6 +271,19 @@ Pane {
     return qsTr("Start page") + " \u2192 " + item.title;
   }
 
+  function showMeaningFallback() {
+    dictionaryPage.textFormat = Text.PlainText;
+    if (meaning.length > 0) {
+      dictionaryPage.text = meaning;
+    } else {
+      dictionaryPage.text = "";
+    }
+    insertMeaning.enabled = true;
+    spinner.visible = false;
+    networkErrorScreen.visible = false;
+    body.visible = true;
+  }
+
   function init() {
     spinner.visible = true;
     networkErrorScreen.visible = false;
@@ -275,16 +291,12 @@ Pane {
     transcription.title = "";
     transcription.visible = false;
     duplicateWords = library.findByTitle(title, itemID);
+    dictionaryPage.text = "";
+    insertMeaning.enabled = false;
     if (meaning.length > 0) {
-      dictionaryPage.textFormat = Text.PlainText;
-      dictionaryPage.text = meaning;
-      insertMeaning.enabled = true;
-      spinner.visible = false;
-      body.visible = true;
-    } else {
-      dictionaryPage.text = "";
-      insertMeaning.enabled = false;
-      dictionary.get(title);
+      showMeaningFallback();
+      return;
     }
+    dictionary.get(title);
   }
 }

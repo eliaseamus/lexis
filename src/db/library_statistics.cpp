@@ -230,7 +230,7 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
   QSqlQuery query(db);
   if (scopeRootId == kRootParentId) {
     query.prepare(
-      "SELECT id, title, meaning, color, "
+      "SELECT id, title, meaning, cached_translation, color, "
       "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
       "FROM items "
       "WHERE language_code = :language_code AND type = :word_type "
@@ -246,7 +246,7 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
       "  JOIN subtree s ON i.parent_id = s.id "
       "  WHERE i.language_code = :language_code"
       ") "
-      "SELECT id, title, meaning, color, "
+      "SELECT id, title, meaning, cached_translation, color, "
       "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
       "FROM items "
       "WHERE language_code = :language_code "
@@ -267,8 +267,9 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
     result.append(QVariantMap{
       {QStringLiteral("itemId"),   query.value("id").toInt()              },
       {QStringLiteral("title"),    query.value("title").toString()        },
-      {QStringLiteral("meaning"),  query.value("meaning").toString()      },
-      {QStringLiteral("color"),    query.value("color").toString()        },
+      {QStringLiteral("meaning"),           query.value("meaning").toString()           },
+      {QStringLiteral("cachedTranslation"), query.value("cached_translation").toString()},
+      {QStringLiteral("color"),            query.value("color").toString()            },
       {QStringLiteral("hasImage"), query.value("has_image").toInt() != 0  }
     });
   }

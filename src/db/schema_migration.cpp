@@ -64,6 +64,7 @@ bool SchemaMigration::createSchemaV1(QSqlDatabase& db) {
     "  modification_time TEXT NOT NULL,"
     "  color TEXT,"
     "  meaning TEXT,"
+    "  cached_translation TEXT,"
     "  image BLOB,"
     "  audio BLOB"
     ")",
@@ -79,9 +80,36 @@ bool SchemaMigration::createSchemaV1(QSqlDatabase& db) {
   }
 
   if (currentVersion(db) == 0) {
-    return setVersion(db, kSchemaVersion);
+    return setVersion(db, 1);
   }
   return true;
+}
+
+bool SchemaMigration::migrateToV2(QSqlDatabase& db) {
+  QSqlQuery query(db);
+  query.prepare("PRAGMA table_info(items)");
+  if (!query.exec()) {
+    qWarning() << "read items schema:" << query.lastError();
+    return false;
+  }
+
+  while (query.next()) {
+    if (query.value("name").toString() == QStringLiteral("cached_translation")) {
+      return true;
+    }
+  }
+
+  return execSql(db, "ALTER TABLE items ADD COLUMN cached_translation TEXT");
+}
+
+bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
+  if (currentVersion(db) >= kSchemaVersion) {
+    return migrateToV2(db);
+  }
+  if (!migrateToV2(db)) {
+    return false;
+  }
+  return setVersion(db, kSchemaVersion);
 }
 
 int SchemaMigration::currentVersion(QSqlDatabase& db) {
@@ -256,22 +284,24 @@ bool SchemaMigration::ensureSchema(QSqlDatabase& db) {
   const bool hasItemsTable = tableExists(db, "items");
 
   if (!hasItemsTable && hasLegacyTables) {
-    return migrateFromLegacy(db);
+    if (!migrateFromLegacy(db)) {
+      return false;
+    }
+    return upgradeSchema(db);
   }
 
   if (!hasItemsTable) {
-    return createSchemaV1(db);
+    if (!createSchemaV1(db)) {
+      return false;
+    }
+    return upgradeSchema(db);
   }
 
   if (!createSchemaV1(db)) {
     return false;
   }
 
-  if (currentVersion(db) < kSchemaVersion) {
-    return setVersion(db, kSchemaVersion);
-  }
-
-  return true;
+  return upgradeSchema(db);
 }
 
 }  // namespace lexis

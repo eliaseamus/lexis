@@ -7,13 +7,15 @@
 
 namespace lexis {
 
-inline constexpr int kSchemaVersion = 1;
+inline constexpr int kSchemaVersion = 2;
 inline constexpr int kRootParentId = 0;
 
 class SchemaMigration {
  public:
   static bool ensureSchema(QSqlDatabase& db);
   static bool createSchemaV1(QSqlDatabase& db);
+  static bool migrateToV2(QSqlDatabase& db);
+  static bool upgradeSchema(QSqlDatabase& db);
 
  private:
   static int currentVersion(QSqlDatabase& db);
