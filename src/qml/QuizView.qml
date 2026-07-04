@@ -101,6 +101,12 @@ Pane {
         value: loadProgress
       }
 
+      PrettyLabel {
+        visible: phase === "error"
+        Layout.alignment: Qt.AlignHCenter
+        title: qsTr("Quiz unavailable")
+      }
+
       Label {
         visible: phase === "error"
         Layout.alignment: Qt.AlignHCenter
@@ -108,6 +114,7 @@ Pane {
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         color: settings.fgColor
+        font.pointSize: 16
         text: errorMessage
       }
 
@@ -480,10 +487,10 @@ Pane {
     return Object.keys(seen).length
   }
 
-  function buildQuestionOptions(wordTranslations, distractorTranslations) {
+  function buildQuestionOptions(wordTranslations, distractorTranslations, targetOptionCount) {
     const correct = formatOptionText(wordTranslations)
     const options = [correct]
-    for (let i = 0; i < distractorTranslations.length && options.length < 4; i++) {
+    for (let i = 0; i < distractorTranslations.length && options.length < targetOptionCount; i++) {
       const text = formatOptionText(distractorTranslations[i])
       if (text.length > 0) {
         options.push(text)
@@ -499,8 +506,10 @@ Pane {
       return
     }
 
-    const distractorWords = pickDistractorWords(word, 3)
-    if (distractorWords.length < 3) {
+    const targetOptionCount = Math.min(4, scopeWords.length)
+    const distractorCount = targetOptionCount - 1
+    const distractorWords = pickDistractorWords(word, distractorCount)
+    if (distractorWords.length < distractorCount) {
       currentIndex++
       showQuestion()
       return
@@ -515,8 +524,8 @@ Pane {
       }
 
       const distractorTranslations = distractorWords.map((entry) => answers[entry.itemId] || [])
-      const built = buildQuestionOptions(wordTranslations, distractorTranslations)
-      if (built.options.length < 4 || uniqueOptionCount(built.options) < 4) {
+      const built = buildQuestionOptions(wordTranslations, distractorTranslations, targetOptionCount)
+      if (built.options.length < targetOptionCount || uniqueOptionCount(built.options) < targetOptionCount) {
         prepareQuestionOptions(word, attempt + 1)
         return
       }
@@ -589,9 +598,11 @@ Pane {
     errorMessage = ""
 
     scopeWords = library.wordsInScope(scopeRootId)
-    if (scopeWords.length < 4) {
+    if (scopeWords.length < 2) {
       phase = "error"
-      errorMessage = qsTr("Need at least 4 words in this scope to start a quiz.")
+      errorMessage = scopeWords.length === 0
+                   ? qsTr("This scope has no words to quiz.")
+                   : qsTr("Need at least two words in this scope to start a quiz.")
       return
     }
 

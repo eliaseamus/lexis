@@ -26,17 +26,17 @@
 <context>
     <name>DuplicateWordConfirmDialog</name>
     <message>
-        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="27"/>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="28"/>
         <source>This word already exists in your library.</source>
         <translation>Это слово уже есть в вашей библиотеке.</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="36"/>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="123"/>
         <source>Add another entry with the same title?</source>
         <translation>Добавить ещё одну запись с таким же названием?</translation>
     </message>
     <message>
-        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="17"/>
+        <location filename="../src/qml/DuplicateWordConfirmDialog.qml" line="18"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
@@ -129,17 +129,17 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="58"/>
+        <location filename="../src/qml/ItemView.qml" line="48"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="121"/>
+        <location filename="../src/qml/ItemView.qml" line="144"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="105"/>
+        <location filename="../src/qml/ItemView.qml" line="95"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
@@ -206,17 +206,32 @@ and drop it in this area</source>
         <translation>Песня</translation>
     </message>
     <message>
+        <location filename="../src/qml/LibraryView.qml" line="222"/>
+        <source>Quiz</source>
+        <translation>Викторина</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="475"/>
+        <source>This scope has no words to quiz.</source>
+        <translation>В выбранной области нет слов для викторины.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="478"/>
+        <source>Need at least two words in this scope to start a quiz.</source>
+        <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
+    </message>
+    <message>
         <location filename="../src/qml/LibraryView.qml" line="11"/>
         <source>Word</source>
         <translation>Слово</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="55"/>
+        <location filename="../src/qml/LibraryView.qml" line="52"/>
         <source>Select a language to learn</source>
         <translation>Выбрать язык для изучения</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="70"/>
+        <location filename="../src/qml/LibraryView.qml" line="67"/>
         <source>Library is empty.
 Add the first item using &quot;+&quot; button
 in the right bottom corner.</source>
@@ -228,7 +243,7 @@ in the right bottom corner.</source>
 <context>
     <name>MoveDialog</name>
     <message>
-        <location filename="../src/qml/MoveDialog.qml" line="68"/>
+        <location filename="../src/qml/MoveDialog.qml" line="75"/>
         <source>Filter subject groups</source>
         <translation>Фильтр групп</translation>
     </message>
@@ -259,89 +274,99 @@ in the right bottom corner.</source>
 <context>
     <name>QuizView</name>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="54"/>
+        <location filename="../src/qml/QuizView.qml" line="55"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="61"/>
+        <location filename="../src/qml/QuizView.qml" line="62"/>
         <source>Question %1 of %2</source>
         <translation>Вопрос %1 из %2</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="67"/>
+        <location filename="../src/qml/QuizView.qml" line="68"/>
         <source>Score: %1</source>
         <translation>Счёт: %1</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="88"/>
+        <location filename="../src/qml/QuizView.qml" line="84"/>
         <source>Loading question…</source>
         <translation>Загрузка вопроса…</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="97"/>
-        <location filename="../src/qml/QuizView.qml" line="266"/>
+        <location filename="../src/qml/QuizView.qml" line="93"/>
+        <location filename="../src/qml/QuizView.qml" line="269"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="121"/>
-        <location filename="../src/qml/QuizView.qml" line="279"/>
+        <location filename="../src/qml/QuizView.qml" line="107"/>
+        <source>Quiz unavailable</source>
+        <translation>Викторина недоступна</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizView.qml" line="124"/>
+        <location filename="../src/qml/QuizView.qml" line="282"/>
         <source>Back to library</source>
         <translation>Назад в библиотеку</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="163"/>
+        <location filename="../src/qml/QuizView.qml" line="166"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="172"/>
+        <location filename="../src/qml/QuizView.qml" line="175"/>
         <source>Choose the translation:</source>
         <translation>Выберите перевод:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="236"/>
+        <location filename="../src/qml/QuizView.qml" line="239"/>
         <source>Quiz complete!</source>
         <translation>Викторина завершена!</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="243"/>
+        <location filename="../src/qml/QuizView.qml" line="246"/>
         <source>You got %1 out of %2 correct.</source>
         <translation>Правильных ответов: %1 из %2.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="254"/>
+        <location filename="../src/qml/QuizView.qml" line="257"/>
         <source>Correct:</source>
         <translation>Правильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="259"/>
+        <location filename="../src/qml/QuizView.qml" line="262"/>
         <source>Wrong:</source>
         <translation>Неправильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="264"/>
+        <location filename="../src/qml/QuizView.qml" line="267"/>
         <source>Accuracy:</source>
         <translation>Точность:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="267"/>
+        <location filename="../src/qml/QuizView.qml" line="270"/>
         <source>0%</source>
         <translation>0%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="275"/>
+        <location filename="../src/qml/QuizView.qml" line="278"/>
         <source>Try again</source>
         <translation>Ещё раз</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="517"/>
-        <source>Need at least 4 words in this scope to start a quiz.</source>
-        <translation>Для викторины нужно не менее 4 слов в выбранной области.</translation>
+        <location filename="../src/qml/QuizView.qml" line="604"/>
+        <source>This scope has no words to quiz.</source>
+        <translation>В выбранной области нет слов для викторины.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="525"/>
+        <location filename="../src/qml/QuizView.qml" line="605"/>
+        <source>Need at least two words in this scope to start a quiz.</source>
+        <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizView.qml" line="547"/>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
@@ -377,17 +402,17 @@ in the right bottom corner.</source>
         <translation>Переместить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="32"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="31"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="42"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="41"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="51"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="50"/>
         <source>Quiz</source>
         <translation>Викторина</translation>
     </message>
@@ -643,72 +668,67 @@ in the right bottom corner.</source>
         <translation>Стартовая страница</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="78"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="77"/>
         <source>Type:</source>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="84"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="83"/>
         <source>Location:</source>
         <translation>Расположение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="90"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="89"/>
         <source>Creation:</source>
         <translation>Создание:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="96"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="95"/>
         <source>Last edit:</source>
         <translation>Изменение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="102"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="101"/>
         <source>Direct children:</source>
         <translation>Прямые дочерние элементы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="108"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="107"/>
         <source>All descendants:</source>
         <translation>Все вложенные элементы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="114"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="113"/>
         <source>Total items:</source>
         <translation>Всего элементов:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="120"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="119"/>
         <source>Words:</source>
         <translation>Слова:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="126"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="125"/>
         <source>Subject groups:</source>
         <translation>Группы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="132"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="131"/>
         <source>Added this month:</source>
         <translation>Добавлено в этом месяце:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="138"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="137"/>
         <source>Added last 7 days:</source>
         <translation>Добавлено за 7 дней:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="144"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="143"/>
         <source>Added last 30 days:</source>
         <translation>Добавлено за 30 дней:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="154"/>
-        <source>Words by subject group</source>
-        <translation>Слова по группам</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="164"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="159"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
@@ -749,7 +769,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="311"/>
+        <location filename="../src/db/library.cpp" line="330"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>

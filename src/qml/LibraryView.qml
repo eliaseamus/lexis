@@ -212,6 +212,21 @@ Pane {
     parent: ApplicationWindow.overlay
   }
 
+  Dialog {
+    id: quizErrorDialog
+    property string message: ""
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+    standardButtons: Dialog.Ok
+    title: qsTr("Quiz")
+    Label {
+      text: quizErrorDialog.message
+      wrapMode: Text.WordWrap
+      width: Math.min(360, main.width - sideBar.width - 80)
+    }
+  }
+
   RowLayout {
     id: dragItems
     spacing: -195
@@ -444,8 +459,25 @@ Pane {
   function openQuiz(scopeRootId, scopeTitle) {
     hideSearchLine()
     clearSelectedItems()
+    const scopeError = quizScopeErrorMessage(scopeRootId)
+    if (scopeError.length > 0) {
+      quizErrorDialog.message = scopeError
+      quizErrorDialog.open()
+      return
+    }
     quizView.init(scopeRootId, scopeTitle)
     stackView.push(quizView)
+  }
+
+  function quizScopeErrorMessage(scopeRootId) {
+    const wordCount = library.wordsInScope(scopeRootId).length
+    if (wordCount === 0) {
+      return qsTr("This scope has no words to quiz.")
+    }
+    if (wordCount < 2) {
+      return qsTr("Need at least two words in this scope to start a quiz.")
+    }
+    return ""
   }
 
   function openCurrentScopeQuiz() {
