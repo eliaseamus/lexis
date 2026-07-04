@@ -220,6 +220,61 @@ QVariantList buildWordsBySubjectGroup(const QSqlDatabase& db, const QString& lan
 
 }  // namespace
 
+QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QString& languageCode,
+                                            int scopeRootId) {
+  QVariantList result;
+  if (languageCode.isEmpty()) {
+    return result;
+  }
+
+  QSqlQuery query(db);
+  if (scopeRootId == kRootParentId) {
+    query.prepare(
+      "SELECT id, title, meaning, color, "
+      "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
+      "FROM items "
+      "WHERE language_code = :language_code AND type = :word_type "
+      "ORDER BY title COLLATE NOCASE");
+    query.bindValue(":language_code", languageCode);
+    query.bindValue(":word_type", static_cast<int>(LibrarySectionType::kWord));
+  } else {
+    query.prepare(
+      "WITH RECURSIVE subtree(id) AS ("
+      "  SELECT :scope_root "
+      "  UNION ALL "
+      "  SELECT i.id FROM items i "
+      "  JOIN subtree s ON i.parent_id = s.id "
+      "  WHERE i.language_code = :language_code"
+      ") "
+      "SELECT id, title, meaning, color, "
+      "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
+      "FROM items "
+      "WHERE language_code = :language_code "
+      "  AND type = :word_type "
+      "  AND id IN (SELECT id FROM subtree WHERE id != :scope_root) "
+      "ORDER BY title COLLATE NOCASE");
+    query.bindValue(":language_code", languageCode);
+    query.bindValue(":scope_root", scopeRootId);
+    query.bindValue(":word_type", static_cast<int>(LibrarySectionType::kWord));
+  }
+
+  if (!query.exec()) {
+    qWarning() << "Failed to load scoped words:" << query.lastError();
+    return result;
+  }
+
+  while (query.next()) {
+    result.append(QVariantMap{
+      {QStringLiteral("itemId"),   query.value("id").toInt()              },
+      {QStringLiteral("title"),    query.value("title").toString()        },
+      {QStringLiteral("meaning"),  query.value("meaning").toString()      },
+      {QStringLiteral("color"),    query.value("color").toString()        },
+      {QStringLiteral("hasImage"), query.value("has_image").toInt() != 0  }
+    });
+  }
+  return result;
+}
+
 QVariantMap LibraryStatistics::languageStats(const QSqlDatabase& db, const QString& languageCode,
                                              const SectionTypeManager& /*typeManager*/) {
   QVariantMap stats;

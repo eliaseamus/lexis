@@ -151,11 +151,14 @@ Rectangle {
       okTooltipText: qsTr("Insert title")
       okay: function () {
         if (imagePicker.hasQuery) {
-          const duplicates = library.findByTitle(titleItem.text, editMode ? itemID : -1);
-          if (duplicates.length > 0) {
-            duplicateItemDialog.matches = duplicates;
-            duplicateItemDialog.open();
-            return;
+          const itemType = types[type.currentIndex];
+          if (itemType === "Word") {
+            const duplicates = library.findByTitle(titleItem.text, editMode ? itemID : -1);
+            if (duplicates.length > 0) {
+              duplicateItemDialog.matches = duplicates;
+              duplicateItemDialog.open();
+              return;
+            }
           }
           if (editMode) {
             library.updateItem(newDbRecord, currentType);

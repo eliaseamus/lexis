@@ -132,6 +132,10 @@ Pane {
       stackView.push(itemConfiguration);
     }
 
+    function onStartQuiz() {
+      openCurrentScopeQuiz();
+    }
+
     function onGoBack() {
       libraryView.pop()
     }
@@ -173,6 +177,11 @@ Pane {
 
   ItemView {
     id: itemView
+    visible: false
+  }
+
+  QuizView {
+    id: quizView
     visible: false
   }
 
@@ -449,6 +458,19 @@ Pane {
   function openLibraryStatistics() {
     statisticsDialog.libraryMode = true
     statisticsDialog.open()
+  }
+
+  function openQuiz(scopeRootId, scopeTitle) {
+    hideSearchLine()
+    clearSelectedItems()
+    quizView.init(scopeRootId, scopeTitle)
+    stackView.push(quizView)
+  }
+
+  function openCurrentScopeQuiz() {
+    const scopeRootId = parentStack.length === 0 ? 0 : parentStack[parentStack.length - 1]
+    const scopeTitle = pages.length === 0 ? settings.currentLanguage : pages[pages.length - 1]
+    openQuiz(scopeRootId, scopeTitle)
   }
 
 }

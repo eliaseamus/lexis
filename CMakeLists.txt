@@ -95,6 +95,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/OkCancel.qml
     src/qml/PrettyButton.qml
     src/qml/PrettyLabel.qml
+    src/qml/QuizView.qml
     src/qml/RoundImage.qml
     src/qml/SectionItem.qml
     src/qml/SectionItemMenu.qml

@@ -66,6 +66,7 @@ class Library : public QObject {
   Q_INVOKABLE QVariantList duplicateItems() const;
   Q_INVOKABLE QVariantMap languageStatistics() const;
   Q_INVOKABLE QVariantMap itemStatistics(int itemId) const;
+  Q_INVOKABLE QVariantList wordsInScope(int scopeRootId = 0) const;
   Q_INVOKABLE QString currentLanguage() const {
     return _language;
   }

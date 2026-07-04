@@ -7,6 +7,8 @@ namespace lexis {
 
 namespace {
 
+constexpr int kWordType = std::to_underlying(LibrarySectionType::kWord);
+
 int parentIdFromVariant(const QVariant& value) {
   if (!value.isValid() || value.isNull()) {
     return kRootParentId;
@@ -153,10 +155,12 @@ QVariantList LibrarySearch::findByTitle(const QSqlDatabase& db, const QString& l
     "SELECT id, parent_id, title, meaning, type, color, image "
     "FROM items "
     "WHERE language_code = :language_code "
+    "  AND type = :word_type "
     "  AND title = :title COLLATE NOCASE "
     "  AND (:exclude_id < 0 OR id != :exclude_id) "
     "ORDER BY title");
   sqlQuery.bindValue(":language_code", languageCode);
+  sqlQuery.bindValue(":word_type", kWordType);
   sqlQuery.bindValue(":title", trimmed);
   sqlQuery.bindValue(":exclude_id", excludeItemId);
 
@@ -172,8 +176,8 @@ QVariantList LibrarySearch::findByTitle(const QSqlDatabase& db, const QString& l
   return results;
 }
 
-QVariantList LibrarySearch::findAllDuplicates(const QSqlDatabase& db, const QString& languageCode,
-                                              const SectionTypeManager& typeManager) {
+QVariantList LibrarySearch::findAllDuplicateWords(const QSqlDatabase& db, const QString& languageCode,
+                                                  const SectionTypeManager& typeManager) {
   QVariantList results;
   if (languageCode.isEmpty()) {
     return results;
@@ -184,14 +188,16 @@ QVariantList LibrarySearch::findAllDuplicates(const QSqlDatabase& db, const QStr
     "SELECT id, parent_id, title, meaning, type, color, image "
     "FROM items "
     "WHERE language_code = :language_code "
+    "  AND type = :word_type "
     "  AND lower(title) IN ("
     "    SELECT lower(title) FROM items "
-    "    WHERE language_code = :language_code "
+    "    WHERE language_code = :language_code AND type = :word_type "
     "    GROUP BY lower(title) "
     "    HAVING COUNT(*) > 1"
     "  ) "
     "ORDER BY lower(title), id");
   sqlQuery.bindValue(":language_code", languageCode);
+  sqlQuery.bindValue(":word_type", kWordType);
 
   if (!sqlQuery.exec()) {
     qWarning() << "Duplicate scan failed:" << sqlQuery.lastError();

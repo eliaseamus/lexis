@@ -9,6 +9,7 @@ RowLayout {
   signal goBack
   signal searchRequest(query: string)
   signal addNewItem
+  signal startQuiz
   signal displaySettings
 
   RoundButton {
@@ -40,6 +41,20 @@ RowLayout {
       ToolTip {
         visible: search.hovered
         text: qsTr("Search")
+      }
+    }
+
+    RoundButton {
+      id: quiz
+      icon.source: "qrc:/qt/qml/QLexis/icons/question.png"
+      icon.color: settings.fgColor
+      enabled: settings.currentLanguage.length > 0
+      Material.background: settings.accentColor
+      onClicked: startQuiz()
+
+      ToolTip {
+        visible: quiz.hovered
+        text: qsTr("Quiz")
       }
     }
 
@@ -136,6 +151,13 @@ RowLayout {
     onActivated: addNewItem()
   }
 
+  Shortcut {
+    id: quizCmd
+    enabled: stackView.currentItem === libraryView && settings.currentLanguage.length > 0
+    sequence: "Ctrl+Shift+Q"
+    onActivated: startQuiz()
+  }
+
   function toggleSearchLine() {
     if (searchLine.display) {
       searchLine.display = false
@@ -150,10 +172,13 @@ RowLayout {
   function refresh() {
     const isSearchEnabled = library.sections.length > 0;
     const isNewItemEnabled = settings.currentLanguage.length > 0;
+    const isQuizEnabled = settings.currentLanguage.length > 0;
     back.enabled = !libraryView.isStartPage;
     searchCmd.enabled = isSearchEnabled;
     search.enabled = isSearchEnabled;
     newItemCmd.enabled = isNewItemEnabled;
     addLibraryItem.enabled = isNewItemEnabled;
+    quiz.enabled = isQuizEnabled;
+    quizCmd.enabled = isQuizEnabled;
   }
 }

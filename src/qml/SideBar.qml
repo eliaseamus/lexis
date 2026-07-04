@@ -161,6 +161,11 @@ Item {
       text: qsTr("Statistics…")
       onTriggered: libraryView.openLibraryStatistics()
     }
+    MenuItem {
+      enabled: settings.currentLanguage.length > 0
+      text: qsTr("Quiz…")
+      onTriggered: libraryView.openCurrentScopeQuiz()
+    }
     MenuSeparator {}
     MenuItem {
       enabled: settings.currentLanguage.length > 0

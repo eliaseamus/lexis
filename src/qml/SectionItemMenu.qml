@@ -47,4 +47,15 @@ Menu {
       statisticsDialog.open()
     }
   }
+  MenuItem {
+    text: qsTr("Quiz")
+    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
+    onTriggered: {
+      if (type === "Word") {
+        libraryView.openQuiz(librarySection.currentParentId, librarySection.title)
+      } else {
+        libraryView.openQuiz(itemID, title)
+      }
+    }
+  }
 }

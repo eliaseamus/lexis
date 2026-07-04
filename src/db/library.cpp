@@ -551,7 +551,7 @@ QVariantList Library::duplicateItems() const {
   if (_language.isEmpty()) {
     return {};
   }
-  return LibrarySearch::findAllDuplicates(QSqlDatabase::database(), _language, _typeManager);
+  return LibrarySearch::findAllDuplicateWords(QSqlDatabase::database(), _language, _typeManager);
 }
 
 QVariantMap Library::languageStatistics() const {
@@ -566,6 +566,13 @@ QVariantMap Library::itemStatistics(int itemId) const {
     return {};
   }
   return LibraryStatistics::itemStats(QSqlDatabase::database(), _language, itemId, _typeManager);
+}
+
+QVariantList Library::wordsInScope(int scopeRootId) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibraryStatistics::scopedWords(QSqlDatabase::database(), _language, scopeRootId);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

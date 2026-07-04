@@ -13,6 +13,8 @@ class LibraryStatistics {
                                  const SectionTypeManager& typeManager);
   static QVariantMap itemStats(const QSqlDatabase& db, const QString& languageCode, int itemId,
                                const SectionTypeManager& typeManager);
+  static QVariantList scopedWords(const QSqlDatabase& db, const QString& languageCode,
+                                  int scopeRootId);
 };
 
 }  // namespace lexis

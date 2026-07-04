@@ -8,7 +8,7 @@ Dialog {
   id: duplicateDialog
   property var matches: []
   property var duplicateGroups: []
-  property string message: qsTr("An item with this title already exists in your library.")
+  property string message: qsTr("A word with this title already exists in your library.")
   property bool resolvable: true
   modal: true
 

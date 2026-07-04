@@ -194,6 +194,55 @@ class LibraryStatisticsTest : public QObject {
     db.close();
     QSqlDatabase::removeDatabase("stats_test_run");
   }
+
+  void scopedWordsReturnsAllWordsForLanguage() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    const auto dbPath = tempDir.path() + "/stats.db";
+    QVERIFY(createDatabase(dbPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "stats_test_run");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    const auto words = lexis::LibraryStatistics::scopedWords(db, "en", lexis::kRootParentId);
+    QCOMPARE(words.size(), 3);
+
+    QHash<QString, QVariantMap> wordsByTitle;
+    for (const auto& entryValue : words) {
+      const auto entry = entryValue.toMap();
+      wordsByTitle.insert(entry.value("title").toString(), entry);
+    }
+
+    QCOMPARE(wordsByTitle.value("ingenious").value("meaning").toString(), QString("clever"));
+    QCOMPARE(wordsByTitle.value("ingenious").value("hasImage").toBool(), true);
+    QCOMPARE(wordsByTitle.value("apple").value("hasImage").toBool(), false);
+
+    db.close();
+    QSqlDatabase::removeDatabase("stats_test_run");
+  }
+
+  void scopedWordsReturnsSubtreeWordsOnly() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    const auto dbPath = tempDir.path() + "/stats.db";
+    QVERIFY(createDatabase(dbPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "stats_test_run");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    const auto personalityWords = lexis::LibraryStatistics::scopedWords(db, "en", 1);
+    QCOMPARE(personalityWords.size(), 1);
+    QCOMPARE(personalityWords[0].toMap().value("title").toString(), QString("ingenious"));
+
+    const auto foodWords = lexis::LibraryStatistics::scopedWords(db, "en", 4);
+    QCOMPARE(foodWords.size(), 1);
+    QCOMPARE(foodWords[0].toMap().value("title").toString(), QString("apple"));
+
+    db.close();
+    QSqlDatabase::removeDatabase("stats_test_run");
+  }
 };
 
 QTEST_MAIN(LibraryStatisticsTest)
