@@ -28,6 +28,12 @@ class Library : public QObject {
   };
 
  private:
+  struct PendingAudioRequest {
+    int itemId = -1;
+    QString title;
+  };
+
+ private:
   QVector<LibrarySection*> _sections;
   QString _language;
   int _currentParentId = kRootParentId;
@@ -36,9 +42,13 @@ class Library : public QObject {
   Pronunciation* _pronunciation = nullptr;
   CurrentItem _audioItem;
   int _pendingAudioItemId = -1;
+  bool _audioFetchInProgress = false;
+  QVector<PendingAudioRequest> _audioRequestQueue;
   QString _databasePath;
   QHash<int, QUrl> _imageUrlCache;
   QHash<int, QTemporaryFile*> _imageFiles;
+  QHash<int, QUrl> _audioUrlCache;
+  QHash<int, QTemporaryFile*> _audioFiles;
 
  public:
   explicit Library(QObject* parent = nullptr);
@@ -81,6 +91,11 @@ class Library : public QObject {
 
  private:
   void invalidateImageCache(int id = -1);
+  void invalidateAudioCache(int id = -1);
+  QUrl cacheAudioBlob(int id, const QByteArray& compressedAudio);
+  void requestAudioForItem(int id, const QString& title);
+  void processAudioQueue();
+  void finishAudioFetch(int itemId, const QByteArray& audio);
   void closeDatabaseConnection();
   void clearSections();
   LibrarySection* getSection(LibrarySectionType type);
@@ -88,7 +103,6 @@ class Library : public QObject {
   void insertItem(LibraryItem&& item);
   void ensureLanguage(const QString& language);
   QString getTitle(int id) const;
-  void requestAudio(const QString& title);
   void updateParentModificationTime(int id);
   void addChildItems(int parentId, TreeItem* parent);
   QVariant parentIdVariant(int parentId) const;

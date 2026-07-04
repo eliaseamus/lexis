@@ -23,11 +23,7 @@ Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunci
   connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
   connect(_pronunciation, &Pronunciation::audioFailed, this, [this]() {
     const auto itemId = _pendingAudioItemId > 0 ? _pendingAudioItemId : _audioItem.id;
-    if (itemId <= 0) {
-      return;
-    }
-    _pendingAudioItemId = -1;
-    emit audioReady(itemId, QUrl{});
+    finishAudioFetch(itemId, {});
   });
 }
 
@@ -152,7 +148,7 @@ void Library::addItem(LibraryItem* item) {
   item->setID(query.lastInsertId().toInt());
   if (item->type() == LibrarySectionType::kWord) {
     _audioItem.id = item->id();
-    requestAudio(item->title());
+    requestAudioForItem(item->id(), item->title());
   }
   updateParentModificationTime(item->id());
   invalidateImageCache(item->id());
@@ -172,7 +168,8 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   QSqlQuery query;
   if (wordTitleChanged) {
     _audioItem.id = item->id();
-    requestAudio(item->title());
+    invalidateAudioCache(item->id());
+    requestAudioForItem(item->id(), item->title());
     query.prepare(
       "UPDATE items "
       "SET title = :title, modification_time = :modification, type = :type, image = :image, "
@@ -261,6 +258,12 @@ void Library::deleteItem(int id, LibrarySectionType type) {
     _sections.removeOne(section);
   }
   invalidateImageCache(id);
+  invalidateAudioCache(id);
+  for (int i = _audioRequestQueue.size() - 1; i >= 0; --i) {
+    if (_audioRequestQueue[i].itemId == id) {
+      _audioRequestQueue.removeAt(i);
+    }
+  }
 }
 
 void Library::deleteLanguage(const QString& language) {
@@ -288,6 +291,10 @@ QUrl Library::readAudio(int id) {
     return {};
   }
 
+  if (_audioUrlCache.contains(id)) {
+    return _audioUrlCache.value(id);
+  }
+
   _audioItem.id = id;
 
   QSqlQuery query;
@@ -302,14 +309,13 @@ QUrl Library::readAudio(int id) {
 
   if (audio.isEmpty()) {
     const auto title = getTitle(id);
-    if (!title.isEmpty() && _pendingAudioItemId != id) {
-      _pendingAudioItemId = id;
-      requestAudio(title);
+    if (!title.isEmpty()) {
+      requestAudioForItem(id, title);
     }
     return {};
   }
 
-  const auto url = getSection(LibrarySectionType::kWord)->updateAudio(id, std::move(audio));
+  const auto url = cacheAudioBlob(id, audio);
   if (url.isEmpty()) {
     QSqlQuery clearQuery;
     clearQuery.prepare(
@@ -322,10 +328,12 @@ QUrl Library::readAudio(int id) {
 
     const auto title = getTitle(id);
     if (!title.isEmpty()) {
-      _pendingAudioItemId = id;
-      requestAudio(title);
+      requestAudioForItem(id, title);
     }
+    return {};
   }
+
+  getSection(LibrarySectionType::kWord)->updateAudio(id, QByteArray(audio));
   return url;
 }
 
@@ -340,6 +348,13 @@ void Library::refreshAudio(int id) {
     return;
   }
 
+  invalidateAudioCache(id);
+  for (int i = _audioRequestQueue.size() - 1; i >= 0; --i) {
+    if (_audioRequestQueue[i].itemId == id) {
+      _audioRequestQueue.removeAt(i);
+    }
+  }
+
   QSqlQuery query;
   query.prepare("UPDATE items SET audio = :audio WHERE id = :id AND language_code = :language_code");
   query.bindValue(":audio", QByteArray{});
@@ -350,8 +365,7 @@ void Library::refreshAudio(int id) {
   }
 
   getSection(LibrarySectionType::kWord)->updateAudio(id, QByteArray{});
-  _pendingAudioItemId = id;
-  requestAudio(title);
+  requestAudioForItem(id, title);
 }
 
 void Library::updateMeaning(int id, const QString& meaning) {
@@ -413,6 +427,7 @@ void Library::clearSections() {
   }
   _sections.clear();
   invalidateImageCache();
+  invalidateAudioCache();
 }
 
 LibrarySection* Library::getSection(LibrarySectionType type) {
@@ -482,8 +497,79 @@ QString Library::getTitle(int id) const {
   return {};
 }
 
-void Library::requestAudio(const QString& title) {
-  _pronunciation->get(title);
+void Library::requestAudioForItem(int id, const QString& title) {
+  if (id <= 0 || title.isEmpty()) {
+    return;
+  }
+
+  for (const auto& request : _audioRequestQueue) {
+    if (request.itemId == id) {
+      return;
+    }
+  }
+  if (_audioFetchInProgress && _pendingAudioItemId == id) {
+    return;
+  }
+
+  _audioRequestQueue.append(PendingAudioRequest{id, title});
+  processAudioQueue();
+}
+
+void Library::processAudioQueue() {
+  if (_audioFetchInProgress || _audioRequestQueue.isEmpty()) {
+    return;
+  }
+
+  const auto request = _audioRequestQueue.constFirst();
+  _audioFetchInProgress = true;
+  _pendingAudioItemId = request.itemId;
+  _audioItem.id = request.itemId;
+  _pronunciation->get(request.title);
+}
+
+void Library::finishAudioFetch(int itemId, const QByteArray& audio) {
+  _audioFetchInProgress = false;
+  _pendingAudioItemId = -1;
+  for (int i = 0; i < _audioRequestQueue.size(); ++i) {
+    if (_audioRequestQueue[i].itemId == itemId) {
+      _audioRequestQueue.removeAt(i);
+      break;
+    }
+  }
+
+  if (itemId <= 0) {
+    processAudioQueue();
+    return;
+  }
+
+  if (audio.isEmpty()) {
+    emit audioReady(itemId, QUrl{});
+    processAudioQueue();
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare("UPDATE items SET audio = :audio WHERE id = :id AND language_code = :language_code");
+  query.bindValue(":audio", audio);
+  query.bindValue(":id", itemId);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update audio for item %1:").arg(itemId) << query.lastError();
+    emit audioReady(itemId, QUrl{});
+    processAudioQueue();
+    return;
+  }
+
+  const auto url = cacheAudioBlob(itemId, audio);
+  getSection(LibrarySectionType::kWord)->updateAudio(itemId, QByteArray(audio));
+  emit audioReady(itemId, url);
+  processAudioQueue();
+}
+
+void Library::updateAudio(QByteArray audio) {
+  const auto itemId = _pendingAudioItemId > 0 ? _pendingAudioItemId : _audioItem.id;
+  finishAudioFetch(itemId, std::move(audio));
 }
 
 void Library::updateParentModificationTime(int id) {
@@ -549,36 +635,6 @@ void Library::addChildItems(int parentId, TreeItem* parent) {
     addChildItems(id, item.get());
     parent->appendChild(std::move(item));
   }
-}
-
-void Library::updateAudio(QByteArray audio) {
-  if (_audioItem.id <= 0) {
-    return;
-  }
-
-  const auto itemId = _audioItem.id;
-  _pendingAudioItemId = -1;
-
-  if (audio.isEmpty()) {
-    emit audioReady(itemId, QUrl{});
-    return;
-  }
-
-  QSqlQuery query;
-  query.prepare("UPDATE items SET audio = :audio WHERE id = :id AND language_code = :language_code");
-  query.bindValue(":audio", audio);
-  query.bindValue(":id", itemId);
-  query.bindValue(":language_code", _language);
-
-  if (!query.exec()) {
-    qWarning() << QString("Failed to update audio for item %1:").arg(itemId)
-               << query.lastError();
-    emit audioReady(itemId, QUrl{});
-    return;
-  }
-
-  const auto url = getSection(LibrarySectionType::kWord)->updateAudio(itemId, std::move(audio));
-  emit audioReady(itemId, url);
 }
 
 bool Library::exportLanguage(const QString& language, const QUrl& fileUrl) {
@@ -720,6 +776,43 @@ void Library::invalidateImageCache(int id) {
     file->deleteLater();
   }
   _imageUrlCache.remove(id);
+}
+
+void Library::invalidateAudioCache(int id) {
+  if (id < 0) {
+    for (auto* file : _audioFiles) {
+      file->deleteLater();
+    }
+    _audioFiles.clear();
+    _audioUrlCache.clear();
+    return;
+  }
+
+  if (auto* file = _audioFiles.take(id)) {
+    file->deleteLater();
+  }
+  _audioUrlCache.remove(id);
+}
+
+QUrl Library::cacheAudioBlob(int id, const QByteArray& compressedAudio) {
+  if (id <= 0 || compressedAudio.isEmpty()) {
+    return {};
+  }
+
+  invalidateAudioCache(id);
+
+  auto* file = new QTemporaryFile(this);
+  file->setFileTemplate(temporaryFileTemplate());
+  file->setAutoRemove(true);
+  if (!writeCompressedBlob(*file, compressedAudio)) {
+    file->deleteLater();
+    return {};
+  }
+
+  const auto url = QUrl::fromLocalFile(file->fileName());
+  _audioFiles.insert(id, file);
+  _audioUrlCache.insert(id, url);
+  return url;
 }
 
 QUrl Library::itemImageUrl(int id) {

@@ -30,6 +30,7 @@ Pane {
   property var lookupQueue: []
   property bool lookupBusy: false
   property bool playWhenReady: false
+  property bool audioLoading: false
   property int audioRetryCount: 0
   readonly property int maxAudioRetries: 3
 
@@ -158,15 +159,18 @@ Pane {
           RowLayout {
             Layout.alignment: Qt.AlignHCenter
             visible: !currentQuestionReverse && currentWord !== null
+            BusyIndicator {
+              visible: audioLoading
+              Layout.preferredWidth: 32
+              Layout.preferredHeight: 32
+            }
             RoundButton {
+              visible: !audioLoading
               icon.source: "qrc:/qt/qml/QLexis/icons/audio.png"
               icon.color: cardFgColor
               Material.background: cardColor
               enabled: currentWord !== null
-              onClicked: {
-                playWhenReady = true
-                playPronunciation()
-              }
+              onClicked: playPronunciation()
               ToolTip {
                 visible: parent.hovered
                 text: qsTr("Pronunciation")
@@ -333,6 +337,7 @@ Pane {
       if (!currentWord || itemId !== currentWord.itemId) {
         return
       }
+      audioLoading = false
       if (url.toString().length === 0) {
         if (playWhenReady) {
           retryPronunciation()
@@ -590,6 +595,7 @@ Pane {
       currentOptions = shuffle(built.options)
       questionsPresented++
       phase = "question"
+      prefetchAudio()
     })
   }
 
@@ -634,29 +640,63 @@ Pane {
     })
   }
 
+  function prefetchAudio() {
+    if (!currentWord || currentQuestionReverse) {
+      audioLoading = false
+      return
+    }
+
+    const cachedUrl = pronunciation.source.toString()
+    if (cachedUrl.length > 0) {
+      audioLoading = false
+      return
+    }
+
+    const url = library.readAudio(currentWord.itemId).toString()
+    if (url.length > 0) {
+      pronunciation.source = url
+      audioLoading = false
+    } else {
+      audioLoading = true
+    }
+  }
+
   function playPronunciation() {
     if (!currentWord) {
       return
     }
     playWhenReady = true
-    let url = pronunciation.source.toString()
-    if (url.length === 0) {
-      url = library.readAudio(currentWord.itemId).toString()
-      if (url.length === 0) {
-        return
-      }
-      pronunciation.source = url
+    const cachedUrl = pronunciation.source.toString()
+    if (cachedUrl.length > 0) {
+      pronunciation.play()
+      playbackCheckTimer.restart()
+      return
     }
-    pronunciation.play()
-    playbackCheckTimer.restart()
+
+    const url = library.readAudio(currentWord.itemId).toString()
+    if (url.length > 0) {
+      pronunciation.source = url
+      audioLoading = false
+      pronunciation.play()
+      playbackCheckTimer.restart()
+      return
+    }
+
+    audioLoading = true
   }
 
   function retryPronunciation() {
-    if (!currentWord || !playWhenReady || audioRetryCount >= maxAudioRetries) {
+    if (!currentWord || !playWhenReady) {
+      return
+    }
+    if (audioRetryCount >= maxAudioRetries) {
+      audioLoading = false
+      playWhenReady = false
       return
     }
     audioRetryCount++
     pronunciation.source = ""
+    audioLoading = true
     library.refreshAudio(currentWord.itemId)
   }
 
@@ -665,8 +705,10 @@ Pane {
     currentOptions = []
     audioRetryCount = 0
     playWhenReady = false
+    audioLoading = false
     playbackCheckTimer.stop()
     pronunciation.stop()
+    pronunciation.source = ""
 
     if (currentIndex >= questions.length) {
       if (questionsPresented === 0) {
