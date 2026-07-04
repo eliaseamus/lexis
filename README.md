@@ -69,6 +69,38 @@ reflect the meaning of the word too good, you can type a different word or phras
 In case the dictionary doesn't provide any meaning for the word or phrase, you may add it yourself into the library.
 You may also revise the groups added into the collection by moving them or their contents around the library.
 
+## Features
+
+### Search
+Use the toolbar search button or **Ctrl+F** to find words and folders across the entire library. Results show a breadcrumb path; selecting a word opens its card, selecting a folder navigates into it.
+
+### Quiz
+Start a multiple-choice quiz from the toolbar (**Ctrl+Shift+Q**), the sidebar *Library data* menu, or an item's context menu. The quiz uses words from the current folder (or the whole language at the root level). You pick the correct translation from four options; results show your score and accuracy at the end.
+
+### Statistics
+Open library-wide statistics from *Library data → Statistics*, or per-item statistics from an item's context menu. View word counts, recent additions, and a breakdown of words by subject group.
+
+### Library data (desktop)
+From the sidebar settings icon:
+- **Export language** — save one language as a `.lexis` archive
+- **Import language** — merge a `.lexis` archive into the library
+- **Backup database** — copy the full SQLite database
+- **Restore database** — replace the local database from a backup
+
+Duplicate titles are detected automatically and can be resolved from a dedicated dialog.
+
+## Keyboard shortcuts
+Press **Alt+4** or open *Help* from the sidebar to see the full shortcut list.
+
+| Shortcut | Action |
+|----------|--------|
+| Esc / Alt+← | Back |
+| Ctrl+F | Search |
+| Ctrl+N | New item |
+| Ctrl+Shift+Q | Quiz |
+| Ctrl+Q | Quit |
+| Alt+1 … Alt+4 | Interface language, sort rule, color, help |
+
 ## Supported languages
 There are nine languages available to learn using **Lexis**:
 - english

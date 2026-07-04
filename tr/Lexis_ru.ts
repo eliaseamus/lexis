@@ -44,52 +44,62 @@
 <context>
     <name>HelpDialog</name>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="8"/>
+        <location filename="../src/qml/HelpDialog.qml" line="9"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="11"/>
+        <location filename="../src/qml/HelpDialog.qml" line="13"/>
         <source>Cancel selection</source>
         <translation>Отменить выделение</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="9"/>
+        <location filename="../src/qml/HelpDialog.qml" line="10"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="10"/>
+        <location filename="../src/qml/HelpDialog.qml" line="7"/>
+        <source>Keyboard shortcuts</source>
+        <translation>Горячие клавиши</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/HelpDialog.qml" line="11"/>
         <source>New item</source>
         <translation>Новый элемент</translation>
     </message>
     <message>
         <location filename="../src/qml/HelpDialog.qml" line="12"/>
+        <source>Quiz</source>
+        <translation>Викторина</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/HelpDialog.qml" line="14"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="13"/>
+        <location filename="../src/qml/HelpDialog.qml" line="15"/>
         <source>Interface language</source>
         <translation>Язык интерфейса</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="14"/>
+        <location filename="../src/qml/HelpDialog.qml" line="16"/>
         <source>Sort rule</source>
         <translation>Правило сортировки</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="15"/>
+        <location filename="../src/qml/HelpDialog.qml" line="17"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="16"/>
+        <location filename="../src/qml/HelpDialog.qml" line="18"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../src/qml/HelpDialog.qml" line="36"/>
+        <location filename="../src/qml/HelpDialog.qml" line="38"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>
@@ -129,22 +139,22 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="48"/>
+        <location filename="../src/qml/ItemView.qml" line="51"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="144"/>
+        <location filename="../src/qml/ItemView.qml" line="145"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="95"/>
+        <location filename="../src/qml/ItemView.qml" line="96"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="271"/>
+        <location filename="../src/qml/ItemView.qml" line="320"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
@@ -274,99 +284,99 @@ in the right bottom corner.</source>
 <context>
     <name>QuizView</name>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="55"/>
+        <location filename="../src/qml/QuizView.qml" line="58"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="62"/>
+        <location filename="../src/qml/QuizView.qml" line="65"/>
         <source>Question %1 of %2</source>
         <translation>Вопрос %1 из %2</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="68"/>
+        <location filename="../src/qml/QuizView.qml" line="71"/>
         <source>Score: %1</source>
         <translation>Счёт: %1</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="84"/>
+        <location filename="../src/qml/QuizView.qml" line="87"/>
         <source>Loading question…</source>
         <translation>Загрузка вопроса…</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="93"/>
-        <location filename="../src/qml/QuizView.qml" line="269"/>
+        <location filename="../src/qml/QuizView.qml" line="96"/>
+        <location filename="../src/qml/QuizView.qml" line="272"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="107"/>
+        <location filename="../src/qml/QuizView.qml" line="110"/>
         <source>Quiz unavailable</source>
         <translation>Викторина недоступна</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="124"/>
-        <location filename="../src/qml/QuizView.qml" line="282"/>
+        <location filename="../src/qml/QuizView.qml" line="127"/>
+        <location filename="../src/qml/QuizView.qml" line="285"/>
         <source>Back to library</source>
         <translation>Назад в библиотеку</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="166"/>
+        <location filename="../src/qml/QuizView.qml" line="169"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="175"/>
+        <location filename="../src/qml/QuizView.qml" line="178"/>
         <source>Choose the translation:</source>
         <translation>Выберите перевод:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="239"/>
+        <location filename="../src/qml/QuizView.qml" line="242"/>
         <source>Quiz complete!</source>
         <translation>Викторина завершена!</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="246"/>
+        <location filename="../src/qml/QuizView.qml" line="249"/>
         <source>You got %1 out of %2 correct.</source>
         <translation>Правильных ответов: %1 из %2.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="257"/>
+        <location filename="../src/qml/QuizView.qml" line="260"/>
         <source>Correct:</source>
         <translation>Правильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="262"/>
+        <location filename="../src/qml/QuizView.qml" line="265"/>
         <source>Wrong:</source>
         <translation>Неправильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="267"/>
+        <location filename="../src/qml/QuizView.qml" line="270"/>
         <source>Accuracy:</source>
         <translation>Точность:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="270"/>
+        <location filename="../src/qml/QuizView.qml" line="273"/>
         <source>0%</source>
         <translation>0%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="278"/>
+        <location filename="../src/qml/QuizView.qml" line="281"/>
         <source>Try again</source>
         <translation>Ещё раз</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="604"/>
+        <location filename="../src/qml/QuizView.qml" line="685"/>
         <source>This scope has no words to quiz.</source>
         <translation>В выбранной области нет слов для викторины.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="605"/>
+        <location filename="../src/qml/QuizView.qml" line="686"/>
         <source>Need at least two words in this scope to start a quiz.</source>
         <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="547"/>
+        <location filename="../src/qml/QuizView.qml" line="628"/>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
@@ -769,7 +779,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="330"/>
+        <location filename="../src/db/library.cpp" line="395"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>

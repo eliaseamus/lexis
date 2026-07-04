@@ -28,12 +28,16 @@ You can see a QML GUI classes diagram below. Some of GUI elements are depicted i
 `MainWindow` contains a [StackView](https://doc.qt.io/qt-5/qml-qtquick-controls2-stackview.html) to display pages and a `SideBar` on the left side.
 
 `LibraryView` is the default page of the StackView and probably the main page of the app.
-It displays user's collection and used to navigate between levels of the collection. It also has a `ToolBar` to search for existing elements and add new ones.
+It displays user's collection and used to navigate between levels of the collection. It also has a `ToolBar` to search for existing elements, start a quiz, and add new ones.
 The collection is splitted into sections by type (words, subject group, etc) and groups of `SectionView` elements serve to visualize sections.
 Each SectionView has a [GridView](https://doc.qt.io/qt-6/qml-qtquick-gridview.html) to display `SectionItems`, representing the smallest unit of the collection.
 
+`SearchView` is an overlay on `LibraryView` for library-wide search. It is backed by `LibrarySearch` on the C++ side and returns matches with breadcrumb paths.
+
 `ItemView` displays the dictionary definitions of a chosen word, pronunciation button, transcription and an icon. In case dictionary service doesn't provide any information on a word of interest,
 the user may add their own notes on it using `insertMeaning` button.
+
+`QuizView` is pushed onto the StackView for multiple-choice vocabulary quizzes. It loads translations for words in the current scope via stored meanings, cached translations, and the `Dictionary` service, then presents up to ten questions with immediate feedback.
 
 <p align="center">
   <img alt="Open word card" src="uml/diagrams/open_item.png">
@@ -43,7 +47,9 @@ When an item is being added or modified, a `LibraryItemConfiguration` page is pu
 ImagePicker showcases pictures to choose from via a [WebView](https://doc.qt.io/qt-6/qml-qtwebview-webview.html) displaying search results of the [Google Programmable Search Engine](https://programmablesearchengine.google.com/about/).
 
 There is also a bunch of modal dialog windows for various purposes: from configuring menu settings (`InterfaceLanguageDialog`, `SortRoleDialog`, `HelpDialog`, etc) to
-performing operations on items (`DeleteDialog`, `MoveDialog`, etc).
+performing operations on items (`DeleteDialog`, `MoveDialog`, `DuplicateItemDialog`, `StatisticsDialog`, etc).
+
+The sidebar *Library data* menu (desktop) exposes export/import of `.lexis` language archives and SQLite database backup/restore through `Library` methods implemented in `LibraryArchive`.
 
 ## Data model
 Library is responsible for maintaining user's words collection: storing it into SQLite database as well as exposing the collection into QML code.
@@ -52,17 +58,30 @@ Library is responsible for maintaining user's words collection: storing it into 
   <img alt="Data model class diagram" src="uml/diagrams/data_model_class.png">
 </p>
 
-Library performs all operations on items that involve storage access, including: read, update, delete, move.
-Since library items may have children, which may also have children in their turn, etc, a tree structure is used for storing collection data.
-Thus, the root table for the data inherits its name from the language it is dedicated to: for instance, `en` - for English, `es` - for Spanish, and so on.
-All the successor elements' tables obtain their name by concatenating their parent's name and their index within the parent table (like `es_3_11`).
-When a group of elements is being deleted, dropping for its table together with all its child tables follows.
+Library performs all operations on items that involve storage access, including: read, update, delete, and move.
+Items form a tree: each row belongs to a language and optionally to a parent item via `parent_id`. Words, subject groups, books, and other section types are distinguished by a `type` field (`LibrarySectionType`).
+
+The database uses a normalized schema managed by `SchemaMigration`:
+- `schema_version` — current schema version
+- `languages` — registered learning languages (`code`)
+- `items` — all library entries with columns for `language_code`, `parent_id`, `title`, `type`, timestamps, `color`, `meaning`, `cached_translation`, `image`, and `audio`
+
+On startup, `SchemaMigration::ensureSchema` creates the v1 schema or migrates legacy databases that used per-level tables named after language codes and item indices (for example `en_3_11`). Child rows are deleted automatically through `ON DELETE CASCADE`.
+
+Navigation in QML tracks a `parentStack` of folder ids; `Library::openLanguage`, `openFolder`, and `openRoot` load direct children of the current parent into typed `LibrarySection` groups.
+
+Supporting modules:
+- `LibrarySearch` — full-library text search with breadcrumbs
+- `LibraryStatistics` — aggregate and per-item stats, including scoped word lists for quizzes
+- `LibraryArchive` — `.lexis` JSON export/import and database file copy
 
 When providing the collection data to QML, it is sorted into groups of `LibrarySection` by type. To enable sorting and filtering for the sections, a `LibraryItemProxyModel`
 extending [QSortFilterProxyModel](https://doc.qt.io/qt-6/qsortfilterproxymodel.html) was added. It serves as a wrapper for the actual `LibraryItemModel` possessing the collection of `LibraryItems`.
 
+`TreeModel` exposes the folder hierarchy for `MoveDialog`, which also supports searching destination folders.
+
 One more chore of the Library is to request audio from `Pronunciation` service when a new word is added into the collection, or the existing word's title is changed.
-Audio fetch is an asynchronous operation, since it may take some time, and we don't want to freeze GUI during that. Library stores the last requested audio file and provides it to `ItemView` page on demand: when the audio file was not uploaded yet at the moment of LibraryItem's creation.
+Audio fetch is an asynchronous operation, since it may take some time, and we don't want to freeze GUI during that. Library stores requested audio per item and provides it to `ItemView` and `QuizView` on demand.
 
 <p align="center">
   <img alt="Play pronunciation" src="uml/diagrams/play_pronunciation.png">
