@@ -53,7 +53,7 @@ class Library : public QObject {
  public:
   explicit Library(QObject* parent = nullptr);
   Q_INVOKABLE void openDatabase(const QString& name);
-  Q_INVOKABLE void addItem(LibraryItem* item);
+  Q_INVOKABLE void addItem(LibraryItem* item, int parentIdOverride = -1);
   Q_INVOKABLE void updateItem(LibraryItem* item, LibrarySectionType oldType);
   Q_INVOKABLE void moveItem(int id, int targetParentId);
   Q_INVOKABLE void deleteItem(int id, LibrarySectionType type);
@@ -82,6 +82,12 @@ class Library : public QObject {
   Q_INVOKABLE QString currentLanguage() const {
     return _language;
   }
+  Q_INVOKABLE int currentParentId() const {
+    return _currentParentId;
+  }
+  Q_INVOKABLE QString parentBreadcrumb(int parentId) const;
+  Q_INVOKABLE QVariantList suggestSubjectGroups(const QString& wordTitle, const QString& meaning = {},
+                                                int excludeItemId = -1) const;
   Q_INVOKABLE QVariantList ancestorPath(int itemId) const;
   Q_INVOKABLE LibraryItem* getItem(int id);
   Q_INVOKABLE QUrl itemImageUrl(int id);

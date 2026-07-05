@@ -2,6 +2,7 @@
 
 #include "library_archive.hpp"
 #include "frequency_lookup.hpp"
+#include "library_group_suggestion.hpp"
 #include "library_search.hpp"
 #include "library_statistics.hpp"
 #include "utils.hpp"
@@ -153,13 +154,15 @@ void Library::openRoot() {
   populateSections();
 }
 
-void Library::addItem(LibraryItem* item) {
+void Library::addItem(LibraryItem* item, int parentIdOverride) {
   if (!item || _language.isEmpty()) {
     qWarning() << "no item was provided or language is not selected";
     return;
   }
 
   applyFrequencyToItem(item, _language);
+
+  const int parentId = parentIdOverride >= 0 ? parentIdOverride : _currentParentId;
 
   QSqlQuery query;
   query.prepare(
@@ -173,7 +176,7 @@ void Library::addItem(LibraryItem* item) {
   item->setCreationTime(now);
   item->setModificationTime(now);
   query.bindValue(":language_code", _language);
-  query.bindValue(":parent_id", parentIdVariant(_currentParentId));
+  query.bindValue(":parent_id", parentIdVariant(parentId));
   query.bindValue(":title", item->title());
   query.bindValue(":creation", formatDateTimeForDb(item->creationTime()));
   query.bindValue(":modification", formatDateTimeForDb(item->modificationTime()));
@@ -862,6 +865,23 @@ QVariantList Library::wordsInScope(int scopeRootId) const {
     enriched.append(map);
   }
   return enriched;
+}
+
+QString Library::parentBreadcrumb(int parentId) const {
+  if (_language.isEmpty() || parentId <= kRootParentId) {
+    return {};
+  }
+  return LibrarySearch::breadcrumb(LibrarySearch::loadItemIndex(QSqlDatabase::database(), _language),
+                                 parentId);
+}
+
+QVariantList Library::suggestSubjectGroups(const QString& wordTitle, const QString& meaning,
+                                           int excludeItemId) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language, wordTitle,
+                                                      meaning, excludeItemId, _currentParentId);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

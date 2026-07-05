@@ -54,6 +54,8 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library_search.hpp
   src/db/library_statistics.cpp
   src/db/library_statistics.hpp
+  src/db/library_group_suggestion.cpp
+  src/db/library_group_suggestion.hpp
   src/db/frequency_lookup.cpp
   src/db/frequency_lookup.hpp
   ${app_icon_resource_windows}
@@ -106,6 +108,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
+    src/qml/SubjectGroupSuggestionDialog.qml
     src/qml/TextComplete.qml
     src/qml/StatisticsDialog.qml
     src/qml/ToolBar.qml
@@ -370,6 +373,31 @@ target_include_directories(test_frequency_lookup PRIVATE src src/db)
 add_test(test_frequency_lookup test_frequency_lookup)
 
 set_target_properties(test_frequency_lookup PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# library_group_suggestion
+qt_add_executable(test_library_group_suggestion
+  tests/test_library_group_suggestion.cpp
+  src/db/schema_migration.cpp
+  src/db/library_search.cpp
+  src/db/library_group_suggestion.cpp
+  src/model/section_type.cpp
+)
+
+target_link_libraries(test_library_group_suggestion PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+  Qt6::Qml
+)
+
+target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db)
+
+add_test(test_library_group_suggestion test_library_group_suggestion)
+
+set_target_properties(test_library_group_suggestion PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

@@ -197,12 +197,31 @@ Rectangle {
         return;
       }
     }
+    if (itemType === "Word" && !editMode) {
+      offerSubjectGroupSuggestion();
+      return;
+    }
     commitItem();
   }
 
-  function commitItem() {
+  function offerSubjectGroupSuggestion() {
+    const suggestions = library.suggestSubjectGroups(titleItem.text, meaning);
+    if (suggestions.length === 0 || suggestions[0].confidence < 40) {
+      commitItem();
+      return;
+    }
+    subjectGroupSuggestionDialog.wordTitle = titleItem.text;
+    subjectGroupSuggestionDialog.suggestions = suggestions;
+    subjectGroupSuggestionDialog.currentParentId = library.currentParentId();
+    subjectGroupSuggestionDialog.init();
+    subjectGroupSuggestionDialog.open();
+  }
+
+  function commitItem(parentOverride) {
     if (editMode) {
       library.updateItem(newDbRecord, currentType);
+    } else if (parentOverride !== undefined && parentOverride >= 0) {
+      library.addItem(newDbRecord, parentOverride);
     } else {
       library.addItem(newDbRecord);
     }
@@ -217,6 +236,15 @@ Rectangle {
     x: (main.width - width) / 2 - sideBar.width
     y: (main.height - height) / 2
 
-    onAccepted: commitItem()
+    onAccepted: offerSubjectGroupSuggestion()
+  }
+
+  SubjectGroupSuggestionDialog {
+    id: subjectGroupSuggestionDialog
+    parent: ApplicationWindow.overlay
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+
+    onAccepted: commitItem(selectedGroupId)
   }
 }

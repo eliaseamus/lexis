@@ -42,6 +42,34 @@
     </message>
 </context>
 <context>
+    <name>SubjectGroupSuggestionDialog</name>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="24"/>
+        <source>Start page</source>
+        <translation>Стартовая страница</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="42"/>
+        <source>Suggested group for &quot;%1&quot;</source>
+        <translation>Рекомендуемая группа для «%1»</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="49"/>
+        <source>Choose where to save this word:</source>
+        <translation>Выберите, куда сохранить это слово:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="64"/>
+        <source>%1% match</source>
+        <translation>совпадение %1%</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="73"/>
+        <source>Keep at current location (%1)</source>
+        <translation>Оставить в текущем месте (%1)</translation>
+    </message>
+</context>
+<context>
     <name>HelpDialog</name>
     <message>
         <location filename="../src/qml/HelpDialog.qml" line="9"/>
