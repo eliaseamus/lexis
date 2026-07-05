@@ -4,4 +4,6 @@ build/
 .cache/
 .git/
 CMakeLists.txt.user
+data/frequency.db
+.venv-wordfreq/
 

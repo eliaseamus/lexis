@@ -54,6 +54,8 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library_search.hpp
   src/db/library_statistics.cpp
   src/db/library_statistics.hpp
+  src/db/frequency_lookup.cpp
+  src/db/frequency_lookup.hpp
   ${app_icon_resource_windows}
 )
 
@@ -147,6 +149,32 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 qt_add_translations(${PROJECT_NAME}
     TS_FILE_DIR tr)
+
+find_package(Python3 COMPONENTS Interpreter)
+
+set(LEXIS_FREQUENCY_DB "${CMAKE_CURRENT_SOURCE_DIR}/data/frequency.db")
+if(Python3_FOUND)
+  add_custom_command(
+    OUTPUT ${LEXIS_FREQUENCY_DB}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_frequency_db.py
+            --output ${LEXIS_FREQUENCY_DB}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_frequency_db.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating word frequency database from wordfreq"
+    VERBATIM
+  )
+  add_custom_target(generate_frequency_db DEPENDS ${LEXIS_FREQUENCY_DB})
+endif()
+
+if(EXISTS ${LEXIS_FREQUENCY_DB})
+  add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LEXIS_FREQUENCY_DB}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/data/frequency.db
+    COMMENT "Copying frequency database next to Lexis executable"
+  )
+endif()
 
 if(ANDROID)
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -321,6 +349,27 @@ target_include_directories(test_library_statistics PRIVATE src src/model src/db)
 add_test(test_library_statistics test_library_statistics)
 
 set_target_properties(test_library_statistics PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# frequency_lookup
+qt_add_executable(test_frequency_lookup
+  tests/test_frequency_lookup.cpp
+  src/db/frequency_lookup.cpp
+)
+
+target_link_libraries(test_frequency_lookup PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+)
+
+target_include_directories(test_frequency_lookup PRIVATE src src/db)
+
+add_test(test_frequency_lookup test_frequency_lookup)
+
+set_target_properties(test_frequency_lookup PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )
