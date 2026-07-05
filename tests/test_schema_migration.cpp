@@ -213,6 +213,57 @@ class SchemaMigrationTest : public QObject {
     }
     QSqlDatabase::removeDatabase("migration_test");
   }
+
+  void upgradeAddsSearchFtsIndex() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/v4.db";
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+
+      QSqlQuery query(db);
+      QVERIFY(query.exec("CREATE TABLE schema_version (version INTEGER NOT NULL)"));
+      QVERIFY(query.exec("INSERT INTO schema_version(version) VALUES (4)"));
+      QVERIFY(query.exec("CREATE TABLE languages (code TEXT PRIMARY KEY)"));
+      QVERIFY(query.exec("CREATE TABLE items ("
+                         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                         "language_code TEXT NOT NULL,"
+                         "parent_id INTEGER,"
+                         "title TEXT NOT NULL,"
+                         "type INTEGER NOT NULL,"
+                         "creation_time TEXT NOT NULL,"
+                         "modification_time TEXT NOT NULL,"
+                         "color TEXT,"
+                         "meaning TEXT,"
+                         "cached_translation TEXT,"
+                         "dictionary_summary TEXT,"
+                         "frequency_rank INTEGER,"
+                         "frequency_tier TEXT)"));
+      db.close();
+    }
+
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+      QVERIFY(lexis::SchemaMigration::ensureSchema(db));
+
+      QSqlQuery ftsQuery(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'items_fts'", db);
+      QVERIFY(ftsQuery.exec());
+      QVERIFY(ftsQuery.next());
+
+      QSqlQuery triggerQuery(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name = 'items_fts_insert'", db);
+      QVERIFY(triggerQuery.exec());
+      QVERIFY(triggerQuery.next());
+      db.close();
+    }
+    QSqlDatabase::removeDatabase("migration_test");
+  }
 };
 
 QTEST_MAIN(SchemaMigrationTest)

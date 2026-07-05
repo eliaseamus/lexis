@@ -2,6 +2,7 @@
 
 #include <QTemporaryDir>
 #include <QTemporaryFile>
+#include <QRegularExpression>
 
 namespace lexis {
 
@@ -26,6 +27,13 @@ QDateTime parseDateTimeFromDb(const QString& value) {
   }
 
   return QDateTime::fromString(value, Qt::TextDate);
+}
+
+QString stripHtmlPlainText(const QString& text) {
+  QString plain = text;
+  plain.remove(QRegularExpression(QStringLiteral("<[^>]*>")));
+  plain.replace(QStringLiteral("&nbsp;"), QStringLiteral(" "));
+  return plain.trimmed();
 }
 
 bool writeCompressedBlob(QTemporaryFile& file, const QByteArray& compressedBlob) {

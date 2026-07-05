@@ -23,5 +23,6 @@ QString temporaryFileTemplate();
 bool writeCompressedBlob(QTemporaryFile& file, const QByteArray& compressedBlob);
 QString formatDateTimeForDb(const QDateTime& dateTime);
 QDateTime parseDateTimeFromDb(const QString& value);
+QString stripHtmlPlainText(const QString& text);
 
 }  // namespace lexis

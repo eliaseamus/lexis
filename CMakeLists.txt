@@ -314,6 +314,7 @@ qt_add_executable(test_library_search
   tests/test_library_search.cpp
   src/db/schema_migration.cpp
   src/db/library_search.cpp
+  src/utils.cpp
   src/model/section_type.cpp
 )
 
@@ -387,6 +388,7 @@ qt_add_executable(test_library_group_suggestion
   src/db/library_search.cpp
   src/db/library_group_suggestion.cpp
   src/web/dictionary_summary.cpp
+  src/utils.cpp
   src/model/section_type.cpp
 )
 

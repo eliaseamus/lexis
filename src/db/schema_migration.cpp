@@ -150,6 +150,59 @@ bool SchemaMigration::migrateToV4(QSqlDatabase& db) {
   return execSql(db, "ALTER TABLE items ADD COLUMN dictionary_summary TEXT");
 }
 
+bool SchemaMigration::migrateToV5(QSqlDatabase& db) {
+  if (tableExists(db, QStringLiteral("items_fts"))) {
+    return true;
+  }
+
+  const char* statements[] = {
+    "CREATE VIRTUAL TABLE items_fts USING fts5("
+    "  item_id UNINDEXED,"
+    "  language_code UNINDEXED,"
+    "  title,"
+    "  meaning,"
+    "  dictionary_summary,"
+    "  cached_translation,"
+    "  tokenize='unicode61 remove_diacritics 2'"
+    ")",
+    "CREATE TRIGGER IF NOT EXISTS items_fts_insert AFTER INSERT ON items BEGIN "
+    "INSERT INTO items_fts(item_id, language_code, title, meaning, dictionary_summary, "
+    "cached_translation) "
+    "VALUES (new.id, new.language_code, new.title, IFNULL(new.meaning, ''), "
+    "IFNULL(new.dictionary_summary, ''), IFNULL(new.cached_translation, '')); "
+    "END",
+    "CREATE TRIGGER IF NOT EXISTS items_fts_delete AFTER DELETE ON items BEGIN "
+    "DELETE FROM items_fts WHERE item_id = old.id; "
+    "END",
+    "CREATE TRIGGER IF NOT EXISTS items_fts_update AFTER UPDATE ON items BEGIN "
+    "DELETE FROM items_fts WHERE item_id = old.id; "
+    "INSERT INTO items_fts(item_id, language_code, title, meaning, dictionary_summary, "
+    "cached_translation) "
+    "VALUES (new.id, new.language_code, new.title, IFNULL(new.meaning, ''), "
+    "IFNULL(new.dictionary_summary, ''), IFNULL(new.cached_translation, '')); "
+    "END",
+  };
+
+  for (const auto* sql : statements) {
+    if (!execSql(db, sql)) {
+      return false;
+    }
+  }
+
+  QSqlQuery backfill(db);
+  if (!backfill.exec(
+        "INSERT INTO items_fts(item_id, language_code, title, meaning, dictionary_summary, "
+        "cached_translation) "
+        "SELECT id, language_code, title, IFNULL(meaning, ''), IFNULL(dictionary_summary, ''), "
+        "IFNULL(cached_translation, '') "
+        "FROM items")) {
+    qWarning() << "backfill items_fts:" << backfill.lastError();
+    return false;
+  }
+
+  return true;
+}
+
 bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
   if (!migrateToV2(db)) {
     return false;
@@ -158,6 +211,9 @@ bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
     return false;
   }
   if (!migrateToV4(db)) {
+    return false;
+  }
+  if (!migrateToV5(db)) {
     return false;
   }
   if (currentVersion(db) < kSchemaVersion) {

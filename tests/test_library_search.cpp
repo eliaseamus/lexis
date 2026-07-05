@@ -12,13 +12,15 @@ class LibrarySearchTest : public QObject {
 
  private:
   bool insertItem(QSqlDatabase& db, int id, const QString& language, std::optional<int> parentId,
-                  const QString& title, int type, const QString& meaning = {}) {
+                  const QString& title, int type, const QString& meaning = {},
+                  const QString& dictionarySummary = {}) {
     QSqlQuery query(db);
     query.prepare(
       "INSERT INTO items"
-      "(id, language_code, parent_id, title, creation_time, modification_time, type, color, meaning)"
-      "VALUES (:id, :language_code, :parent_id, :title, :creation, :modification, :type, :color, "
-      ":meaning)");
+      "(id, language_code, parent_id, title, creation_time, modification_time, type, color, "
+      "meaning, dictionary_summary)"
+      "VALUES (:id, :language_code, :parent_id, :title, :creation, :modification, :type, "
+      ":color, :meaning, :dictionary_summary)");
     query.bindValue(":id", id);
     query.bindValue(":language_code", language);
     if (parentId.has_value()) {
@@ -32,6 +34,11 @@ class LibrarySearchTest : public QObject {
     query.bindValue(":type", type);
     query.bindValue(":color", "#ffffff");
     query.bindValue(":meaning", meaning);
+    if (dictionarySummary.isEmpty()) {
+      query.bindValue(":dictionary_summary", QVariant());
+    } else {
+      query.bindValue(":dictionary_summary", dictionarySummary);
+    }
     return query.exec();
   }
 
@@ -203,6 +210,30 @@ class LibrarySearchTest : public QObject {
     lexis::SectionTypeManager typeManager;
     QCOMPARE(lexis::LibrarySearch::findByTitle(db, "en", "Personality", typeManager).size(), 0);
     QCOMPARE(lexis::LibrarySearch::findByTitle(db, "en", "Food", typeManager).size(), 0);
+
+    db.close();
+    QSqlDatabase::removeDatabase("search_test");
+  }
+
+  void findsWordsByDictionarySummary() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/search.db";
+    QVERIFY(createDatabase(dbPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "search_test");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    QSqlQuery(db).exec(
+      "UPDATE items SET dictionary_summary = 'steer\nwheel\nvehicle part' WHERE id = 3");
+
+    lexis::SectionTypeManager typeManager;
+    const auto results = lexis::LibrarySearch::search(db, "en", "vehicle", typeManager);
+    QCOMPARE(results.size(), 1);
+    QCOMPARE(results[0].toMap().value("title").toString(), QString("ingenious"));
+    QCOMPARE(results[0].toMap().value("snippet").toString(), QString("vehicle part"));
 
     db.close();
     QSqlDatabase::removeDatabase("search_test");

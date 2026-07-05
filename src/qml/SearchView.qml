@@ -112,8 +112,10 @@ Item {
 
                 Text {
                   Layout.fillWidth: true
-                  visible: modelData.type === "Word" && modelData.meaning.length > 0
-                  text: modelData.meaning
+                  visible: modelData.type === "Word"
+                           && modelData.snippet !== undefined
+                           && modelData.snippet.length > 0
+                  text: modelData.snippet
                   color: resultRow.rowTextColor
                   opacity: 0.75
                   elide: Text.ElideRight
