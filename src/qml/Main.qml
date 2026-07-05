@@ -39,6 +39,8 @@ Window {
     property string currentLanguage
     property list<string> languages: []
     property string sortRole: "Title"
+    property string wordSortRole: ""
+    property string groupSortRole: ""
     property color accentColor: Material.accentColor
     property color fgColor: "white"
   }

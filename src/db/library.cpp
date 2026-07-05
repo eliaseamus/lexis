@@ -840,7 +840,28 @@ QVariantList Library::wordsInScope(int scopeRootId) const {
   if (_language.isEmpty()) {
     return {};
   }
-  return LibraryStatistics::scopedWords(QSqlDatabase::database(), _language, scopeRootId);
+
+  const auto words =
+    LibraryStatistics::scopedWords(QSqlDatabase::database(), _language, scopeRootId);
+  if (!FrequencyLookup::isOpen()) {
+    return words;
+  }
+
+  QVariantList enriched;
+  enriched.reserve(words.size());
+  for (const auto& entry : words) {
+    auto map = entry.toMap();
+    if (map.value(QStringLiteral("frequencyTier")).toString().isEmpty()) {
+      const auto result =
+        FrequencyLookup::lookup(_language, map.value(QStringLiteral("title")).toString());
+      if (result.found) {
+        map.insert(QStringLiteral("frequencyRank"), result.rank);
+        map.insert(QStringLiteral("frequencyTier"), result.tier);
+      }
+    }
+    enriched.append(map);
+  }
+  return enriched;
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

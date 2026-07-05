@@ -8,9 +8,8 @@ namespace lexis {
 
 LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent)
     : QSortFilterProxyModel(parent), _source(new LibraryItemModel(this)) {
-  AppSettings settings;
   setSourceModel(_source);
-  setSortingRole(settings.getSortRole());
+  setSortRole(LibraryItemModel::TitleRole);
   setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 

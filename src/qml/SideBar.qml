@@ -341,7 +341,7 @@ Item {
     parent: ApplicationWindow.overlay
     onAccepted: {
       library.sections.forEach((section) => {
-        section.sort(settings.sortRole)
+        section.sort(section.type === 0 ? settings.wordSortRole : settings.groupSortRole)
       })
     }
   }

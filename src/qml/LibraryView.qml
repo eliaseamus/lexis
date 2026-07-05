@@ -439,7 +439,8 @@ Pane {
           "imageUrl": item.imageUrl,
           "itemColor": item.color,
           "audioUrl": item.audioUrl,
-          "meaning": item.meaning
+          "meaning": item.meaning,
+          "frequencyTier": item.frequencyTier !== undefined ? item.frequencyTier : ""
         })
       }
     } else {

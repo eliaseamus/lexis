@@ -146,6 +146,45 @@ Pane {
           anchors.margins: 16
           spacing: 12
 
+          RowLayout {
+            Layout.fillWidth: true
+            visible: currentWord !== null && currentWord.frequencyTier !== undefined
+                     && currentWord.frequencyTier.length > 0
+            spacing: 0
+
+            Item { Layout.fillWidth: true }
+
+            Rectangle {
+              id: frequencyBadge
+              Layout.minimumWidth: frequencyBadgeLabel.implicitWidth + 32
+              Layout.preferredWidth: frequencyBadgeLabel.implicitWidth + 32
+              implicitHeight: 26
+              radius: implicitHeight / 2
+              color: Utils.frequencyTierColor(currentWord.frequencyTier)
+
+              Text {
+                id: frequencyBadgeLabel
+                anchors.centerIn: parent
+                text: Utils.frequencyTierLabel(currentWord.frequencyTier)
+                color: "white"
+                font.pixelSize: 12
+                font.bold: true
+              }
+
+              ToolTip {
+                visible: frequencyBadgeMouseArea.containsMouse
+                text: qsTr("Word frequency: %1")
+                      .arg(Utils.frequencyTierLabel(currentWord.frequencyTier))
+              }
+
+              MouseArea {
+                id: frequencyBadgeMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+              }
+            }
+          }
+
           Label {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true

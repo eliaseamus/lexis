@@ -385,6 +385,11 @@ in the right bottom corner.</source>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
+    <message>
+        <location filename="../src/qml/QuizView.qml" line="165"/>
+        <source>Word frequency: %1</source>
+        <translation>Частотность слова: %1</translation>
+    </message>
 </context>
 <context>
     <name>SearchView</name>
@@ -610,22 +615,35 @@ in the right bottom corner.</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="28"/>
+        <source>Words</source>
+        <translation>Слова</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SortRoleDialog.qml" line="47"/>
+        <source>Subject groups</source>
+        <translation>Группы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
         <source>Frequency</source>
         <translation>Частоте</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
         <source>Modification time</source>
         <translation>Времени изменения</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
         <source>Creation time</source>
         <translation>Времени создания</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
         <source>Title</source>
         <translation>Названию</translation>
     </message>

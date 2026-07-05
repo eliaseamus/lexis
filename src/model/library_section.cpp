@@ -2,6 +2,7 @@
 
 #include <QHash>
 
+#include "app_settings.hpp"
 #include "section_type.hpp"
 
 namespace lexis {
@@ -11,6 +12,8 @@ LibrarySection::LibrarySection(QObject* parent)
 
 LibrarySection::LibrarySection(LibrarySectionType type, QObject* parent) : LibrarySection(parent) {
   setType(type);
+  AppSettings settings;
+  _model->reSort(settings.sortRoleForSectionType(type));
 }
 
 void LibrarySection::sort(const QString& sortRole) {
