@@ -10,7 +10,9 @@ class LibraryGroupSuggestion {
   static QVariantList suggestSubjectGroups(const QSqlDatabase& db, const QString& languageCode,
                                            const QString& wordTitle, const QString& meaning,
                                            const QString& dictionarySummary, int excludeItemId,
-                                           int currentParentId, int limit = 3);
+                                           int currentParentId,
+                                           const QString& translationLanguageCode = {},
+                                           int limit = 3);
 };
 
 }  // namespace lexis

@@ -223,7 +223,7 @@ Rectangle {
     const excludeId = editMode ? itemID : -1;
     const parentId = editMode ? itemParentId : library.currentParentId();
     const suggestions = library.suggestSubjectGroups(titleItem.text, meaning, excludeId, parentId);
-    if (suggestions.length === 0 || suggestions[0].confidence < 40) {
+    if (suggestions.length === 0) {
       commitItem();
       return;
     }

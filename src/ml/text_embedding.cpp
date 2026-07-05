@@ -44,19 +44,37 @@ std::optional<QVector<float>> averageVectors(const QVector<QVector<float>>& vect
   return sum;
 }
 
+std::optional<QVector<float>> lookupToken(const QString& languageCode,
+                                          const QString& secondaryLanguageCode,
+                                          const QString& token) {
+  const auto primary = EmbeddingLookup::lookup(languageCode, token);
+  if (primary.found) {
+    return primary.values;
+  }
+  if (secondaryLanguageCode.isEmpty() || secondaryLanguageCode == languageCode) {
+    return std::nullopt;
+  }
+
+  const auto secondary = EmbeddingLookup::lookup(secondaryLanguageCode, token);
+  if (!secondary.found) {
+    return std::nullopt;
+  }
+  return secondary.values;
+}
+
 }  // namespace
 
 std::optional<QVector<float>> TextEmbedding::embed(const QString& languageCode,
-                                                   const QString& text) {
+                                                   const QString& text,
+                                                   const QString& secondaryLanguageCode) {
   if (!EmbeddingLookup::isOpen() || languageCode.isEmpty()) {
     return std::nullopt;
   }
 
   QVector<QVector<float>> vectors;
   for (const auto& token : tokenize(text)) {
-    const auto vector = EmbeddingLookup::lookup(languageCode, token);
-    if (vector.found) {
-      vectors.append(vector.values);
+    if (const auto vector = lookupToken(languageCode, secondaryLanguageCode, token)) {
+      vectors.append(*vector);
     }
   }
 
@@ -64,9 +82,10 @@ std::optional<QVector<float>> TextEmbedding::embed(const QString& languageCode,
 }
 
 std::optional<double> TextEmbedding::similarity(const QString& languageCode, const QString& left,
-                                                const QString& right) {
-  const auto leftVector = embed(languageCode, left);
-  const auto rightVector = embed(languageCode, right);
+                                                const QString& right,
+                                                const QString& secondaryLanguageCode) {
+  const auto leftVector = embed(languageCode, left, secondaryLanguageCode);
+  const auto rightVector = embed(languageCode, right, secondaryLanguageCode);
   if (!leftVector.has_value() || !rightVector.has_value()) {
     return std::nullopt;
   }
@@ -75,9 +94,9 @@ std::optional<double> TextEmbedding::similarity(const QString& languageCode, con
   return cosine > 0.0 ? cosine : 0.0;
 }
 
-std::optional<double> TextEmbedding::centroidSimilarity(const QString& languageCode,
-                                                        const QVector<float>& target,
-                                                        const QVector<QString>& members) {
+std::optional<double> TextEmbedding::centroidSimilarity(
+  const QString& languageCode, const QVector<float>& target, const QVector<QString>& members,
+  const QString& secondaryLanguageCode) {
   if (!EmbeddingLookup::isOpen() || members.isEmpty()) {
     return std::nullopt;
   }
@@ -85,7 +104,7 @@ std::optional<double> TextEmbedding::centroidSimilarity(const QString& languageC
   QVector<QVector<float>> memberVectors;
   memberVectors.reserve(members.size());
   for (const auto& member : members) {
-    if (const auto vector = embed(languageCode, member)) {
+    if (const auto vector = embed(languageCode, member, secondaryLanguageCode)) {
       memberVectors.append(*vector);
     }
   }

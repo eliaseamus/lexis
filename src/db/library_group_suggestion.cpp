@@ -11,6 +11,8 @@
 #include "schema_migration.hpp"
 #include "section_type.hpp"
 #include "text_embedding.hpp"
+#include "embedding_lookup.hpp"
+#include "utils.hpp"
 
 namespace lexis {
 
@@ -116,6 +118,14 @@ QVector<int> descendantWordIds(int groupId, const QHash<int, QVector<int>>& chil
 double scoreGroupHeuristic(const QString& wordTitle, const QString& semanticContext,
                            const QString& groupTitle,
                            const QVector<QPair<QString, QString>>& wordsInGroup) {
+  if (wordsInGroup.isEmpty()) {
+    double score = textSimilarity(wordTitle, groupTitle) * 0.70;
+    if (!semanticContext.isEmpty()) {
+      score += textSimilarity(semanticContext, groupTitle) * 0.30;
+    }
+    return score;
+  }
+
   double score = 0.0;
   score += textSimilarity(wordTitle, groupTitle) * 0.35;
 
@@ -155,17 +165,35 @@ QString memberText(const QString& title, const QString& semanticContext) {
   return title + QLatin1Char('\n') + semanticContext;
 }
 
-double scoreGroupWithEmbeddings(const QString& languageCode, const QString& wordTitle,
-                                const QString& semanticContext, const QString& groupTitle,
+double scoreGroupWithEmbeddings(const QString& languageCode, const QString& translationLanguageCode,
+                                const QString& wordTitle, const QString& semanticContext,
+                                const QString& groupTitle,
                                 const QVector<QPair<QString, QString>>& wordsInGroup) {
+  if (wordsInGroup.isEmpty()) {
+    double score = 0.0;
+    if (const auto titleSimilarity =
+          TextEmbedding::similarity(languageCode, wordTitle, groupTitle, translationLanguageCode)) {
+      score += *titleSimilarity * 0.70;
+    }
+    if (!semanticContext.isEmpty()) {
+      if (const auto semanticSimilarity = TextEmbedding::similarity(
+            languageCode, semanticContext, groupTitle, translationLanguageCode)) {
+        score += *semanticSimilarity * 0.30;
+      }
+    }
+    return score;
+  }
+
   const auto targetText = memberText(wordTitle, semanticContext);
-  const auto targetEmbedding = TextEmbedding::embed(languageCode, targetText);
+  const auto targetEmbedding =
+    TextEmbedding::embed(languageCode, targetText, translationLanguageCode);
   if (!targetEmbedding.has_value()) {
-    return scoreGroupHeuristic(wordTitle, semanticContext, groupTitle, wordsInGroup);
+    return 0.0;
   }
 
   double score = 0.0;
-  if (const auto titleSimilarity = TextEmbedding::similarity(languageCode, wordTitle, groupTitle)) {
+  if (const auto titleSimilarity =
+        TextEmbedding::similarity(languageCode, wordTitle, groupTitle, translationLanguageCode)) {
     score += *titleSimilarity * 0.15;
   }
 
@@ -175,14 +203,15 @@ double scoreGroupWithEmbeddings(const QString& languageCode, const QString& word
     memberTexts.append(memberText(existingTitle, existingSemanticContext));
   }
 
-  if (const auto centroidSimilarity =
-        TextEmbedding::centroidSimilarity(languageCode, *targetEmbedding, memberTexts)) {
+  if (const auto centroidSimilarity = TextEmbedding::centroidSimilarity(
+        languageCode, *targetEmbedding, memberTexts, translationLanguageCode)) {
     score += *centroidSimilarity * 0.55;
   }
 
   double bestMemberScore = 0.0;
   for (const auto& member : memberTexts) {
-    if (const auto memberSimilarity = TextEmbedding::similarity(languageCode, targetText, member)) {
+    if (const auto memberSimilarity =
+          TextEmbedding::similarity(languageCode, targetText, member, translationLanguageCode)) {
       bestMemberScore = *memberSimilarity > bestMemberScore ? *memberSimilarity : bestMemberScore;
     }
   }
@@ -190,14 +219,19 @@ double scoreGroupWithEmbeddings(const QString& languageCode, const QString& word
   return score;
 }
 
-double scoreGroup(const QString& languageCode, const QString& wordTitle,
-                  const QString& semanticContext, const QString& groupTitle,
+double scoreGroup(const QString& languageCode, const QString& translationLanguageCode,
+                  const QString& wordTitle, const QString& semanticContext,
+                  const QString& groupTitle,
                   const QVector<QPair<QString, QString>>& wordsInGroup) {
-  if (TextEmbedding::embed(languageCode, wordTitle).has_value()) {
-    return scoreGroupWithEmbeddings(languageCode, wordTitle, semanticContext, groupTitle,
-                                    wordsInGroup);
+  const auto heuristic =
+    scoreGroupHeuristic(wordTitle, semanticContext, groupTitle, wordsInGroup);
+  if (!EmbeddingLookup::isOpen()) {
+    return heuristic;
   }
-  return scoreGroupHeuristic(wordTitle, semanticContext, groupTitle, wordsInGroup);
+
+  const auto embedding = scoreGroupWithEmbeddings(languageCode, translationLanguageCode, wordTitle,
+                                                  semanticContext, groupTitle, wordsInGroup);
+  return embedding > heuristic ? embedding : heuristic;
 }
 
 }  // namespace
@@ -205,15 +239,15 @@ double scoreGroup(const QString& languageCode, const QString& wordTitle,
 QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
   const QSqlDatabase& db, const QString& languageCode, const QString& wordTitle,
   const QString& meaning, const QString& dictionarySummary, int excludeItemId,
-  int currentParentId, int limit) {
+  int currentParentId, const QString& translationLanguageCode, int limit) {
   QVariantList results;
   const auto trimmedTitle = wordTitle.trimmed();
   if (languageCode.isEmpty() || trimmedTitle.isEmpty() || limit <= 0) {
     return results;
   }
 
-  const auto targetSemanticContext =
-    combineSemanticContext(meaning.trimmed(), dictionarySummary.trimmed());
+  const auto targetSemanticContext = combineSemanticContext(
+    stripHtmlPlainText(meaning.trimmed()), dictionarySummary.trimmed());
 
   QSqlQuery query(db);
   query.prepare(
@@ -242,7 +276,7 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
                                                             : query.value("parent_id").toInt();
 
     titles.insert(id, query.value("title").toString());
-    semanticContexts.insert(id, combineSemanticContext(query.value("meaning").toString(),
+    semanticContexts.insert(id, combineSemanticContext(stripHtmlPlainText(query.value("meaning").toString()),
                                                          query.value("dictionary_summary").toString(),
                                                          query.value("cached_translation").toString()));
     typeById.insert(id, type);
@@ -272,9 +306,9 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
     }
 
     const auto groupTitle = titles.value(groupId);
-    const auto score =
-      scoreGroup(languageCode, trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
-    if (score < 0.10) {
+    const auto score = scoreGroup(languageCode, translationLanguageCode, trimmedTitle,
+                                  targetSemanticContext, groupTitle, wordsInGroup);
+    if (score <= 0.0) {
       continue;
     }
 
@@ -298,9 +332,13 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
             });
 
   const auto topScore = scoredGroups.front().score;
+  const double minimumScore = topScore * 0.28;
   const int resultCount = limit < scoredGroups.size() ? limit : scoredGroups.size();
   for (int i = 0; i < resultCount; ++i) {
     auto entry = scoredGroups[i];
+    if (entry.score < minimumScore) {
+      break;
+    }
     entry.confidence = topScore > 0.0 ? qRound(100.0 * entry.score / topScore) : 0;
     results.append(QVariantMap{
       {QStringLiteral("groupId"),    entry.groupId    },

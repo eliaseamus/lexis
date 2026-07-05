@@ -10,9 +10,11 @@ class DictionarySummaryTest : public QObject {
   Q_OBJECT
 
  private:
-  Definition* makeDefinition(const QString& translationText, const QStringList& synonyms = {},
-                             const QStringList& meanings = {}) {
+  Definition* makeDefinition(const QString& sourceText, const QString& translationText,
+                             const QStringList& synonyms = {}, const QStringList& meanings = {}) {
     auto* definition = new Definition(this);
+    definition->setText(sourceText);
+    definition->setPartOfSpeech(QStringLiteral("noun"));
     auto* translation = new Translation(definition);
     translation->setText(translationText);
     translation->setSynonyms(synonyms);
@@ -24,19 +26,19 @@ class DictionarySummaryTest : public QObject {
  private slots:
   void buildsUniqueSummaryLines() {
     const QVector<Definition*> definitions = {
-      makeDefinition("руль", {"wheel", "steering wheel"}, {"vehicle part"}),
-      makeDefinition("колесо", {"wheel"}, {"vehicle part"}),
+      makeDefinition("steer", "руль", {"wheel", "steering wheel"}, {"vehicle part"}),
+      makeDefinition("wheel", "колесо", {"wheel"}, {"vehicle part"}),
     };
 
     const auto summary = lexis::buildDictionarySummary(definitions);
     const auto lines = summary.split('\n');
 
-    QCOMPARE(lines.size(), 5);
-    QCOMPARE(lines[0], QString("руль"));
-    QCOMPARE(lines[1], QString("wheel"));
-    QCOMPARE(lines[2], QString("steering wheel"));
-    QCOMPARE(lines[3], QString("vehicle part"));
-    QCOMPARE(lines[4], QString("колесо"));
+    QCOMPARE(lines.size(), 7);
+    QCOMPARE(lines[0], QString("steer"));
+    QCOMPARE(lines[1], QString("noun"));
+    QCOMPARE(lines[2], QString("руль"));
+    QCOMPARE(lines[3], QString("wheel"));
+    QCOMPARE(lines[6], QString("колесо"));
   }
 
   void combinesSemanticContextWithoutDuplicates() {

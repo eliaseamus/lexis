@@ -1041,9 +1041,10 @@ QVariantList Library::suggestSubjectGroups(const QString& wordTitle, const QStri
   }
 
   const int parentId = currentParentId >= 0 ? currentParentId : _currentParentId;
+  const auto translationLanguage = _settings.getInterfaceLanguage();
   return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language,
                                                       wordTitle, effectiveMeaning, dictionarySummary,
-                                                      excludeItemId, parentId);
+                                                      excludeItemId, parentId, translationLanguage);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

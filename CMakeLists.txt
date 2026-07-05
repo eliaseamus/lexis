@@ -417,6 +417,7 @@ qt_add_executable(test_library_group_suggestion
   src/web/dictionary_summary.cpp
   src/ml/embedding_lookup.cpp
   src/ml/text_embedding.cpp
+  src/utils.cpp
   src/model/section_type.cpp
 )
 

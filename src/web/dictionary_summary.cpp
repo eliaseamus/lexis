@@ -28,6 +28,9 @@ QString buildDictionarySummary(const QVector<Definition*>& definitions) {
       continue;
     }
 
+    appendUnique(&lines, &seen, definition->text());
+    appendUnique(&lines, &seen, definition->partOfSpeech());
+
     for (const auto* translation : definition->translations()) {
       if (!translation) {
         continue;

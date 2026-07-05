@@ -338,7 +338,7 @@ Pane {
     const parentId = library.itemParentId(itemId);
     const suggestions = library.suggestSubjectGroups(item["title"], item["meaning"] || "",
                                                      itemId, parentId);
-    if (suggestions.length === 0 || suggestions[0].confidence < 40) {
+    if (suggestions.length === 0) {
       suggestGroupInfoDialog.message = qsTr("No strong group match found for this word.");
       suggestGroupInfoDialog.open();
       return;
