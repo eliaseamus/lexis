@@ -1,7 +1,9 @@
 #include "library.hpp"
 
 #include "library_archive.hpp"
+#include "embedding_lookup.hpp"
 #include "frequency_lookup.hpp"
+#include "library_group_organizer.hpp"
 #include "library_group_suggestion.hpp"
 #include "library_search.hpp"
 #include "library_statistics.hpp"
@@ -1044,6 +1046,66 @@ QVariantList Library::suggestSubjectGroups(const QString& wordTitle, const QStri
   return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language,
                                                       wordTitle, effectiveMeaning, dictionarySummary,
                                                       excludeItemId, parentId);
+}
+
+QVariantList Library::proposeWordGroups(int scopeRootId) const {
+  if (_language.isEmpty()) {
+    return {};
+  }
+  const int scope = scopeRootId >= 0 ? scopeRootId : _currentParentId;
+  return LibraryGroupOrganizer::proposeGroups(QSqlDatabase::database(), _language, scope);
+}
+
+int Library::createGroupWithWords(const QString& name, const QColor& color,
+                                  const QVariantList& wordIds) {
+  const auto trimmedName = name.trimmed();
+  if (_language.isEmpty() || trimmedName.isEmpty()) {
+    return -1;
+  }
+
+  const auto now = formatDateTimeForDb(QDateTime::currentDateTime());
+
+  QSqlQuery query;
+  query.prepare(
+    "INSERT INTO items"
+    "(language_code, parent_id, title, creation_time, modification_time, type, color)"
+    "VALUES (:language_code, :parent_id, :title, :creation, :modification, :type, :color)");
+  query.bindValue(":language_code", _language);
+  query.bindValue(":parent_id", parentIdVariant(_currentParentId));
+  query.bindValue(":title", trimmedName);
+  query.bindValue(":creation", now);
+  query.bindValue(":modification", now);
+  query.bindValue(":type", std::to_underlying(LibrarySectionType::kSubjectGroup));
+  query.bindValue(":color", color.isValid() ? color.name() : QStringLiteral("whitesmoke"));
+
+  if (!query.exec()) {
+    qWarning() << "Failed to create group" << trimmedName << ":" << query.lastError();
+    return -1;
+  }
+
+  const int groupId = query.lastInsertId().toInt();
+  for (const auto& wordId : wordIds) {
+    QSqlQuery moveQuery;
+    moveQuery.prepare(
+      "UPDATE items SET parent_id = :parent_id, modification_time = :modification "
+      "WHERE id = :id AND language_code = :language_code AND type = :type");
+    moveQuery.bindValue(":parent_id", groupId);
+    moveQuery.bindValue(":modification", now);
+    moveQuery.bindValue(":id", wordId.toInt());
+    moveQuery.bindValue(":language_code", _language);
+    moveQuery.bindValue(":type", std::to_underlying(LibrarySectionType::kWord));
+    if (!moveQuery.exec()) {
+      qWarning() << "Failed to move word" << wordId << "into group" << groupId << ":"
+                 << moveQuery.lastError();
+    }
+  }
+
+  openFolder(_currentParentId);
+  return groupId;
+}
+
+bool Library::hasSemanticIndex() const {
+  return EmbeddingLookup::isOpen();
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

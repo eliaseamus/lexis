@@ -103,6 +103,10 @@ class Library : public QObject {
   Q_INVOKABLE QVariantList suggestSubjectGroups(const QString& wordTitle, const QString& meaning = {},
                                                 int excludeItemId = -1,
                                                 int currentParentId = -1) const;
+  Q_INVOKABLE QVariantList proposeWordGroups(int scopeRootId = -1) const;
+  Q_INVOKABLE int createGroupWithWords(const QString& name, const QColor& color,
+                                       const QVariantList& wordIds);
+  Q_INVOKABLE bool hasSemanticIndex() const;
   Q_INVOKABLE QVariantList ancestorPath(int itemId) const;
   Q_INVOKABLE LibraryItem* getItem(int id);
   Q_INVOKABLE QUrl itemImageUrl(int id);

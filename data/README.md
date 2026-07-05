@@ -1,3 +1,26 @@
+# Bundled data
+
+## Word embeddings (`data/embeddings.db`)
+
+Semantic group suggestions ("spear" → *Weapon*) and the "Organize words" feature use
+pre-computed word embeddings bundled as a SQLite database. Vectors come from a pre-trained
+[gensim](https://radimrehurek.com/gensim/) model (GloVe `glove-wiki-gigaword-100` by default,
+English), restricted to the ~60k most frequent words, unit-normalized and quantized to int8
+(~6 MiB total).
+
+```bash
+python3 -m venv .venv-wordfreq
+.venv-wordfreq/bin/pip install -r scripts/requirements.txt
+.venv-wordfreq/bin/python scripts/generate_embedding_db.py
+```
+
+Or via CMake: `cmake --build build --target generate_embedding_db`.
+
+Lookup is implemented in `EmbeddingLookup` / `TextEmbedding` (`src/ml/`). When the database is
+absent, group suggestions fall back to lexical matching and "Organize words" is disabled.
+For other learning languages pass a matching model, e.g.
+`--model <fasttext-model> --languages de`.
+
 # Word frequency data
 
 Lexis word popularity labels (`core`, `common`, `intermediate`, `advanced`, `rare`) come from

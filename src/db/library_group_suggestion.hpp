@@ -11,6 +11,8 @@ class LibraryGroupSuggestion {
                                            const QString& wordTitle, const QString& meaning,
                                            const QString& dictionarySummary, int excludeItemId,
                                            int currentParentId, int limit = 3);
+  // Maps an internal match score to an absolute 0-100 confidence.
+  static int confidenceFromScore(double score);
 };
 
 }  // namespace lexis

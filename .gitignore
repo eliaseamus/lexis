@@ -5,5 +5,7 @@ build/
 .git/
 CMakeLists.txt.user
 data/frequency.db
+data/embeddings.db
 .venv-wordfreq/
+.venv-embed/
 

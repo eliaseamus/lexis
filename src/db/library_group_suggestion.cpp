@@ -1,6 +1,5 @@
 #include "library_group_suggestion.hpp"
 
-#include <QSet>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -10,6 +9,8 @@
 #include "library_search.hpp"
 #include "schema_migration.hpp"
 #include "section_type.hpp"
+#include "text_embedding.hpp"
+#include "text_similarity.hpp"
 
 namespace lexis {
 
@@ -22,67 +23,6 @@ struct ScoredGroup {
   double score = 0.0;
   int confidence = 0;
 };
-
-QStringList tokenize(const QString& text) {
-  QStringList tokens;
-  QString current;
-  for (const auto character : text.toCaseFolded()) {
-    if (character.isLetterOrNumber()) {
-      current.append(character);
-      continue;
-    }
-    if (!current.isEmpty()) {
-      tokens.append(current);
-      current.clear();
-    }
-  }
-  if (!current.isEmpty()) {
-    tokens.append(current);
-  }
-  return tokens;
-}
-
-double jaccardSimilarity(const QStringList& leftTokens, const QStringList& rightTokens) {
-  if (leftTokens.isEmpty() || rightTokens.isEmpty()) {
-    return 0.0;
-  }
-
-  QSet<QString> leftSet(leftTokens.begin(), leftTokens.end());
-  QSet<QString> rightSet(rightTokens.begin(), rightTokens.end());
-  int intersection = 0;
-  for (const auto& token : leftSet) {
-    if (rightSet.contains(token)) {
-      ++intersection;
-    }
-  }
-
-  const int unionSize = leftSet.size() + rightSet.size() - intersection;
-  if (unionSize <= 0) {
-    return 0.0;
-  }
-  return static_cast<double>(intersection) / unionSize;
-}
-
-double substringSimilarity(const QString& left, const QString& right) {
-  const auto normalizedLeft = left.trimmed().toCaseFolded();
-  const auto normalizedRight = right.trimmed().toCaseFolded();
-  if (normalizedLeft.isEmpty() || normalizedRight.isEmpty()) {
-    return 0.0;
-  }
-  if (normalizedLeft == normalizedRight) {
-    return 1.0;
-  }
-  if (normalizedLeft.contains(normalizedRight) || normalizedRight.contains(normalizedLeft)) {
-    return 0.75;
-  }
-  return 0.0;
-}
-
-double textSimilarity(const QString& left, const QString& right) {
-  const auto jaccard = jaccardSimilarity(tokenize(left), tokenize(right));
-  const auto substring = substringSimilarity(left, right);
-  return jaccard >= substring ? jaccard : substring;
-}
 
 QVector<int> descendantWordIds(int groupId, const QHash<int, QVector<int>>& childrenByParent,
                                const QHash<int, LibrarySectionType>& typeById) {
@@ -112,9 +52,9 @@ QVector<int> descendantWordIds(int groupId, const QHash<int, QVector<int>>& chil
   return wordIds;
 }
 
-double scoreGroup(const QString& wordTitle, const QString& semanticContext,
-                  const QString& groupTitle,
-                  const QVector<QPair<QString, QString>>& wordsInGroup) {
+double lexicalGroupScore(const QString& wordTitle, const QString& semanticContext,
+                         const QString& groupTitle,
+                         const QVector<QPair<QString, QString>>& wordsInGroup) {
   double score = 0.0;
   score += textSimilarity(wordTitle, groupTitle) * 0.35;
 
@@ -147,7 +87,52 @@ double scoreGroup(const QString& wordTitle, const QString& semanticContext,
   return score;
 }
 
+// Raw cosine similarities between arbitrary related words sit well below 1.0,
+// and unrelated words rarely drop to exactly 0. Rescale to strip the noise
+// floor and stretch strong relations toward 1.0.
+double rescaleCosine(double similarity) {
+  const auto rescaled = (similarity - 0.30) / 0.70;
+  if (rescaled < 0.0) {
+    return 0.0;
+  }
+  return rescaled > 1.0 ? 1.0 : rescaled;
+}
+
+double embeddingGroupScore(const EmbeddingVector& wordVector,
+                           const EmbeddingVector& contextVector,
+                           const EmbeddingVector& groupTitleVector,
+                           const QVector<EmbeddingVector>& memberVectors) {
+  const auto& targetVector = wordVector.isEmpty() ? contextVector : wordVector;
+  if (targetVector.isEmpty()) {
+    return 0.0;
+  }
+
+  auto centroid = TextEmbedding::meanVector(memberVectors);
+  TextEmbedding::normalize(centroid);
+
+  double score = 0.0;
+  score += rescaleCosine(TextEmbedding::similarity(targetVector, groupTitleVector)) * 0.35;
+  score += rescaleCosine(TextEmbedding::similarity(targetVector, centroid)) * 0.45;
+
+  if (!contextVector.isEmpty()) {
+    const auto contextSimilarity =
+      std::max(TextEmbedding::similarity(contextVector, groupTitleVector),
+               TextEmbedding::similarity(contextVector, centroid));
+    score += rescaleCosine(contextSimilarity) * 0.20;
+  }
+
+  return score;
+}
+
 }  // namespace
+
+int LibraryGroupSuggestion::confidenceFromScore(double score) {
+  // A score of ~0.7 already means a very strong match with either scoring
+  // strategy, so treat it as full confidence.
+  const auto normalized = score / 0.7;
+  const auto clamped = normalized < 0.0 ? 0.0 : (normalized > 1.0 ? 1.0 : normalized);
+  return qRound(100.0 * clamped);
+}
 
 QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
   const QSqlDatabase& db, const QString& languageCode, const QString& wordTitle,
@@ -204,6 +189,23 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
     return results;
   }
 
+  const bool useEmbeddings = EmbeddingLookup::isOpen();
+  const auto targetVector =
+    useEmbeddings ? TextEmbedding::embedText(languageCode, trimmedTitle) : EmbeddingVector{};
+  const auto contextVector = useEmbeddings
+                               ? TextEmbedding::embedText(languageCode, targetSemanticContext)
+                               : EmbeddingVector{};
+
+  QHash<int, EmbeddingVector> memberVectorCache;
+  const auto memberVector = [&](int wordId) -> const EmbeddingVector& {
+    auto it = memberVectorCache.find(wordId);
+    if (it == memberVectorCache.end()) {
+      it = memberVectorCache.insert(wordId,
+                                    TextEmbedding::embedText(languageCode, titles.value(wordId)));
+    }
+    return *it;
+  };
+
   const auto index = LibrarySearch::loadItemIndex(db, languageCode);
   QVector<ScoredGroup> scoredGroups;
   scoredGroups.reserve(subjectGroupIds.size());
@@ -213,13 +215,27 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
       continue;
     }
 
+    const auto wordIds = descendantWordIds(groupId, childrenByParent, typeById);
     QVector<QPair<QString, QString>> wordsInGroup;
-    for (const auto wordId : descendantWordIds(groupId, childrenByParent, typeById)) {
+    QVector<EmbeddingVector> memberVectors;
+    for (const auto wordId : wordIds) {
       wordsInGroup.append({titles.value(wordId), semanticContexts.value(wordId)});
+      if (useEmbeddings) {
+        const auto& vector = memberVector(wordId);
+        if (!vector.isEmpty()) {
+          memberVectors.append(vector);
+        }
+      }
     }
 
     const auto groupTitle = titles.value(groupId);
-    const auto score = scoreGroup(trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
+    auto score = lexicalGroupScore(trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
+    if (useEmbeddings) {
+      const auto groupTitleVector = TextEmbedding::embedText(languageCode, groupTitle);
+      const auto semanticScore =
+        embeddingGroupScore(targetVector, contextVector, groupTitleVector, memberVectors);
+      score = std::max(score, semanticScore);
+    }
     if (score < 0.12) {
       continue;
     }
@@ -228,7 +244,7 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
                          groupTitle,
                          LibrarySearch::breadcrumb(index, groupId),
                          score,
-                         0});
+                         confidenceFromScore(score)});
   }
 
   if (scoredGroups.isEmpty()) {
@@ -243,11 +259,9 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
               return left.groupName.localeAwareCompare(right.groupName) < 0;
             });
 
-  const auto topScore = scoredGroups.front().score;
   const int resultCount = limit < scoredGroups.size() ? limit : scoredGroups.size();
   for (int i = 0; i < resultCount; ++i) {
-    auto entry = scoredGroups[i];
-    entry.confidence = topScore > 0.0 ? qRound(100.0 * entry.score / topScore) : 0;
+    const auto& entry = scoredGroups[i];
     results.append(QVariantMap{
       {QStringLiteral("groupId"),    entry.groupId    },
       {QStringLiteral("groupName"),  entry.groupName  },

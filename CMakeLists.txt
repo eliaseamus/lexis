@@ -8,7 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network Multimedia Sql Charts
              Qml Quick QuickControls2 WebView LinguistTools Test REQUIRED)
 
-include_directories(src src/db src/gui src/model src/web)
+include_directories(src src/db src/gui src/ml src/model src/web)
 qt_standard_project_setup(REQUIRES 6.8 I18N_TRANSLATED_LANGUAGES ru)
 enable_testing(true)
 
@@ -58,8 +58,16 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library_statistics.hpp
   src/db/library_group_suggestion.cpp
   src/db/library_group_suggestion.hpp
+  src/db/library_group_organizer.cpp
+  src/db/library_group_organizer.hpp
+  src/db/text_similarity.cpp
+  src/db/text_similarity.hpp
   src/db/frequency_lookup.cpp
   src/db/frequency_lookup.hpp
+  src/ml/embedding_lookup.cpp
+  src/ml/embedding_lookup.hpp
+  src/ml/text_embedding.cpp
+  src/ml/text_embedding.hpp
   ${app_icon_resource_windows}
 )
 
@@ -110,6 +118,7 @@ qt_add_qml_module(${PROJECT_NAME}
     src/qml/SelectLanguageDialog.qml
     src/qml/SideBar.qml
     src/qml/SortRoleDialog.qml
+    src/qml/OrganizeGroupsDialog.qml
     src/qml/SubjectGroupSuggestionDialog.qml
     src/qml/TextComplete.qml
     src/qml/StatisticsDialog.qml
@@ -178,6 +187,30 @@ if(EXISTS ${LEXIS_FREQUENCY_DB})
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LEXIS_FREQUENCY_DB}
             $<TARGET_FILE_DIR:${PROJECT_NAME}>/data/frequency.db
     COMMENT "Copying frequency database next to Lexis executable"
+  )
+endif()
+
+set(LEXIS_EMBEDDING_DB "${CMAKE_CURRENT_SOURCE_DIR}/data/embeddings.db")
+if(Python3_FOUND)
+  add_custom_command(
+    OUTPUT ${LEXIS_EMBEDDING_DB}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_embedding_db.py
+            --output ${LEXIS_EMBEDDING_DB}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_embedding_db.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating word embedding database from gensim/wordfreq"
+    VERBATIM
+  )
+  add_custom_target(generate_embedding_db DEPENDS ${LEXIS_EMBEDDING_DB})
+endif()
+
+if(EXISTS ${LEXIS_EMBEDDING_DB})
+  add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LEXIS_EMBEDDING_DB}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/data/embeddings.db
+    COMMENT "Copying embedding database next to Lexis executable"
   )
 endif()
 
@@ -387,6 +420,9 @@ qt_add_executable(test_library_group_suggestion
   src/db/schema_migration.cpp
   src/db/library_search.cpp
   src/db/library_group_suggestion.cpp
+  src/db/text_similarity.cpp
+  src/ml/embedding_lookup.cpp
+  src/ml/text_embedding.cpp
   src/web/dictionary_summary.cpp
   src/utils.cpp
   src/model/section_type.cpp
@@ -400,11 +436,41 @@ target_link_libraries(test_library_group_suggestion PRIVATE
   Qt6::Gui
 )
 
-target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db src/web)
+target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db src/ml src/web)
 
 add_test(test_library_group_suggestion test_library_group_suggestion)
 
 set_target_properties(test_library_group_suggestion PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# library_group_organizer
+qt_add_executable(test_library_group_organizer
+  tests/test_library_group_organizer.cpp
+  src/db/schema_migration.cpp
+  src/db/library_group_organizer.cpp
+  src/db/text_similarity.cpp
+  src/ml/embedding_lookup.cpp
+  src/ml/text_embedding.cpp
+  src/web/dictionary_summary.cpp
+  src/utils.cpp
+  src/model/section_type.cpp
+)
+
+target_link_libraries(test_library_group_organizer PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+  Qt6::Qml
+  Qt6::Gui
+)
+
+target_include_directories(test_library_group_organizer PRIVATE src src/model src/db src/ml src/web)
+
+add_test(test_library_group_organizer test_library_group_organizer)
+
+set_target_properties(test_library_group_organizer PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

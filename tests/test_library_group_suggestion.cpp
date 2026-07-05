@@ -1,11 +1,42 @@
 #include <QTemporaryDir>
+#include <QtEndian>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QTest>
 
+#include <bit>
+#include <cmath>
+
+#include "embedding_lookup.hpp"
 #include "library_group_suggestion.hpp"
 #include "schema_migration.hpp"
 #include "section_type.hpp"
+
+namespace {
+
+QByteArray encodeVector(QVector<float> vector) {
+  double squaredNorm = 0.0;
+  for (const auto component : vector) {
+    squaredNorm += static_cast<double>(component) * component;
+  }
+  const auto norm = static_cast<float>(std::sqrt(squaredNorm));
+  float peak = 0.0F;
+  for (auto& component : vector) {
+    component /= norm;
+    peak = std::max(peak, std::abs(component));
+  }
+
+  const float scale = peak / 127.0F;
+  QByteArray blob;
+  const auto scaleBits = qToLittleEndian(std::bit_cast<quint32>(scale));
+  blob.append(reinterpret_cast<const char*>(&scaleBits), 4);
+  for (const auto component : vector) {
+    blob.append(static_cast<char>(qRound(component / scale)));
+  }
+  return blob;
+}
+
+}  // namespace
 
 class LibraryGroupSuggestionTest : public QObject {
   Q_OBJECT
@@ -94,7 +125,7 @@ class LibraryGroupSuggestionTest : public QObject {
 
     QCOMPARE(suggestions.size(), 1);
     QCOMPARE(suggestions[0].toMap().value("groupName").toString(), QString("Food"));
-    QVERIFY(suggestions[0].toMap().value("confidence").toInt() == 100);
+    QVERIFY(suggestions[0].toMap().value("confidence").toInt() >= 40);
 
     const auto carSuggestions = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
       db, "en", "engine", {}, {}, -1, lexis::kRootParentId);
@@ -103,6 +134,72 @@ class LibraryGroupSuggestionTest : public QObject {
 
     db.close();
     QSqlDatabase::removeDatabase("group_suggestion_test_run");
+  }
+
+  void suggestsGroupSemanticallyThroughEmbeddings() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    const auto dbPath = tempDir.path() + "/groups.db";
+    const auto embeddingPath = tempDir.path() + "/embeddings.db";
+
+    // Library: a "Weapon" subject group holding sword and dagger.
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "group_suggestion_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+      QVERIFY(lexis::SchemaMigration::ensureSchema(db));
+      QSqlQuery(db).exec("INSERT INTO languages(code) VALUES ('en')");
+      using enum lexis::LibrarySectionType;
+      QVERIFY(insertItem(db, 1, "en", std::nullopt, "Weapon", std::to_underlying(kSubjectGroup)));
+      QVERIFY(insertItem(db, 2, "en", 1, "sword", std::to_underlying(kWord)));
+      QVERIFY(insertItem(db, 3, "en", 1, "dagger", std::to_underlying(kWord)));
+      db.close();
+    }
+    QSqlDatabase::removeDatabase("group_suggestion_test");
+
+    // Synthetic embeddings placing spear next to sword/dagger/weapon.
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "embedding_fixture");
+      db.setDatabaseName(embeddingPath);
+      QVERIFY(db.open());
+      QSqlQuery(db).exec(
+        "CREATE TABLE word_embeddings ("
+        "language_code TEXT NOT NULL, word TEXT NOT NULL, rank INTEGER NOT NULL, "
+        "vector BLOB NOT NULL, PRIMARY KEY (language_code, word))");
+      const auto insert = [&db](const QString& word, const QVector<float>& vector) {
+        QSqlQuery query(db);
+        query.prepare(
+          "INSERT INTO word_embeddings(language_code, word, rank, vector) "
+          "VALUES ('en', :word, 1000, :vector)");
+        query.bindValue(":word", word);
+        query.bindValue(":vector", encodeVector(vector));
+        return query.exec();
+      };
+      QVERIFY(insert("weapon", {0.95F, 0.05F, 0.0F}));
+      QVERIFY(insert("spear", {0.90F, 0.10F, 0.0F}));
+      QVERIFY(insert("sword", {0.92F, 0.05F, 0.0F}));
+      QVERIFY(insert("dagger", {0.88F, 0.12F, 0.0F}));
+      db.close();
+    }
+    QSqlDatabase::removeDatabase("embedding_fixture");
+    QVERIFY(lexis::EmbeddingLookup::open(embeddingPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "group_suggestion_test_run");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    // No lexical overlap between "spear" and the group, so any suggestion
+    // must come from embedding similarity.
+    const auto suggestions = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
+      db, "en", "spear", {}, {}, -1, lexis::kRootParentId);
+
+    QCOMPARE(suggestions.size(), 1);
+    QCOMPARE(suggestions[0].toMap().value("groupName").toString(), QString("Weapon"));
+    QVERIFY(suggestions[0].toMap().value("confidence").toInt() >= 40);
+
+    db.close();
+    QSqlDatabase::removeDatabase("group_suggestion_test_run");
+    lexis::EmbeddingLookup::close();
   }
 
   void skipsCurrentParentAndLowConfidenceMatches() {

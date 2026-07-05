@@ -166,6 +166,11 @@ Item {
       text: qsTr("Quiz…")
       onTriggered: libraryView.openCurrentScopeQuiz()
     }
+    MenuItem {
+      enabled: settings.currentLanguage.length > 0
+      text: qsTr("Organize words…")
+      onTriggered: libraryView.openOrganizeGroups()
+    }
     MenuSeparator {}
     MenuItem {
       enabled: settings.currentLanguage.length > 0

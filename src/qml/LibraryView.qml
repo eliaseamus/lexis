@@ -244,6 +244,24 @@ Pane {
     }
   }
 
+  OrganizeGroupsDialog {
+    id: organizeGroupsDialog
+    parent: ApplicationWindow.overlay
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+
+    onCreateRequested: (name, wordIds, groupColor) => {
+      library.createGroupWithWords(name, groupColor, wordIds);
+      refresh();
+      const remaining = library.proposeWordGroups();
+      if (remaining.length === 0) {
+        organizeGroupsDialog.close();
+      } else {
+        organizeGroupsDialog.proposals = remaining;
+      }
+    }
+  }
+
   Dialog {
     id: suggestGroupInfoDialog
     property string message: ""
@@ -532,6 +550,25 @@ Pane {
       return qsTr("Need at least two words in this scope to start a quiz.")
     }
     return ""
+  }
+
+  function openOrganizeGroups() {
+    hideSearchLine()
+    clearSelectedItems()
+    if (!library.hasSemanticIndex()) {
+      suggestGroupInfoDialog.message =
+          qsTr("Semantic index (embeddings.db) is not available, so words cannot be grouped automatically.")
+      suggestGroupInfoDialog.open()
+      return
+    }
+    const proposals = library.proposeWordGroups()
+    if (proposals.length === 0) {
+      suggestGroupInfoDialog.message = qsTr("No related word clusters found on this page.")
+      suggestGroupInfoDialog.open()
+      return
+    }
+    organizeGroupsDialog.proposals = proposals
+    organizeGroupsDialog.open()
   }
 
   function openCurrentScopeQuiz() {

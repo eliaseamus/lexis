@@ -42,39 +42,6 @@
     </message>
 </context>
 <context>
-    <name>SubjectGroupSuggestionDialog</name>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="24"/>
-        <source>Start page</source>
-        <translation>Стартовая страница</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="42"/>
-        <source>Suggested group for &quot;%1&quot;</source>
-        <translation>Рекомендуемая группа для «%1»</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="49"/>
-        <source>Choose where to save this word:</source>
-        <translation>Выберите, куда сохранить это слово:</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="52"/>
-        <source>Choose where to move this word:</source>
-        <translation>Выберите, куда переместить это слово:</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="64"/>
-        <source>%1% match</source>
-        <translation>совпадение %1%</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="73"/>
-        <source>Keep at current location (%1)</source>
-        <translation>Оставить в текущем месте (%1)</translation>
-    </message>
-</context>
-<context>
     <name>HelpDialog</name>
     <message>
         <location filename="../src/qml/HelpDialog.qml" line="9"/>
@@ -172,27 +139,27 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="71"/>
+        <location filename="../src/qml/ItemView.qml" line="73"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="93"/>
+        <location filename="../src/qml/ItemView.qml" line="97"/>
         <source>Request another pronunciation</source>
         <translation>Запросить другое произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="166"/>
+        <location filename="../src/qml/ItemView.qml" line="188"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="96"/>
+        <location filename="../src/qml/ItemView.qml" line="139"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="320"/>
+        <location filename="../src/qml/ItemView.qml" line="368"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
@@ -200,18 +167,18 @@ and drop it in this area</source>
 <context>
     <name>LibraryItemConfiguration</name>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="57"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="59"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="128"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="143"/>
         <source>Pick an image</source>
         <translation>Выбрать изображение</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="142"/>
-        <location filename="../src/qml/LibraryItemConfiguration.qml" line="151"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="157"/>
+        <location filename="../src/qml/LibraryItemConfiguration.qml" line="166"/>
         <source>Insert title</source>
         <translation>Введите название</translation>
     </message>
@@ -259,24 +226,34 @@ and drop it in this area</source>
         <translation>Викторина</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="254"/>
+        <location filename="../src/qml/LibraryView.qml" line="272"/>
         <source>Suggest group</source>
         <translation>Предложить группу</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="342"/>
+        <location filename="../src/qml/LibraryView.qml" line="360"/>
         <source>No strong group match found for this word.</source>
         <translation>Для этого слова не найдено подходящей группы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="475"/>
+        <location filename="../src/qml/LibraryView.qml" line="547"/>
         <source>This scope has no words to quiz.</source>
         <translation>В выбранной области нет слов для викторины.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="478"/>
+        <location filename="../src/qml/LibraryView.qml" line="550"/>
         <source>Need at least two words in this scope to start a quiz.</source>
         <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="560"/>
+        <source>Semantic index (embeddings.db) is not available, so words cannot be grouped automatically.</source>
+        <translation>Семантический индекс (embeddings.db) недоступен, поэтому автоматическая группировка слов невозможна.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="566"/>
+        <source>No related word clusters found on this page.</source>
+        <translation>На этой странице не найдено групп связанных слов.</translation>
     </message>
     <message>
         <location filename="../src/qml/LibraryView.qml" line="11"/>
@@ -330,111 +307,144 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>OrganizeGroupsDialog</name>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="25"/>
+        <source>Suggested groups</source>
+        <translation>Рекомендуемые группы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="32"/>
+        <source>These words look related. Review the group name, uncheck words you want to leave out, and create the groups you like.</source>
+        <translation>Эти слова выглядят связанными. Проверьте название группы, снимите отметку с лишних слов и создайте понравившиеся группы.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="68"/>
+        <source>Group name</source>
+        <translation>Название группы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="73"/>
+        <source>%1% match</source>
+        <translation>совпадение %1%</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="95"/>
+        <source>Create group</source>
+        <translation>Создать группу</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/OrganizeGroupsDialog.qml" line="120"/>
+        <source>Close</source>
+        <translation>Закрыть</translation>
+    </message>
+</context>
+<context>
     <name>QuizView</name>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="60"/>
+        <location filename="../src/qml/QuizView.qml" line="62"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="67"/>
+        <location filename="../src/qml/QuizView.qml" line="69"/>
         <source>Question %1 of %2</source>
         <translation>Вопрос %1 из %2</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="73"/>
+        <location filename="../src/qml/QuizView.qml" line="75"/>
         <source>Score: %1</source>
         <translation>Счёт: %1</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="89"/>
+        <location filename="../src/qml/QuizView.qml" line="91"/>
         <source>Loading question…</source>
         <translation>Загрузка вопроса…</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="98"/>
-        <location filename="../src/qml/QuizView.qml" line="275"/>
+        <location filename="../src/qml/QuizView.qml" line="100"/>
+        <location filename="../src/qml/QuizView.qml" line="319"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="112"/>
+        <location filename="../src/qml/QuizView.qml" line="114"/>
         <source>Quiz unavailable</source>
         <translation>Викторина недоступна</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="129"/>
-        <location filename="../src/qml/QuizView.qml" line="288"/>
+        <location filename="../src/qml/QuizView.qml" line="131"/>
+        <location filename="../src/qml/QuizView.qml" line="332"/>
         <source>Back to library</source>
         <translation>Назад в библиотеку</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="172"/>
+        <location filename="../src/qml/QuizView.qml" line="216"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="181"/>
+        <location filename="../src/qml/QuizView.qml" line="225"/>
         <source>Choose the translation:</source>
         <translation>Выберите перевод:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="181"/>
+        <location filename="../src/qml/QuizView.qml" line="225"/>
         <source>Choose the word:</source>
         <translation>Выберите слово:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="245"/>
+        <location filename="../src/qml/QuizView.qml" line="289"/>
         <source>Quiz complete!</source>
         <translation>Викторина завершена!</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="252"/>
+        <location filename="../src/qml/QuizView.qml" line="296"/>
         <source>You got %1 out of %2 correct.</source>
         <translation>Правильных ответов: %1 из %2.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="263"/>
+        <location filename="../src/qml/QuizView.qml" line="307"/>
         <source>Correct:</source>
         <translation>Правильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="268"/>
+        <location filename="../src/qml/QuizView.qml" line="312"/>
         <source>Wrong:</source>
         <translation>Неправильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="273"/>
+        <location filename="../src/qml/QuizView.qml" line="317"/>
         <source>Accuracy:</source>
         <translation>Точность:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="276"/>
+        <location filename="../src/qml/QuizView.qml" line="320"/>
         <source>0%</source>
         <translation>0%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="284"/>
+        <location filename="../src/qml/QuizView.qml" line="328"/>
         <source>Try again</source>
         <translation>Ещё раз</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="736"/>
+        <location filename="../src/qml/QuizView.qml" line="826"/>
         <source>This scope has no words to quiz.</source>
         <translation>В выбранной области нет слов для викторины.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="737"/>
+        <location filename="../src/qml/QuizView.qml" line="827"/>
         <source>Need at least two words in this scope to start a quiz.</source>
         <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="674"/>
+        <location filename="../src/qml/QuizView.qml" line="764"/>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="165"/>
+        <location filename="../src/qml/QuizView.qml" line="177"/>
         <source>Word frequency: %1</source>
         <translation>Частотность слова: %1</translation>
     </message>
@@ -447,9 +457,17 @@ in the right bottom corner.</source>
         <translation>Результаты поиска</translation>
     </message>
     <message>
-        <location filename="../src/qml/SearchView.qml" line="140"/>
+        <location filename="../src/qml/SearchView.qml" line="160"/>
         <source>No matches found</source>
         <translation>Ничего не найдено</translation>
+    </message>
+</context>
+<context>
+    <name>SectionItem</name>
+    <message>
+        <location filename="../src/qml/SectionItem.qml" line="50"/>
+        <source>Word frequency: %1</source>
+        <translation>Частотность слова: %1</translation>
     </message>
 </context>
 <context>
@@ -551,111 +569,116 @@ in the right bottom corner.</source>
         <translation>Викторина…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="172"/>
+        <location filename="../src/qml/SideBar.qml" line="171"/>
+        <source>Organize words…</source>
+        <translation>Организовать слова…</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="177"/>
         <source>Export language…</source>
         <translation>Экспорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="179"/>
+        <location filename="../src/qml/SideBar.qml" line="184"/>
         <source>Import language…</source>
         <translation>Импорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="184"/>
+        <location filename="../src/qml/SideBar.qml" line="189"/>
         <source>Backup database…</source>
         <translation>Резервная копия базы…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="188"/>
+        <location filename="../src/qml/SideBar.qml" line="193"/>
         <source>Restore database…</source>
         <translation>Восстановить базу…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="195"/>
+        <location filename="../src/qml/SideBar.qml" line="200"/>
         <source>Export language</source>
         <translation>Экспорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="198"/>
-        <location filename="../src/qml/SideBar.qml" line="213"/>
+        <location filename="../src/qml/SideBar.qml" line="203"/>
+        <location filename="../src/qml/SideBar.qml" line="218"/>
         <source>Lexis archive (*.lexis)</source>
         <translation>Архив Lexis (*.lexis)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="201"/>
+        <location filename="../src/qml/SideBar.qml" line="206"/>
         <source>Language exported successfully.</source>
         <translation>Язык успешно экспортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="203"/>
+        <location filename="../src/qml/SideBar.qml" line="208"/>
         <source>Failed to export language.</source>
         <translation>Не удалось экспортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="211"/>
-        <location filename="../src/qml/SideBar.qml" line="271"/>
+        <location filename="../src/qml/SideBar.qml" line="216"/>
+        <location filename="../src/qml/SideBar.qml" line="276"/>
         <source>Import language</source>
         <translation>Импорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="222"/>
+        <location filename="../src/qml/SideBar.qml" line="227"/>
         <source>Backup database</source>
         <translation>Резервная копия базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="225"/>
-        <location filename="../src/qml/SideBar.qml" line="240"/>
+        <location filename="../src/qml/SideBar.qml" line="230"/>
+        <location filename="../src/qml/SideBar.qml" line="245"/>
         <source>SQLite database (*.db)</source>
         <translation>База SQLite (*.db)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="228"/>
+        <location filename="../src/qml/SideBar.qml" line="233"/>
         <source>Database backup created successfully.</source>
         <translation>Резервная копия базы успешно создана.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="230"/>
+        <location filename="../src/qml/SideBar.qml" line="235"/>
         <source>Failed to backup database.</source>
         <translation>Не удалось создать резервную копию базы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="238"/>
-        <location filename="../src/qml/SideBar.qml" line="293"/>
+        <location filename="../src/qml/SideBar.qml" line="243"/>
+        <location filename="../src/qml/SideBar.qml" line="298"/>
         <source>Restore database</source>
         <translation>Восстановление базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="243"/>
+        <location filename="../src/qml/SideBar.qml" line="248"/>
         <source>Database restored successfully.</source>
         <translation>База успешно восстановлена.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="245"/>
+        <location filename="../src/qml/SideBar.qml" line="250"/>
         <source>Failed to restore database.</source>
         <translation>Не удалось восстановить базу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="258"/>
+        <location filename="../src/qml/SideBar.qml" line="263"/>
         <source>Lexis</source>
         <translation>Lexis</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="274"/>
+        <location filename="../src/qml/SideBar.qml" line="279"/>
         <source>Import will replace all items for the language contained in the archive. Continue?</source>
         <translation>Импорт заменит все элементы языка из архива. Продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="280"/>
+        <location filename="../src/qml/SideBar.qml" line="285"/>
         <source>Language imported successfully.</source>
         <translation>Язык успешно импортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="282"/>
+        <location filename="../src/qml/SideBar.qml" line="287"/>
         <source>Failed to import language.</source>
         <translation>Не удалось импортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="296"/>
+        <location filename="../src/qml/SideBar.qml" line="301"/>
         <source>Restore will replace the entire local library database. Continue?</source>
         <translation>Восстановление заменит всю локальную базу библиотеки. Продолжить?</translation>
     </message>
@@ -663,12 +686,12 @@ in the right bottom corner.</source>
 <context>
     <name>SortRoleDialog</name>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="17"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="28"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="29"/>
         <source>Words</source>
         <translation>Слова</translation>
     </message>
@@ -678,25 +701,25 @@ in the right bottom corner.</source>
         <translation>Группы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="34"/>
         <source>Frequency</source>
         <translation>Частоте</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
-        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="34"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="53"/>
         <source>Modification time</source>
         <translation>Времени изменения</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
-        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="34"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="53"/>
         <source>Creation time</source>
         <translation>Времени создания</translation>
     </message>
     <message>
-        <location filename="../src/qml/SortRoleDialog.qml" line="33"/>
-        <location filename="../src/qml/SortRoleDialog.qml" line="52"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="34"/>
+        <location filename="../src/qml/SortRoleDialog.qml" line="53"/>
         <source>Title</source>
         <translation>Названию</translation>
     </message>
@@ -825,6 +848,40 @@ in the right bottom corner.</source>
     </message>
 </context>
 <context>
+    <name>SubjectGroupSuggestionDialog</name>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="25"/>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="79"/>
+        <source>Start page</source>
+        <translation>Стартовая страница</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="43"/>
+        <source>Suggested group for &quot;%1&quot;</source>
+        <translation>Рекомендуемая группа для «%1»</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="53"/>
+        <source>Choose where to save this word:</source>
+        <translation>Выберите, куда сохранить это слово:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="52"/>
+        <source>Choose where to move this word:</source>
+        <translation>Выберите, куда переместить это слово:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="68"/>
+        <source>%1% match</source>
+        <translation>совпадение %1%</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="77"/>
+        <source>Keep at current location (%1)</source>
+        <translation>Оставить в текущем месте (%1)</translation>
+    </message>
+</context>
+<context>
     <name>ToolBar</name>
     <message>
         <location filename="../src/qml/ToolBar.qml" line="25"/>
@@ -860,7 +917,7 @@ in the right bottom corner.</source>
 <context>
     <name>lexis::Library</name>
     <message>
-        <location filename="../src/db/library.cpp" line="395"/>
+        <location filename="../src/db/library.cpp" line="582"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
@@ -868,47 +925,47 @@ in the right bottom corner.</source>
 <context>
     <name>utils</name>
     <message>
-        <location filename="../src/qml/utils.js" line="14"/>
+        <location filename="../src/qml/utils.js" line="48"/>
         <source>English</source>
         <translation>Английский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="16"/>
+        <location filename="../src/qml/utils.js" line="50"/>
         <source>Spanish</source>
         <translation>Испанский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="18"/>
+        <location filename="../src/qml/utils.js" line="52"/>
         <source>German</source>
         <translation>Немецкий</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="20"/>
+        <location filename="../src/qml/utils.js" line="54"/>
         <source>French</source>
         <translation>Французский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="22"/>
+        <location filename="../src/qml/utils.js" line="56"/>
         <source>Russian</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="24"/>
+        <location filename="../src/qml/utils.js" line="58"/>
         <source>Italian</source>
         <translation>Итальянский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="26"/>
+        <location filename="../src/qml/utils.js" line="60"/>
         <source>Polish</source>
         <translation>Польский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="28"/>
+        <location filename="../src/qml/utils.js" line="62"/>
         <source>Ukranian</source>
         <translation>Украинский</translation>
     </message>
     <message>
-        <location filename="../src/qml/utils.js" line="30"/>
+        <location filename="../src/qml/utils.js" line="64"/>
         <source>Turkish</source>
         <translation>Турецкий</translation>
     </message>
@@ -936,14 +993,6 @@ in the right bottom corner.</source>
         <location filename="../src/qml/utils.js" line="22"/>
         <source>Rare</source>
         <translation>Редкий</translation>
-    </message>
-</context>
-<context>
-    <name>SectionItem</name>
-    <message>
-        <location filename="../src/qml/SectionItem.qml" line="50"/>
-        <source>Word frequency: %1</source>
-        <translation>Частотность слова: %1</translation>
     </message>
 </context>
 </TS>
