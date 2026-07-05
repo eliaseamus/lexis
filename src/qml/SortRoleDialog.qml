@@ -20,7 +20,7 @@ Dialog {
     }
 
     Repeater {
-      model: [qsTr("Creation time"), qsTr("Modification time"), qsTr("Title")]
+      model: [qsTr("Creation time"), qsTr("Frequency"), qsTr("Modification time"), qsTr("Title")]
       RadioButton {
         required property string modelData
         required property int index

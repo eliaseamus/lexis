@@ -611,6 +611,11 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
+        <source>Frequency</source>
+        <translation>Частоте</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SortRoleDialog.qml" line="23"/>
         <source>Modification time</source>
         <translation>Времени изменения</translation>
     </message>

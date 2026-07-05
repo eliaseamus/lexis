@@ -8,6 +8,7 @@ QHash<QString, LibraryItemModel::LibraryItemRole> AppSettings::sectionSortRoles(
   static QHash<QString, LibraryItemModel::LibraryItemRole> roles = {
     {"Modification time", LibraryItemModel::ModificationTimeRole},
     {"Creation time",     LibraryItemModel::CreationTimeRole    },
+    {"Frequency",         LibraryItemModel::FrequencyRankRole   },
     {"Title",             LibraryItemModel::TitleRole           }
   };
   return roles;

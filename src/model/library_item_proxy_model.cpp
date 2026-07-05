@@ -2,6 +2,8 @@
 
 #include "app_settings.hpp"
 
+#include <limits>
+
 namespace lexis {
 
 LibraryItemProxyModel::LibraryItemProxyModel(QObject* parent)
@@ -46,11 +48,7 @@ void LibraryItemProxyModel::reSort(const QString& role) {
 }
 
 void LibraryItemProxyModel::setSortingRole(const QString& role) {
-  static QHash<QString, LibraryItemModel::LibraryItemRole> roles = {
-    {"Modification time", LibraryItemModel::ModificationTimeRole},
-    {"Creation time",     LibraryItemModel::CreationTimeRole    },
-    {"Title",             LibraryItemModel::TitleRole           }
-  };
+  const auto roles = AppSettings{}.sectionSortRoles();
 
   if (!roles.contains(role)) {
     qWarning() << "Unknown sort role:" << role;
@@ -76,6 +74,14 @@ bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& 
       return leftData.toDateTime() < rightData.toDateTime();
     case QMetaType::QString:
       return QString::localeAwareCompare(leftData.toString(), rightData.toString()) < 0;
+    case QMetaType::Int:
+    case QMetaType::LongLong: {
+      const auto sortableRank = [](const QVariant& data) {
+        const int rank = data.toInt();
+        return rank > 0 ? rank : std::numeric_limits<int>::max();
+      };
+      return sortableRank(leftData) < sortableRank(rightData);
+    }
   }
 
   qWarning() << "Unknown type for sorting";
