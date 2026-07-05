@@ -4,6 +4,7 @@
 #include <QTest>
 
 #include "library_group_suggestion.hpp"
+#include "embedding_lookup.hpp"
 #include "schema_migration.hpp"
 #include "section_type.hpp"
 
@@ -125,6 +126,78 @@ class LibraryGroupSuggestionTest : public QObject {
 
     db.close();
     QSqlDatabase::removeDatabase("group_suggestion_test_run");
+  }
+
+  bool createEmbeddingDatabase(const QString& path) {
+    if (QSqlDatabase::contains("embedding_test_setup")) {
+      QSqlDatabase::removeDatabase("embedding_test_setup");
+    }
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "embedding_test_setup");
+    db.setDatabaseName(path);
+    if (!db.open()) {
+      return false;
+    }
+
+    QSqlQuery query(db);
+    if (!query.exec("CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)")) {
+      return false;
+    }
+    if (!query.exec("INSERT INTO metadata(key, value) VALUES ('dimensions', '3')")) {
+      return false;
+    }
+    if (!query.exec("CREATE TABLE word_embeddings ("
+                    "language_code TEXT NOT NULL,"
+                    "word TEXT NOT NULL,"
+                    "vector BLOB NOT NULL,"
+                    "PRIMARY KEY (language_code, word))")) {
+      return false;
+    }
+
+    auto insertVector = [&](const QString& word, float x, float y, float z) {
+      QSqlQuery insert(db);
+      insert.prepare(
+        "INSERT INTO word_embeddings(language_code, word, vector) VALUES ('en', :word, :vector)");
+      insert.bindValue(":word", word);
+      const float values[3] = {x, y, z};
+      insert.bindValue(":vector", QByteArray(reinterpret_cast<const char*>(values), sizeof(values)));
+      return insert.exec();
+    };
+
+    const bool ok = insertVector("apple", 1.0F, 0.0F, 0.0F) &&
+                    insertVector("banana", 0.95F, 0.05F, 0.0F) &&
+                    insertVector("orange", 0.9F, 0.1F, 0.0F) &&
+                    insertVector("wheel", 0.0F, 1.0F, 0.0F) &&
+                    insertVector("engine", 0.05F, 0.95F, 0.0F) &&
+                    insertVector("steer", 0.0F, 1.0F, 0.0F);
+
+    db.close();
+    QSqlDatabase::removeDatabase("embedding_test_setup");
+    return ok;
+  }
+
+  void prefersSemanticallySimilarGroupWithEmbeddings() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    const auto dbPath = tempDir.path() + "/groups.db";
+    const auto embeddingPath = tempDir.path() + "/embeddings.db";
+    QVERIFY(createDatabase(dbPath));
+    QVERIFY(createEmbeddingDatabase(embeddingPath));
+    QVERIFY(lexis::EmbeddingLookup::open(embeddingPath));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "group_suggestion_test_run");
+    db.setDatabaseName(dbPath);
+    QVERIFY(db.open());
+
+    const auto suggestions = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
+      db, "en", "steer", {}, {}, -1, lexis::kRootParentId);
+    QVERIFY(!suggestions.isEmpty());
+    QCOMPARE(suggestions[0].toMap().value("groupName").toString(), QString("Car"));
+    QCOMPARE(suggestions[0].toMap().value("confidence").toInt(), 100);
+
+    db.close();
+    QSqlDatabase::removeDatabase("group_suggestion_test_run");
+    lexis::EmbeddingLookup::close();
   }
 };
 

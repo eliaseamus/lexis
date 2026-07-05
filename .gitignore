@@ -5,5 +5,7 @@ build/
 .git/
 CMakeLists.txt.user
 data/frequency.db
+data/embeddings.db
+data/fasttext-cache/
 .venv-wordfreq/
 

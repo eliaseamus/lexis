@@ -8,7 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS
              Core Gui Widgets Network Multimedia Sql Charts
              Qml Quick QuickControls2 WebView LinguistTools Test REQUIRED)
 
-include_directories(src src/db src/gui src/model src/web)
+include_directories(src src/db src/gui src/model src/web src/ml)
 qt_standard_project_setup(REQUIRES 6.8 I18N_TRANSLATED_LANGUAGES ru)
 enable_testing(true)
 
@@ -60,6 +60,10 @@ qt_add_executable(${PROJECT_NAME}
   src/db/library_group_suggestion.hpp
   src/db/frequency_lookup.cpp
   src/db/frequency_lookup.hpp
+  src/ml/embedding_lookup.cpp
+  src/ml/embedding_lookup.hpp
+  src/ml/text_embedding.cpp
+  src/ml/text_embedding.hpp
   ${app_icon_resource_windows}
 )
 
@@ -178,6 +182,30 @@ if(EXISTS ${LEXIS_FREQUENCY_DB})
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LEXIS_FREQUENCY_DB}
             $<TARGET_FILE_DIR:${PROJECT_NAME}>/data/frequency.db
     COMMENT "Copying frequency database next to Lexis executable"
+  )
+endif()
+
+set(LEXIS_EMBEDDINGS_DB "${CMAKE_CURRENT_SOURCE_DIR}/data/embeddings.db")
+if(Python3_FOUND)
+  add_custom_command(
+    OUTPUT ${LEXIS_EMBEDDINGS_DB}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_embeddings_db.py
+            --output ${LEXIS_EMBEDDINGS_DB}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_embeddings_db.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating word embedding database from fastText crawl vectors"
+    VERBATIM
+  )
+  add_custom_target(generate_embeddings_db DEPENDS ${LEXIS_EMBEDDINGS_DB})
+endif()
+
+if(EXISTS ${LEXIS_EMBEDDINGS_DB})
+  add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LEXIS_EMBEDDINGS_DB}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/data/embeddings.db
+    COMMENT "Copying embeddings database next to Lexis executable"
   )
 endif()
 
@@ -387,6 +415,8 @@ qt_add_executable(test_library_group_suggestion
   src/db/library_search.cpp
   src/db/library_group_suggestion.cpp
   src/web/dictionary_summary.cpp
+  src/ml/embedding_lookup.cpp
+  src/ml/text_embedding.cpp
   src/model/section_type.cpp
 )
 
@@ -398,7 +428,7 @@ target_link_libraries(test_library_group_suggestion PRIVATE
   Qt6::Gui
 )
 
-target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db src/web)
+target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db src/web src/ml)
 
 add_test(test_library_group_suggestion test_library_group_suggestion)
 
@@ -429,6 +459,28 @@ target_include_directories(test_dictionary_summary PRIVATE src src/web)
 add_test(test_dictionary_summary test_dictionary_summary)
 
 set_target_properties(test_dictionary_summary PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# embedding_lookup
+qt_add_executable(test_embedding_lookup
+  tests/test_embedding_lookup.cpp
+  src/ml/embedding_lookup.cpp
+  src/ml/text_embedding.cpp
+)
+
+target_link_libraries(test_embedding_lookup PRIVATE
+  Qt6::Core
+  Qt6::Sql
+  Qt6::Test
+)
+
+target_include_directories(test_embedding_lookup PRIVATE src src/ml)
+
+add_test(test_embedding_lookup test_embedding_lookup)
+
+set_target_properties(test_embedding_lookup PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

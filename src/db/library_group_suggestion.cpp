@@ -10,6 +10,7 @@
 #include "library_search.hpp"
 #include "schema_migration.hpp"
 #include "section_type.hpp"
+#include "text_embedding.hpp"
 
 namespace lexis {
 
@@ -112,9 +113,9 @@ QVector<int> descendantWordIds(int groupId, const QHash<int, QVector<int>>& chil
   return wordIds;
 }
 
-double scoreGroup(const QString& wordTitle, const QString& semanticContext,
-                  const QString& groupTitle,
-                  const QVector<QPair<QString, QString>>& wordsInGroup) {
+double scoreGroupHeuristic(const QString& wordTitle, const QString& semanticContext,
+                           const QString& groupTitle,
+                           const QVector<QPair<QString, QString>>& wordsInGroup) {
   double score = 0.0;
   score += textSimilarity(wordTitle, groupTitle) * 0.35;
 
@@ -145,6 +146,58 @@ double scoreGroup(const QString& wordTitle, const QString& semanticContext,
   }
 
   return score;
+}
+
+QString memberText(const QString& title, const QString& semanticContext) {
+  if (semanticContext.trimmed().isEmpty()) {
+    return title;
+  }
+  return title + QLatin1Char('\n') + semanticContext;
+}
+
+double scoreGroupWithEmbeddings(const QString& languageCode, const QString& wordTitle,
+                                const QString& semanticContext, const QString& groupTitle,
+                                const QVector<QPair<QString, QString>>& wordsInGroup) {
+  const auto targetText = memberText(wordTitle, semanticContext);
+  const auto targetEmbedding = TextEmbedding::embed(languageCode, targetText);
+  if (!targetEmbedding.has_value()) {
+    return scoreGroupHeuristic(wordTitle, semanticContext, groupTitle, wordsInGroup);
+  }
+
+  double score = 0.0;
+  if (const auto titleSimilarity = TextEmbedding::similarity(languageCode, wordTitle, groupTitle)) {
+    score += *titleSimilarity * 0.15;
+  }
+
+  QVector<QString> memberTexts;
+  memberTexts.reserve(wordsInGroup.size());
+  for (const auto& [existingTitle, existingSemanticContext] : wordsInGroup) {
+    memberTexts.append(memberText(existingTitle, existingSemanticContext));
+  }
+
+  if (const auto centroidSimilarity =
+        TextEmbedding::centroidSimilarity(languageCode, *targetEmbedding, memberTexts)) {
+    score += *centroidSimilarity * 0.55;
+  }
+
+  double bestMemberScore = 0.0;
+  for (const auto& member : memberTexts) {
+    if (const auto memberSimilarity = TextEmbedding::similarity(languageCode, targetText, member)) {
+      bestMemberScore = *memberSimilarity > bestMemberScore ? *memberSimilarity : bestMemberScore;
+    }
+  }
+  score += bestMemberScore * 0.30;
+  return score;
+}
+
+double scoreGroup(const QString& languageCode, const QString& wordTitle,
+                  const QString& semanticContext, const QString& groupTitle,
+                  const QVector<QPair<QString, QString>>& wordsInGroup) {
+  if (TextEmbedding::embed(languageCode, wordTitle).has_value()) {
+    return scoreGroupWithEmbeddings(languageCode, wordTitle, semanticContext, groupTitle,
+                                    wordsInGroup);
+  }
+  return scoreGroupHeuristic(wordTitle, semanticContext, groupTitle, wordsInGroup);
 }
 
 }  // namespace
@@ -219,8 +272,9 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
     }
 
     const auto groupTitle = titles.value(groupId);
-    const auto score = scoreGroup(trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
-    if (score < 0.12) {
+    const auto score =
+      scoreGroup(languageCode, trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
+    if (score < 0.10) {
       continue;
     }
 

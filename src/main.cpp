@@ -7,6 +7,7 @@
 #include <QtWebView/QtWebView>
 
 #include "app_manager.hpp"
+#include "embedding_lookup.hpp"
 #include "frequency_lookup.hpp"
 #include <QDir>
 #include <QStandardPaths>
@@ -14,25 +15,36 @@
 
 namespace {
 
-bool openFrequencyDatabase() {
+bool openBundledDatabase(const QString& fileName, bool (*openDatabase)(const QString&),
+                         const char* label) {
   const auto appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   const QStringList candidates = {
-    QDir::currentPath() + QStringLiteral("/frequency.db"),
-    appDataDir + QStringLiteral("/frequency.db"),
-    appDataDir + QStringLiteral("/data/frequency.db"),
-    QCoreApplication::applicationDirPath() + QStringLiteral("/data/frequency.db"),
-    QCoreApplication::applicationDirPath() + QStringLiteral("/../data/frequency.db"),
+    QDir::currentPath() + QLatin1Char('/') + fileName,
+    appDataDir + QLatin1Char('/') + fileName,
+    appDataDir + QStringLiteral("/data/") + fileName,
+    QCoreApplication::applicationDirPath() + QStringLiteral("/data/") + fileName,
+    QCoreApplication::applicationDirPath() + QStringLiteral("/../data/") + fileName,
   };
 
   for (const auto& candidate : candidates) {
-    if (lexis::FrequencyLookup::open(candidate)) {
-      qInfo() << "Loaded frequency database from" << candidate;
+    if (openDatabase(candidate)) {
+      qInfo() << "Loaded" << label << "from" << candidate;
       return true;
     }
   }
 
-  qWarning() << "Frequency database not found; word frequency labels will be unavailable";
+  qWarning() << label << "database not found";
   return false;
+}
+
+bool openFrequencyDatabase() {
+  return openBundledDatabase(QStringLiteral("frequency.db"), lexis::FrequencyLookup::open,
+                             "frequency");
+}
+
+bool openEmbeddingsDatabase() {
+  return openBundledDatabase(QStringLiteral("embeddings.db"), lexis::EmbeddingLookup::open,
+                             "embeddings");
 }
 
 }  // namespace
@@ -61,9 +73,11 @@ int main(int argc, char* argv[]) {
   engine.rootContext()->setContextProperty("CSE_ID", MAKE_STR(CSE_ID));
   engine.rootContext()->setContextProperty("appManager", &appManager);
   openFrequencyDatabase();
+  openEmbeddingsDatabase();
   engine.loadFromModule("QLexis", "Main");
 
   const auto exitCode = app.exec();
+  lexis::EmbeddingLookup::close();
   lexis::FrequencyLookup::close();
   return exitCode;
 }
