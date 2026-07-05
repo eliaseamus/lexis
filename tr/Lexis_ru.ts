@@ -172,12 +172,17 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="51"/>
+        <location filename="../src/qml/ItemView.qml" line="71"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="145"/>
+        <location filename="../src/qml/ItemView.qml" line="93"/>
+        <source>Request another pronunciation</source>
+        <translation>Запросить другое произношение</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/ItemView.qml" line="166"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>

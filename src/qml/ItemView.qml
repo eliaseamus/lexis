@@ -16,6 +16,7 @@ Pane {
   property var duplicateWords: []
   property bool playWhenReady: false
   property int audioRetryCount: 0
+  property bool audioRefreshPending: false
   readonly property int maxAudioRetries: 3
 
   signal duplicateSelected(int itemId)
@@ -66,6 +67,7 @@ Pane {
             icon.color: settings.fgColor
             Material.background: settings.accentColor
             icon.source: "qrc:/qt/qml/QLexis/icons/audio.png"
+            enabled: !audioRefreshPending
             ToolTip {
               visible: speaker.hovered
               text: qsTr("Pronunciation")
@@ -73,6 +75,27 @@ Pane {
             onClicked: {
               playWhenReady = true
               playPronunciation()
+            }
+
+            MouseArea {
+              anchors.fill: parent
+              acceptedButtons: Qt.RightButton
+              onClicked: (mouse) => {
+                if (mouse.button === Qt.RightButton) {
+                  pronunciationMenu.popup()
+                }
+              }
+            }
+          }
+
+          Menu {
+            id: pronunciationMenu
+            parent: ApplicationWindow.overlay
+
+            MenuItem {
+              enabled: !audioRefreshPending
+              text: qsTr("Request another pronunciation")
+              onTriggered: requestNewPronunciation()
             }
           }
           Item {Layout.fillWidth: true}
@@ -242,6 +265,7 @@ Pane {
       if (itemId !== itemID) {
         return
       }
+      audioRefreshPending = false
       if (url.toString().length === 0) {
         if (playWhenReady) {
           retryPronunciation()
@@ -370,6 +394,7 @@ Pane {
 
   function retryPronunciation() {
     if (!playWhenReady || audioRetryCount >= maxAudioRetries) {
+      audioRefreshPending = false
       return
     }
     audioRetryCount++
@@ -377,8 +402,18 @@ Pane {
     library.refreshAudio(itemID)
   }
 
+  function requestNewPronunciation() {
+    playWhenReady = true
+    audioRetryCount = 0
+    audioRefreshPending = true
+    audioUrl = ""
+    pronunciation.stop()
+    library.refreshAudio(itemID)
+  }
+
   function init() {
     audioRetryCount = 0
+    audioRefreshPending = false
     playWhenReady = false
     playbackCheckTimer.stop()
     spinner.visible = true;
