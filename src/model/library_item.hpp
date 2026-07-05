@@ -25,6 +25,8 @@ class LibraryItem : public QObject {
   Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY dummy);
   Q_PROPERTY(QUrl audioUrl READ audioUrl WRITE setAudioUrl NOTIFY dummy);
   Q_PROPERTY(QString meaning READ meaning WRITE setMeaning NOTIFY dummy);
+  Q_PROPERTY(int frequencyRank READ frequencyRank WRITE setFrequencyRank NOTIFY dummy);
+  Q_PROPERTY(QString frequencyTier READ frequencyTier WRITE setFrequencyTier NOTIFY dummy);
 
  private:
   int _itemID;
@@ -38,6 +40,8 @@ class LibraryItem : public QObject {
   QTemporaryFile _audio;
   QUrl _audioUrl;
   QString _meaning;
+  int _frequencyRank = -1;
+  QString _frequencyTier;
 
  public:
   explicit LibraryItem(QObject* parent = nullptr);
@@ -84,6 +88,14 @@ class LibraryItem : public QObject {
     return _meaning;
   }
 
+  int frequencyRank() const {
+    return _frequencyRank;
+  }
+
+  QString frequencyTier() const {
+    return _frequencyTier;
+  }
+
   void setID(int id) {
     _itemID = id;
   }
@@ -122,6 +134,14 @@ class LibraryItem : public QObject {
 
   void setMeaning(const QString& meaning) {
     _meaning = meaning;
+  }
+
+  void setFrequencyRank(int rank) {
+    _frequencyRank = rank;
+  }
+
+  void setFrequencyTier(const QString& tier) {
+    _frequencyTier = tier;
   }
 
   void freeAssets();

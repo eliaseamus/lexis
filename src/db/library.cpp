@@ -1,6 +1,7 @@
 #include "library.hpp"
 
 #include "library_archive.hpp"
+#include "frequency_lookup.hpp"
 #include "library_search.hpp"
 #include "library_statistics.hpp"
 #include "utils.hpp"
@@ -13,6 +14,41 @@ namespace {
 
 QVariant nullParentId() {
   return QVariant();
+}
+
+void applyFrequencyToItem(LibraryItem* item, const QString& languageCode) {
+  if (!item) {
+    return;
+  }
+
+  if (item->type() != LibrarySectionType::kWord) {
+    item->setFrequencyRank(-1);
+    item->setFrequencyTier({});
+    return;
+  }
+
+  if (!FrequencyLookup::isOpen()) {
+    return;
+  }
+
+  const auto result = FrequencyLookup::lookup(languageCode, item->title());
+  if (result.found) {
+    item->setFrequencyRank(result.rank);
+    item->setFrequencyTier(result.tier);
+  } else {
+    item->setFrequencyRank(-1);
+    item->setFrequencyTier({});
+  }
+}
+
+void bindFrequencyValues(QSqlQuery& query, const LibraryItem* item) {
+  if (item->frequencyRank() > 0 && !item->frequencyTier().isEmpty()) {
+    query.bindValue(":frequency_rank", item->frequencyRank());
+    query.bindValue(":frequency_tier", item->frequencyTier());
+  } else {
+    query.bindValue(":frequency_rank", QVariant());
+    query.bindValue(":frequency_tier", QVariant());
+  }
 }
 
 }  // namespace
@@ -96,6 +132,7 @@ void Library::openLanguage(const QString& language) {
   ensureLanguage(language);
   _language = language;
   _currentParentId = kRootParentId;
+  backfillMissingFrequencies();
   clearSections();
   populateSections();
 }
@@ -122,11 +159,15 @@ void Library::addItem(LibraryItem* item) {
     return;
   }
 
+  applyFrequencyToItem(item, _language);
+
   QSqlQuery query;
   query.prepare(
     "INSERT INTO items"
-    "(language_code, parent_id, title, creation_time, modification_time, type, image, color)"
-    "VALUES (:language_code, :parent_id, :title, :creation, :modification, :type, :image, :color)");
+    "(language_code, parent_id, title, creation_time, modification_time, type, image, color, "
+    "frequency_rank, frequency_tier)"
+    "VALUES (:language_code, :parent_id, :title, :creation, :modification, :type, :image, :color, "
+    ":frequency_rank, :frequency_tier)");
 
   const auto now = QDateTime::currentDateTime();
   item->setCreationTime(now);
@@ -139,6 +180,7 @@ void Library::addItem(LibraryItem* item) {
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
+  bindFrequencyValues(query, item);
 
   if (!query.exec()) {
     qWarning() << "Failed to insert item:" << query.lastError();
@@ -164,6 +206,11 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   const auto oldTitle = getTitle(item->id());
   const bool wordTitleChanged =
     item->type() == LibrarySectionType::kWord && oldTitle != item->title();
+  const bool frequencyNeedsRefresh =
+    item->type() == LibrarySectionType::kWord || oldType == LibrarySectionType::kWord;
+  if (frequencyNeedsRefresh) {
+    applyFrequencyToItem(item, _language);
+  }
 
   QSqlQuery query;
   if (wordTitleChanged) {
@@ -173,14 +220,15 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     query.prepare(
       "UPDATE items "
       "SET title = :title, modification_time = :modification, type = :type, image = :image, "
-      "color = :color, audio = :audio "
+      "color = :color, audio = :audio, frequency_rank = :frequency_rank, "
+      "frequency_tier = :frequency_tier "
       "WHERE id = :id AND language_code = :language_code");
     query.bindValue(":audio", QByteArray{});
   } else {
     query.prepare(
       "UPDATE items "
       "SET title = :title, modification_time = :modification, type = :type, image = :image, "
-      "color = :color "
+      "color = :color, frequency_rank = :frequency_rank, frequency_tier = :frequency_tier "
       "WHERE id = :id AND language_code = :language_code");
   }
 
@@ -190,6 +238,7 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
   query.bindValue(":type", std::to_underlying(item->type()));
   query.bindValue(":image", item->image());
   query.bindValue(":color", item->color().name());
+  bindFrequencyValues(query, item);
   query.bindValue(":id", item->id());
   query.bindValue(":language_code", _language);
 
@@ -444,6 +493,35 @@ LibrarySection* Library::getSection(LibrarySectionType type) {
   return section;
 }
 
+void Library::backfillMissingFrequencies() {
+  if (_language.isEmpty() || !FrequencyLookup::isOpen()) {
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    "SELECT id, title FROM items "
+    "WHERE language_code = :language_code AND type = :word_type");
+  query.bindValue(":language_code", _language);
+  query.bindValue(":word_type", std::to_underlying(LibrarySectionType::kWord));
+
+  if (!query.exec()) {
+    qWarning() << "Failed to query words for frequency backfill:" << query.lastError();
+    return;
+  }
+
+  while (query.next()) {
+    LibraryItem item;
+    item.setID(query.value("id").toInt());
+    item.setTitle(query.value("title").toString());
+    item.setType(LibrarySectionType::kWord);
+    applyFrequencyToItem(&item, _language);
+    if (item.frequencyRank() > 0) {
+      persistFrequency(item.id(), item.frequencyRank(), item.frequencyTier());
+    }
+  }
+}
+
 void Library::populateSections() {
   if (_language.isEmpty()) {
     return;
@@ -452,11 +530,13 @@ void Library::populateSections() {
   QSqlQuery query;
   if (_currentParentId == kRootParentId) {
     query.prepare(
-      "SELECT id, title, creation_time, modification_time, type, image, color, meaning "
+      "SELECT id, title, creation_time, modification_time, type, image, color, meaning, "
+      "frequency_rank, frequency_tier "
       "FROM items WHERE language_code = :language_code AND parent_id IS NULL");
   } else {
     query.prepare(
-      "SELECT id, title, creation_time, modification_time, type, image, color, meaning "
+      "SELECT id, title, creation_time, modification_time, type, image, color, meaning, "
+      "frequency_rank, frequency_tier "
       "FROM items WHERE language_code = :language_code AND parent_id = :parent_id");
     query.bindValue(":parent_id", _currentParentId);
   }
@@ -477,7 +557,45 @@ void Library::populateSections() {
     item.setImage(query.value("image").toByteArray());
     item.setColor(query.value("color").toString());
     item.setMeaning(query.value("meaning").toString());
+
+    const auto storedRank = query.value("frequency_rank");
+    if (storedRank.isValid() && !storedRank.isNull()) {
+      item.setFrequencyRank(storedRank.toInt());
+      item.setFrequencyTier(query.value("frequency_tier").toString());
+    }
+
+    if (item.type() == LibrarySectionType::kWord &&
+        (item.frequencyRank() <= 0 || item.frequencyTier().isEmpty())) {
+      applyFrequencyToItem(&item, _language);
+      if (item.frequencyRank() > 0) {
+        persistFrequency(item.id(), item.frequencyRank(), item.frequencyTier());
+      }
+    }
+
     insertItem(std::move(item));
+  }
+}
+
+void Library::persistFrequency(int id, int rank, const QString& tier) {
+  if (_language.isEmpty() || id <= 0) {
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    "UPDATE items SET frequency_rank = :frequency_rank, frequency_tier = :frequency_tier "
+    "WHERE id = :id AND language_code = :language_code");
+  if (rank > 0 && !tier.isEmpty()) {
+    query.bindValue(":frequency_rank", rank);
+    query.bindValue(":frequency_tier", tier);
+  } else {
+    query.bindValue(":frequency_rank", QVariant());
+    query.bindValue(":frequency_tier", QVariant());
+  }
+  query.bindValue(":id", id);
+  query.bindValue(":language_code", _language);
+  if (!query.exec()) {
+    qWarning() << "Failed to persist frequency for item" << id << query.lastError();
   }
 }
 
@@ -740,7 +858,8 @@ LibraryItem* Library::getItem(int id) {
 
   QSqlQuery query;
   query.prepare(
-    "SELECT id, title, creation_time, modification_time, type, image, color, meaning "
+    "SELECT id, title, creation_time, modification_time, type, image, color, meaning, "
+    "frequency_rank, frequency_tier "
     "FROM items WHERE id = :id AND language_code = :language_code");
   query.bindValue(":id", id);
   query.bindValue(":language_code", _language);
@@ -759,6 +878,18 @@ LibraryItem* Library::getItem(int id) {
   item->setImage(query.value("image").toByteArray());
   item->setColor(query.value("color").toString());
   item->setMeaning(query.value("meaning").toString());
+  const auto storedRank = query.value("frequency_rank");
+  if (storedRank.isValid() && !storedRank.isNull()) {
+    item->setFrequencyRank(storedRank.toInt());
+    item->setFrequencyTier(query.value("frequency_tier").toString());
+  }
+  if (item->type() == LibrarySectionType::kWord &&
+      (item->frequencyRank() <= 0 || item->frequencyTier().isEmpty())) {
+    applyFrequencyToItem(item, _language);
+    if (item->frequencyRank() > 0) {
+      persistFrequency(item->id(), item->frequencyRank(), item->frequencyTier());
+    }
+  }
   return item;
 }
 

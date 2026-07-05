@@ -111,6 +111,58 @@ class SchemaMigrationTest : public QObject {
     }
     QSqlDatabase::removeDatabase("migration_test");
   }
+
+  void upgradeAddsFrequencyColumns() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/v2.db";
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+
+      QSqlQuery query(db);
+      QVERIFY(query.exec("CREATE TABLE schema_version (version INTEGER NOT NULL)"));
+      QVERIFY(query.exec("INSERT INTO schema_version(version) VALUES (2)"));
+      QVERIFY(query.exec("CREATE TABLE languages (code TEXT PRIMARY KEY)"));
+      QVERIFY(query.exec("CREATE TABLE items ("
+                         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                         "language_code TEXT NOT NULL,"
+                         "parent_id INTEGER,"
+                         "title TEXT NOT NULL,"
+                         "type INTEGER NOT NULL,"
+                         "creation_time TEXT NOT NULL,"
+                         "modification_time TEXT NOT NULL,"
+                         "color TEXT,"
+                         "meaning TEXT,"
+                         "cached_translation TEXT)"));
+      db.close();
+    }
+
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+      QVERIFY(lexis::SchemaMigration::ensureSchema(db));
+
+      bool hasFrequencyRank = false;
+      bool hasFrequencyTier = false;
+      QSqlQuery columns("PRAGMA table_info(items)", db);
+      while (columns.next()) {
+        const auto name = columns.value("name").toString();
+        if (name == "frequency_rank") {
+          hasFrequencyRank = true;
+        } else if (name == "frequency_tier") {
+          hasFrequencyTier = true;
+        }
+      }
+      QVERIFY(hasFrequencyRank);
+      QVERIFY(hasFrequencyTier);
+      db.close();
+    }
+    QSqlDatabase::removeDatabase("migration_test");
+  }
 };
 
 QTEST_MAIN(SchemaMigrationTest)

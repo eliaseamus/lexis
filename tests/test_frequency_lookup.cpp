@@ -56,12 +56,12 @@ class FrequencyLookupTest : public QObject {
     lexis::FrequencyLookup::close();
   }
 
-  void tierFromRankUsesLexisBands() {
-    QCOMPARE(lexis::FrequencyLookup::tierFromRank(1), QString("core"));
-    QCOMPARE(lexis::FrequencyLookup::tierFromRank(5000), QString("core"));
-    QCOMPARE(lexis::FrequencyLookup::tierFromRank(5001), QString("common"));
-    QCOMPARE(lexis::FrequencyLookup::tierFromRank(15001), QString("advanced"));
-    QCOMPARE(lexis::FrequencyLookup::tierFromRank(50000), QString("rare"));
+  void tierFromZipfUsesLexisBands() {
+    QCOMPARE(lexis::FrequencyLookup::tierFromZipf(5.72), QString("core"));
+    QCOMPARE(lexis::FrequencyLookup::tierFromZipf(3.89), QString("common"));
+    QCOMPARE(lexis::FrequencyLookup::tierFromZipf(2.36), QString("intermediate"));
+    QCOMPARE(lexis::FrequencyLookup::tierFromZipf(1.5), QString("advanced"));
+    QCOMPARE(lexis::FrequencyLookup::tierFromZipf(0.5), QString("rare"));
   }
 
  private:

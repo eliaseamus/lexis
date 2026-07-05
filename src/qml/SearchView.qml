@@ -122,6 +122,24 @@ Item {
                 }
               }
 
+              Rectangle {
+                visible: modelData.type === "Word" && modelData.frequencyTier !== undefined
+                         && modelData.frequencyTier.length > 0
+                Layout.preferredHeight: frequencyBadgeLabel.implicitHeight + 12
+                Layout.preferredWidth: frequencyBadgeLabel.implicitWidth + 12
+                radius: 10
+                color: Utils.frequencyTierColor(modelData.frequencyTier)
+
+                Text {
+                  id: frequencyBadgeLabel
+                  anchors.centerIn: parent
+                  text: Utils.frequencyTierLabel(modelData.frequencyTier)
+                  color: "white"
+                  font.pixelSize: 11
+                  font.bold: true
+                }
+              }
+
               Text {
                 text: modelData.type
                 color: resultRow.rowTextColor

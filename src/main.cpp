@@ -8,13 +8,18 @@
 
 #include "app_manager.hpp"
 #include "frequency_lookup.hpp"
+#include <QDir>
+#include <QStandardPaths>
 #include "utils.hpp"
 
 namespace {
 
 bool openFrequencyDatabase() {
+  const auto appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   const QStringList candidates = {
-    QDir::currentPath() + QStringLiteral("/data/frequency.db"),
+    QDir::currentPath() + QStringLiteral("/frequency.db"),
+    appDataDir + QStringLiteral("/frequency.db"),
+    appDataDir + QStringLiteral("/data/frequency.db"),
     QCoreApplication::applicationDirPath() + QStringLiteral("/data/frequency.db"),
     QCoreApplication::applicationDirPath() + QStringLiteral("/../data/frequency.db"),
   };

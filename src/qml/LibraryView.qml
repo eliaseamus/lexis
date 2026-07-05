@@ -269,6 +269,7 @@ Pane {
     itemView.itemColor = item["itemColor"];
     itemView.audioUrl = item["audioUrl"];
     itemView.meaning = item["meaning"];
+    itemView.frequencyTier = item["frequencyTier"] !== undefined ? item["frequencyTier"] : "";
     itemView.init();
     stackView.push(itemView);
   }
@@ -285,6 +286,7 @@ Pane {
     itemView.itemColor = item.color;
     itemView.audioUrl = item.audioUrl;
     itemView.meaning = item.meaning;
+    itemView.frequencyTier = item.frequencyTier !== undefined ? item.frequencyTier : "";
     itemView.init();
   }
 

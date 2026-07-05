@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
 import QLexis
+import "utils.js" as Utils
 
 Pane {
   property int itemID
@@ -11,6 +12,7 @@ Pane {
   property color itemColor
   property alias audioUrl: pronunciation.source
   property string meaning
+  property string frequencyTier: ""
   property var duplicateWords: []
   property bool playWhenReady: false
   property int audioRetryCount: 0
@@ -38,6 +40,24 @@ Pane {
             text: title
             Layout.leftMargin: 20
             font.pointSize: 40
+          }
+          Rectangle {
+            visible: frequencyTier.length > 0
+            Layout.alignment: Qt.AlignVCenter
+            Layout.leftMargin: 12
+            height: 28
+            width: frequencyLabel.implicitWidth + 32
+            radius: 14
+            color: Utils.frequencyTierColor(frequencyTier)
+
+            Text {
+              id: frequencyLabel
+              anchors.centerIn: parent
+              text: Utils.frequencyTierLabel(frequencyTier)
+              color: "white"
+              font.pixelSize: 13
+              font.bold: true
+            }
           }
           RoundButton {
             id: speaker

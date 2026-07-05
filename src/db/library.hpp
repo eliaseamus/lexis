@@ -100,8 +100,10 @@ class Library : public QObject {
   void clearSections();
   LibrarySection* getSection(LibrarySectionType type);
   void populateSections();
+  void backfillMissingFrequencies();
   void insertItem(LibraryItem&& item);
   void ensureLanguage(const QString& language);
+  void persistFrequency(int id, int rank, const QString& tier);
   QString getTitle(int id) const;
   void updateParentModificationTime(int id);
   void addChildItems(int parentId, TreeItem* parent);

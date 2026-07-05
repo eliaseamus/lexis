@@ -21,7 +21,7 @@ class FrequencyLookup {
   static QString databasePath();
   static Result lookup(const QString& languageCode, const QString& word);
   static QVariantMap lookupMap(const QString& languageCode, const QString& word);
-  static QString tierFromRank(int rank);
+  static QString tierFromZipf(double zipf);
 
  private:
   static QString normalizeWord(const QString& word);

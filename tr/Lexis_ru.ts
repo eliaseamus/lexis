@@ -836,5 +836,38 @@ in the right bottom corner.</source>
         <source>Turkish</source>
         <translation>Турецкий</translation>
     </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="14"/>
+        <source>Core</source>
+        <translation>Базовый</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="16"/>
+        <source>Common</source>
+        <translation>Частый</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="18"/>
+        <source>Intermediate</source>
+        <translation>Средний</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="20"/>
+        <source>Advanced</source>
+        <translation>Продвинутый</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/utils.js" line="22"/>
+        <source>Rare</source>
+        <translation>Редкий</translation>
+    </message>
+</context>
+<context>
+    <name>SectionItem</name>
+    <message>
+        <location filename="../src/qml/SectionItem.qml" line="50"/>
+        <source>Word frequency: %1</source>
+        <translation>Частотность слова: %1</translation>
+    </message>
 </context>
 </TS>

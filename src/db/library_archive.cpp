@@ -47,7 +47,7 @@ QList<LibraryArchive::ArchiveItem> LibraryArchive::readItems(QSqlDatabase& db,
   QSqlQuery query(db);
   query.prepare(
     "SELECT id, parent_id, title, type, creation_time, modification_time, color, meaning, image, "
-    "audio "
+    "audio, frequency_rank, frequency_tier "
     "FROM items WHERE language_code = :language_code ORDER BY id");
   query.bindValue(":language_code", language);
 
@@ -70,6 +70,11 @@ QList<LibraryArchive::ArchiveItem> LibraryArchive::readItems(QSqlDatabase& db,
     item.meaning = query.value("meaning").toString();
     item.image = query.value("image").toByteArray();
     item.audio = query.value("audio").toByteArray();
+    const auto storedRank = query.value("frequency_rank");
+    if (storedRank.isValid() && !storedRank.isNull()) {
+      item.frequencyRank = storedRank.toInt();
+      item.frequencyTier = query.value("frequency_tier").toString();
+    }
     items.append(item);
   }
 
@@ -92,6 +97,10 @@ QJsonObject LibraryArchive::archiveItemToJson(const ArchiveItem& item) {
   if (!item.audio.isEmpty()) {
     object["audio"] = QString::fromLatin1(item.audio.toBase64());
   }
+  if (item.frequencyRank > 0 && !item.frequencyTier.isEmpty()) {
+    object["frequency_rank"] = item.frequencyRank;
+    object["frequency_tier"] = item.frequencyTier;
+  }
   return object;
 }
 
@@ -113,6 +122,10 @@ LibraryArchive::ArchiveItem LibraryArchive::archiveItemFromJson(const QJsonObjec
   }
   if (object.contains("audio")) {
     item.audio = QByteArray::fromBase64(object["audio"].toString().toLatin1());
+  }
+  if (object.contains("frequency_rank")) {
+    item.frequencyRank = object["frequency_rank"].toInt();
+    item.frequencyTier = object["frequency_tier"].toString();
   }
   return item;
 }
@@ -266,9 +279,9 @@ bool LibraryArchive::importLanguage(QSqlDatabase& db, const QString& filePath,
     insert.prepare(
       "INSERT INTO items"
       "(language_code, parent_id, title, creation_time, modification_time, type, image, color, "
-      "audio, meaning)"
+      "audio, meaning, frequency_rank, frequency_tier)"
       "VALUES (:language_code, :parent_id, :title, :creation_time, :modification_time, :type, "
-      ":image, :color, :audio, :meaning)");
+      ":image, :color, :audio, :meaning, :frequency_rank, :frequency_tier)");
 
     insert.bindValue(":language_code", language);
     if (item.hasParent) {
@@ -284,6 +297,13 @@ bool LibraryArchive::importLanguage(QSqlDatabase& db, const QString& filePath,
     insert.bindValue(":color", item.color);
     insert.bindValue(":audio", item.audio);
     insert.bindValue(":meaning", item.meaning);
+    if (item.frequencyRank > 0 && !item.frequencyTier.isEmpty()) {
+      insert.bindValue(":frequency_rank", item.frequencyRank);
+      insert.bindValue(":frequency_tier", item.frequencyTier);
+    } else {
+      insert.bindValue(":frequency_rank", QVariant());
+      insert.bindValue(":frequency_tier", QVariant());
+    }
 
     if (!exec(insert, "insert imported item:")) {
       db.rollback();

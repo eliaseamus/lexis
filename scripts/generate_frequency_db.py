@@ -25,16 +25,16 @@ WORDLIST = "best"
 BATCH_SIZE = 10_000
 
 TIER_BANDS = (
-    (5_000, "core"),
-    (10_000, "common"),
-    (15_000, "intermediate"),
-    (25_000, "advanced"),
+    (4.0, "core"),
+    (3.0, "common"),
+    (2.0, "intermediate"),
+    (1.0, "advanced"),
 )
 
 
-def tier_from_rank(rank: int) -> str:
-    for upper_bound, label in TIER_BANDS:
-        if rank <= upper_bound:
+def tier_from_zipf(zipf: float) -> str:
+    for minimum_zipf, label in TIER_BANDS:
+        if zipf >= minimum_zipf:
             return label
     return "rare"
 
@@ -81,8 +81,8 @@ def write_metadata(connection: sqlite3.Connection, languages: tuple[str, ...]) -
         ("languages", ",".join(languages)),
         (
             "tier_bands",
-            "1-5000:core,5001-10000:common,10001-15000:intermediate,"
-            "15001-25000:advanced,25001+:rare",
+            "zipf>=4.0:core,zipf>=3.0:common,zipf>=2.0:intermediate,"
+            "zipf>=1.0:advanced,zipf<1.0:rare",
         ),
     ]
     connection.executemany("INSERT INTO metadata(key, value) VALUES (?, ?)", rows)
@@ -105,13 +105,14 @@ def populate_language(connection: sqlite3.Connection, language_code: str) -> int
     inserted = 0
 
     for rank, (word, frequency) in enumerate(ranked_words, start=1):
+        zipf = zipf_from_frequency(frequency)
         batch.append(
             (
                 language_code,
                 normalize_word(word),
                 rank,
-                zipf_from_frequency(frequency),
-                tier_from_rank(rank),
+                zipf,
+                tier_from_zipf(zipf),
             )
         )
         if len(batch) >= BATCH_SIZE:

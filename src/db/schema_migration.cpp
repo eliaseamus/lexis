@@ -65,6 +65,8 @@ bool SchemaMigration::createSchemaV1(QSqlDatabase& db) {
     "  color TEXT,"
     "  meaning TEXT,"
     "  cached_translation TEXT,"
+    "  frequency_rank INTEGER,"
+    "  frequency_tier TEXT,"
     "  image BLOB,"
     "  audio BLOB"
     ")",
@@ -102,14 +104,45 @@ bool SchemaMigration::migrateToV2(QSqlDatabase& db) {
   return execSql(db, "ALTER TABLE items ADD COLUMN cached_translation TEXT");
 }
 
-bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
-  if (currentVersion(db) >= kSchemaVersion) {
-    return migrateToV2(db);
+bool SchemaMigration::migrateToV3(QSqlDatabase& db) {
+  QSqlQuery query(db);
+  query.prepare("PRAGMA table_info(items)");
+  if (!query.exec()) {
+    qWarning() << "read items schema:" << query.lastError();
+    return false;
   }
+
+  bool hasFrequencyRank = false;
+  bool hasFrequencyTier = false;
+  while (query.next()) {
+    const auto column = query.value("name").toString();
+    if (column == QStringLiteral("frequency_rank")) {
+      hasFrequencyRank = true;
+    } else if (column == QStringLiteral("frequency_tier")) {
+      hasFrequencyTier = true;
+    }
+  }
+
+  if (!hasFrequencyRank && !execSql(db, "ALTER TABLE items ADD COLUMN frequency_rank INTEGER")) {
+    return false;
+  }
+  if (!hasFrequencyTier && !execSql(db, "ALTER TABLE items ADD COLUMN frequency_tier TEXT")) {
+    return false;
+  }
+  return true;
+}
+
+bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
   if (!migrateToV2(db)) {
     return false;
   }
-  return setVersion(db, kSchemaVersion);
+  if (!migrateToV3(db)) {
+    return false;
+  }
+  if (currentVersion(db) < kSchemaVersion) {
+    return setVersion(db, kSchemaVersion);
+  }
+  return true;
 }
 
 int SchemaMigration::currentVersion(QSqlDatabase& db) {

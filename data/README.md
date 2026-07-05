@@ -23,15 +23,19 @@ The database covers all nine Lexis learning languages:
 
 `en`, `es`, `de`, `fr`, `ru`, `it`, `pl`, `uk`, `tr`
 
-## Tier bands (by corpus rank)
+## Tier bands (by Zipf score)
 
-| Rank | Tier |
+Tiers use [Zipf frequency](https://en.wikipedia.org/wiki/Zipf%27s_law#Use_in_measures_of_diversity) (log scale), not corpus rank. Rank alone mislabels common words when the dictionary contains hundreds of thousands of lemmas.
+
+| Zipf | Tier |
 |------|------|
-| 1–5,000 | core |
-| 5,001–10,000 | common |
-| 10,001–15,000 | intermediate |
-| 15,001–25,000 | advanced |
-| 25,001+ | rare |
+| ≥ 4.0 | core |
+| ≥ 3.0 | common |
+| ≥ 2.0 | intermediate |
+| ≥ 1.0 | advanced |
+| < 1.0 | rare |
+
+Examples (English): *thing* → core (5.7), *frog* → common (3.9), *freckle* → intermediate (2.4).
 
 Words are stored case-insensitively. Lookup is implemented in `FrequencyLookup` (`src/db/frequency_lookup.cpp`).
 

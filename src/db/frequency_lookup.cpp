@@ -62,20 +62,17 @@ QString FrequencyLookup::normalizeWord(const QString& word) {
   return word.trimmed().toCaseFolded();
 }
 
-QString FrequencyLookup::tierFromRank(int rank) {
-  if (rank <= 0) {
-    return {};
-  }
-  if (rank <= 5000) {
+QString FrequencyLookup::tierFromZipf(double zipf) {
+  if (zipf >= 4.0) {
     return QStringLiteral("core");
   }
-  if (rank <= 10000) {
+  if (zipf >= 3.0) {
     return QStringLiteral("common");
   }
-  if (rank <= 15000) {
+  if (zipf >= 2.0) {
     return QStringLiteral("intermediate");
   }
-  if (rank <= 25000) {
+  if (zipf >= 1.0) {
     return QStringLiteral("advanced");
   }
   return QStringLiteral("rare");
@@ -115,8 +112,8 @@ FrequencyLookup::Result FrequencyLookup::lookup(const QString& languageCode,
 
   result.rank = query.value("rank").toInt();
   result.zipf = query.value("zipf").toDouble();
-  result.tier = query.value("tier").toString();
-  result.found = result.rank > 0 && !result.tier.isEmpty();
+  result.tier = tierFromZipf(result.zipf);
+  result.found = result.rank > 0 && result.zipf > 0.0 && !result.tier.isEmpty();
   return result;
 }
 

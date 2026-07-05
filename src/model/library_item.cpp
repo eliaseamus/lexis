@@ -43,6 +43,8 @@ void LibraryItem::init(LibraryItem&& item) {
   _audio.setFileName(item._audio.fileName());
   item._audio.setAutoRemove(false);
   _meaning = std::move(item._meaning);
+  _frequencyRank = item._frequencyRank;
+  _frequencyTier = std::move(item._frequencyTier);
 }
 
 QByteArray LibraryItem::image() const {

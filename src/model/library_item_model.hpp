@@ -26,7 +26,9 @@ class LibraryItemModel : public QAbstractListModel {
     ImageUrlRole,
     ColorRole,
     AudioUrlRole,
-    MeaningRole
+    MeaningRole,
+    FrequencyRankRole,
+    FrequencyTierRole
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);

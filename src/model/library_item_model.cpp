@@ -99,6 +99,10 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->audioUrl();
     case MeaningRole:
       return item->meaning();
+    case FrequencyRankRole:
+      return item->frequencyRank();
+    case FrequencyTierRole:
+      return item->frequencyTier();
   }
 
   return {};
@@ -115,6 +119,8 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[ColorRole] = "itemColor";
   roles[AudioUrlRole] = "audioUrl";
   roles[MeaningRole] = "meaning";
+  roles[FrequencyRankRole] = "frequencyRank";
+  roles[FrequencyTierRole] = "frequencyTier";
   return roles;
 }
 

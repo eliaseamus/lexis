@@ -41,6 +41,10 @@ QVariantMap makeResultMap(const QSqlQuery& row, const LibrarySearch::ItemIndex& 
   result.insert(QStringLiteral("typeEnum"), static_cast<int>(type));
   result.insert(QStringLiteral("itemColor"), row.value("color").toString());
   result.insert(QStringLiteral("hasImage"), !image.isEmpty());
+  const auto frequencyTier = row.value("frequency_tier").toString();
+  if (!frequencyTier.isEmpty()) {
+    result.insert(QStringLiteral("frequencyTier"), frequencyTier);
+  }
   result.insert(QStringLiteral("breadcrumb"), LibrarySearch::breadcrumb(index, id));
   result.insert(QStringLiteral("parentPath"), LibrarySearch::parentPath(index, id));
   return result;
@@ -118,7 +122,7 @@ QVariantList LibrarySearch::search(const QSqlDatabase& db, const QString& langua
 
   QSqlQuery sqlQuery(db);
   sqlQuery.prepare(
-    "SELECT id, parent_id, title, meaning, type, color, image "
+    "SELECT id, parent_id, title, meaning, type, color, image, frequency_tier "
     "FROM items "
     "WHERE language_code = :language_code "
     "  AND (title LIKE :pattern COLLATE NOCASE "
@@ -152,7 +156,7 @@ QVariantList LibrarySearch::findByTitle(const QSqlDatabase& db, const QString& l
 
   QSqlQuery sqlQuery(db);
   sqlQuery.prepare(
-    "SELECT id, parent_id, title, meaning, type, color, image "
+    "SELECT id, parent_id, title, meaning, type, color, image, frequency_tier "
     "FROM items "
     "WHERE language_code = :language_code "
     "  AND type = :word_type "

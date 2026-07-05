@@ -97,6 +97,7 @@ Item {
                      "lightgrey"
         itemTitle: title
         imageSource: imageUrl
+        wordFrequencyTier: type === "Word" && frequencyTier !== undefined ? frequencyTier : ""
         MouseArea {
           id: mouseArea
           anchors.fill: parent
@@ -230,6 +231,7 @@ Item {
           item["itemColor"] = itemColor;
           item["audioUrl"] = audioUrl;
           item["meaning"] = meaning;
+          item["frequencyTier"] = frequencyTier;
           return item;
         }
 
