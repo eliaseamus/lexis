@@ -90,14 +90,14 @@ class LibraryGroupSuggestionTest : public QObject {
     QVERIFY(db.open());
 
     const auto suggestions = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
-      db, "en", "orange", "fruit", -1, lexis::kRootParentId);
+      db, "en", "orange", "fruit", {}, -1, lexis::kRootParentId);
 
     QCOMPARE(suggestions.size(), 1);
     QCOMPARE(suggestions[0].toMap().value("groupName").toString(), QString("Food"));
     QVERIFY(suggestions[0].toMap().value("confidence").toInt() == 100);
 
     const auto carSuggestions = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
-      db, "en", "engine", {}, -1, lexis::kRootParentId);
+      db, "en", "engine", {}, {}, -1, lexis::kRootParentId);
     QCOMPARE(carSuggestions.size(), 1);
     QCOMPARE(carSuggestions[0].toMap().value("groupName").toString(), QString("Car"));
 
@@ -116,11 +116,11 @@ class LibraryGroupSuggestionTest : public QObject {
     QVERIFY(db.open());
 
     const auto inCar = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
-      db, "en", "wheel", {}, -1, 4);
+      db, "en", "wheel", {}, {}, -1, 4);
     QCOMPARE(inCar.size(), 0);
 
     const auto unrelated = lexis::LibraryGroupSuggestion::suggestSubjectGroups(
-      db, "en", "xyz", {}, -1, lexis::kRootParentId);
+      db, "en", "xyz", {}, {}, -1, lexis::kRootParentId);
     QCOMPARE(unrelated.size(), 0);
 
     db.close();

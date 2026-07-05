@@ -5,6 +5,7 @@
 #include "library_group_suggestion.hpp"
 #include "library_search.hpp"
 #include "library_statistics.hpp"
+#include "dictionary_summary.hpp"
 #include "utils.hpp"
 
 #include <QtSql/QtSql>
@@ -54,7 +55,8 @@ void bindFrequencyValues(QSqlQuery& query, const LibraryItem* item) {
 
 }  // namespace
 
-Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunciation(this)) {
+Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunciation(this)),
+                                    _dictionary(new Dictionary(this)) {
   openDatabase("lexis.db");
   openLanguage(_settings.getCurrentLanguage());
   connect(_pronunciation, &Pronunciation::audioReady, this, &Library::updateAudio);
@@ -62,6 +64,8 @@ Library::Library(QObject* parent) : QObject(parent), _pronunciation(new Pronunci
     const auto itemId = _pendingAudioItemId > 0 ? _pendingAudioItemId : _audioItem.id;
     finishAudioFetch(itemId, {});
   });
+  connect(_dictionary, &Dictionary::definitionsReady, this, &Library::onDictionaryDefinitionsReady);
+  connect(_dictionary, &Dictionary::errorOccured, this, &Library::onDictionaryError);
 }
 
 void Library::closeDatabaseConnection() {
@@ -194,6 +198,7 @@ void Library::addItem(LibraryItem* item, int parentIdOverride) {
   if (item->type() == LibrarySectionType::kWord) {
     _audioItem.id = item->id();
     requestAudioForItem(item->id(), item->title());
+    requestDictionarySummaryForItem(item->id(), item->title());
   }
   updateParentModificationTime(item->id());
   invalidateImageCache(item->id());
@@ -220,13 +225,16 @@ void Library::updateItem(LibraryItem* item, LibrarySectionType oldType) {
     _audioItem.id = item->id();
     invalidateAudioCache(item->id());
     requestAudioForItem(item->id(), item->title());
+    persistDictionarySummary(item->id(), {});
+    requestDictionarySummaryForItem(item->id(), item->title());
     query.prepare(
       "UPDATE items "
       "SET title = :title, modification_time = :modification, type = :type, image = :image, "
-      "color = :color, audio = :audio, frequency_rank = :frequency_rank, "
-      "frequency_tier = :frequency_tier "
+      "color = :color, audio = :audio, dictionary_summary = :dictionary_summary, "
+      "frequency_rank = :frequency_rank, frequency_tier = :frequency_tier "
       "WHERE id = :id AND language_code = :language_code");
     query.bindValue(":audio", QByteArray{});
+    query.bindValue(":dictionary_summary", QVariant());
   } else {
     query.prepare(
       "UPDATE items "
@@ -452,6 +460,117 @@ void Library::updateCachedTranslation(int id, const QString& translation) {
     qWarning() << QString("Failed to update cached translation for item %1:").arg(id)
                << query.lastError();
   }
+}
+
+void Library::storeDictionarySummary(int id, const QString& summary) {
+  if (_language.isEmpty() || id <= 0 || summary.trimmed().isEmpty()) {
+    return;
+  }
+  persistDictionarySummary(id, summary.trimmed());
+}
+
+void Library::prefetchDictionary(const QString& title) {
+  const auto trimmed = title.trimmed();
+  if (trimmed.isEmpty()) {
+    return;
+  }
+  if (!_dictionary->cachedSummary(trimmed).isEmpty()) {
+    return;
+  }
+  _dictionary->get(trimmed);
+}
+
+QString Library::buildDictionarySummary(const QVector<Definition*>& definitions) const {
+  return lexis::buildDictionarySummary(definitions);
+}
+
+void Library::persistDictionarySummary(int id, const QString& summary) {
+  if (_language.isEmpty() || id <= 0) {
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+    "UPDATE items SET dictionary_summary = :summary "
+    "WHERE id = :id AND language_code = :language_code");
+  if (summary.isEmpty()) {
+    query.bindValue(":summary", QVariant());
+  } else {
+    query.bindValue(":summary", summary);
+  }
+  query.bindValue(":id", id);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec()) {
+    qWarning() << QString("Failed to update dictionary summary for item %1:").arg(id)
+               << query.lastError();
+  }
+}
+
+void Library::requestDictionarySummaryForItem(int id, const QString& title) {
+  if (id <= 0 || title.isEmpty()) {
+    return;
+  }
+
+  const auto cached = _dictionary->cachedSummary(title);
+  if (!cached.isEmpty()) {
+    persistDictionarySummary(id, cached);
+    return;
+  }
+
+  for (const auto& request : _dictionaryRequestQueue) {
+    if (request.itemId == id) {
+      return;
+    }
+  }
+  if (_dictionaryFetchInProgress && _pendingDictionaryItemId == id) {
+    return;
+  }
+
+  _dictionaryRequestQueue.append(PendingDictionaryRequest{id, title});
+  processDictionaryQueue();
+}
+
+void Library::processDictionaryQueue() {
+  if (_dictionaryFetchInProgress || _dictionaryRequestQueue.isEmpty()) {
+    return;
+  }
+
+  const auto request = _dictionaryRequestQueue.constFirst();
+  _dictionaryFetchInProgress = true;
+  _pendingDictionaryItemId = request.itemId;
+  _dictionary->get(request.title);
+}
+
+void Library::finishDictionaryFetch(int itemId, const QVector<Definition*>& definitions) {
+  _dictionaryFetchInProgress = false;
+  _pendingDictionaryItemId = -1;
+  for (int i = 0; i < _dictionaryRequestQueue.size(); ++i) {
+    if (_dictionaryRequestQueue[i].itemId == itemId) {
+      _dictionaryRequestQueue.removeAt(i);
+      break;
+    }
+  }
+
+  if (itemId > 0 && !definitions.isEmpty()) {
+    persistDictionarySummary(itemId, lexis::buildDictionarySummary(definitions));
+  }
+
+  processDictionaryQueue();
+}
+
+void Library::onDictionaryDefinitionsReady(const QVector<Definition*>& definitions) {
+  if (!_dictionaryFetchInProgress) {
+    return;
+  }
+  finishDictionaryFetch(_pendingDictionaryItemId, definitions);
+}
+
+void Library::onDictionaryError() {
+  if (!_dictionaryFetchInProgress) {
+    return;
+  }
+  finishDictionaryFetch(_pendingDictionaryItemId, {});
 }
 
 TreeModel* Library::getStructure() {
@@ -880,8 +999,10 @@ QVariantList Library::suggestSubjectGroups(const QString& wordTitle, const QStri
   if (_language.isEmpty()) {
     return {};
   }
-  return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language, wordTitle,
-                                                      meaning, excludeItemId, _currentParentId);
+  const auto dictionarySummary = _dictionary->cachedSummary(wordTitle.trimmed());
+  return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language,
+                                                      wordTitle, meaning, dictionarySummary,
+                                                      excludeItemId, _currentParentId);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

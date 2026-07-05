@@ -29,6 +29,7 @@ Pane {
   property var pendingResolve: null
   property var lookupQueue: []
   property bool lookupBusy: false
+  property var pendingLookupWord: null
   property bool playWhenReady: false
   property bool audioLoading: false
   property int audioRetryCount: 0
@@ -400,6 +401,12 @@ Pane {
     target: dictionary
 
     function onDefinitionsReady(definitions) {
+      if (pendingLookupWord) {
+        const summary = library.buildDictionarySummary(definitions)
+        if (summary.length > 0) {
+          library.storeDictionarySummary(pendingLookupWord.itemId, summary)
+        }
+      }
       finishLookup(translationsFromDefinitions(definitions))
     }
 
@@ -526,10 +533,12 @@ Pane {
     }
 
     lookupBusy = true
+    pendingLookupWord = word
     pendingResolve = (translations) => {
       storeTranslations(word, translations)
       item.callback(translations)
       lookupBusy = false
+      pendingLookupWord = null
       pendingResolve = null
       processLookupQueue()
     }

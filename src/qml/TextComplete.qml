@@ -7,6 +7,7 @@ Item {
   id: textComplete
   property string placeholder: ""
   property alias text: textField.text
+  signal textEdited(string text)
   Layout.preferredHeight: textField.height
 
   function setText(newText) {
@@ -26,6 +27,7 @@ Item {
     anchors.right: parent.right
 
     onTextEdited: {
+      textComplete.textEdited(text)
       completions.currentIndex = -1
       predictor.get(text)
     }

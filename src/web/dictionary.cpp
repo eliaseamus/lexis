@@ -4,10 +4,21 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkReply>
+#include <QCoreApplication>
 
+#include "dictionary_summary.hpp"
 #include "utils.hpp"
 
 namespace lexis {
+
+namespace {
+
+DictionaryCache* sharedDictionaryCache() {
+  static DictionaryCache* cache = new DictionaryCache(20, QCoreApplication::instance());
+  return cache;
+}
+
+}  // namespace
 
 DictionaryCache::DictionaryCache(qsizetype size, QObject* parent) : QObject(parent), _size(size) {
   _cache.reserve(_size);
@@ -43,7 +54,7 @@ void DictionaryCache::addDefinitions(const QVector<Definition*>& definitions,
 }
 
 Dictionary::Dictionary(QObject* parent)
-    : WebService(parent), _cache(new DictionaryCache(20, this)) {}
+    : WebService(parent), _cache(sharedDictionaryCache()) {}
 
 void Dictionary::get(const QString& query) {
   static const auto urlFormat = QString(
@@ -120,6 +131,14 @@ void Dictionary::onFinished(QNetworkReply* reply) {
 
   _cache->addDefinitions(definitions, _settings.getCurrentInterfaceLanguagePair());
   emit definitionsReady(definitions);
+}
+
+QString Dictionary::cachedSummary(const QString& query) const {
+  const auto definitions = _cache->getDefinitions(query, _settings.getCurrentInterfaceLanguagePair());
+  if (!definitions.has_value()) {
+    return {};
+  }
+  return buildDictionarySummary(definitions.value());
 }
 
 }  // namespace lexis

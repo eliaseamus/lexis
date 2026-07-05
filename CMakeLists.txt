@@ -17,6 +17,8 @@ set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/Lexis.rc")
 qt_add_executable(${PROJECT_NAME}
   src/web/dictionary.cpp
   src/web/dictionary.hpp
+  src/web/dictionary_summary.cpp
+  src/web/dictionary_summary.hpp
   src/web/predictor.cpp
   src/web/predictor.hpp
   src/web/pronunciation.cpp
@@ -244,6 +246,7 @@ set_target_properties(test_predictor PROPERTIES
 qt_add_executable(test_dictionary_cache
   tests/test_dictionary_cache.cpp
   src/web/dictionary.cpp
+  src/web/dictionary_summary.cpp
   src/web/web_service.cpp
   src/app_settings.cpp
 )
@@ -383,6 +386,7 @@ qt_add_executable(test_library_group_suggestion
   src/db/schema_migration.cpp
   src/db/library_search.cpp
   src/db/library_group_suggestion.cpp
+  src/web/dictionary_summary.cpp
   src/model/section_type.cpp
 )
 
@@ -391,13 +395,40 @@ target_link_libraries(test_library_group_suggestion PRIVATE
   Qt6::Sql
   Qt6::Test
   Qt6::Qml
+  Qt6::Gui
 )
 
-target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db)
+target_include_directories(test_library_group_suggestion PRIVATE src src/model src/db src/web)
 
 add_test(test_library_group_suggestion test_library_group_suggestion)
 
 set_target_properties(test_library_group_suggestion PROPERTIES
+  WIN32_EXECUTABLE TRUE
+  MACOSX_BUNDLE TRUE
+)
+
+# dictionary_summary
+qt_add_executable(test_dictionary_summary
+  tests/test_dictionary_summary.cpp
+  src/web/dictionary_summary.cpp
+  src/web/dictionary.cpp
+  src/web/web_service.cpp
+  src/app_settings.cpp
+)
+
+target_link_libraries(test_dictionary_summary PRIVATE
+  Qt6::Core
+  Qt6::Network
+  Qt6::Test
+  Qt6::Qml
+  Qt6::Gui
+)
+
+target_include_directories(test_dictionary_summary PRIVATE src src/web)
+
+add_test(test_dictionary_summary test_dictionary_summary)
+
+set_target_properties(test_dictionary_summary PROPERTIES
   WIN32_EXECUTABLE TRUE
   MACOSX_BUNDLE TRUE
 )

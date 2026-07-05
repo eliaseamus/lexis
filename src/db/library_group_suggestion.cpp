@@ -6,6 +6,7 @@
 
 #include <algorithm>
 
+#include "dictionary_summary.hpp"
 #include "library_search.hpp"
 #include "schema_migration.hpp"
 #include "section_type.hpp"
@@ -111,7 +112,8 @@ QVector<int> descendantWordIds(int groupId, const QHash<int, QVector<int>>& chil
   return wordIds;
 }
 
-double scoreGroup(const QString& wordTitle, const QString& meaning, const QString& groupTitle,
+double scoreGroup(const QString& wordTitle, const QString& semanticContext,
+                  const QString& groupTitle,
                   const QVector<QPair<QString, QString>>& wordsInGroup) {
   double score = 0.0;
   score += textSimilarity(wordTitle, groupTitle) * 0.35;
@@ -119,7 +121,7 @@ double scoreGroup(const QString& wordTitle, const QString& meaning, const QStrin
   if (!wordsInGroup.isEmpty()) {
     double bestWordScore = 0.0;
     double totalWordScore = 0.0;
-    for (const auto& [existingTitle, existingMeaning] : wordsInGroup) {
+    for (const auto& [existingTitle, existingSemanticContext] : wordsInGroup) {
       const auto wordScore = textSimilarity(wordTitle, existingTitle);
       bestWordScore = wordScore > bestWordScore ? wordScore : bestWordScore;
       totalWordScore += wordScore;
@@ -128,18 +130,18 @@ double scoreGroup(const QString& wordTitle, const QString& meaning, const QStrin
     score += (totalWordScore / wordsInGroup.size()) * 0.10;
   }
 
-  if (!meaning.isEmpty()) {
-    score += textSimilarity(meaning, groupTitle) * 0.10;
-    double bestMeaningScore = 0.0;
-    for (const auto& [existingTitle, existingMeaning] : wordsInGroup) {
+  if (!semanticContext.isEmpty()) {
+    score += textSimilarity(semanticContext, groupTitle) * 0.10;
+    double bestSemanticScore = 0.0;
+    for (const auto& [existingTitle, existingSemanticContext] : wordsInGroup) {
       Q_UNUSED(existingTitle);
-      if (existingMeaning.isEmpty()) {
+      if (existingSemanticContext.isEmpty()) {
         continue;
       }
-      const auto meaningScore = textSimilarity(meaning, existingMeaning);
-      bestMeaningScore = meaningScore > bestMeaningScore ? meaningScore : bestMeaningScore;
+      const auto semanticScore = textSimilarity(semanticContext, existingSemanticContext);
+      bestSemanticScore = semanticScore > bestSemanticScore ? semanticScore : bestSemanticScore;
     }
-    score += bestMeaningScore * 0.35;
+    score += bestSemanticScore * 0.35;
   }
 
   return score;
@@ -147,21 +149,23 @@ double scoreGroup(const QString& wordTitle, const QString& meaning, const QStrin
 
 }  // namespace
 
-QVariantList LibraryGroupSuggestion::suggestSubjectGroups(const QSqlDatabase& db,
-                                                          const QString& languageCode,
-                                                          const QString& wordTitle,
-                                                          const QString& meaning,
-                                                          int excludeItemId,
-                                                          int currentParentId, int limit) {
+QVariantList LibraryGroupSuggestion::suggestSubjectGroups(
+  const QSqlDatabase& db, const QString& languageCode, const QString& wordTitle,
+  const QString& meaning, const QString& dictionarySummary, int excludeItemId,
+  int currentParentId, int limit) {
   QVariantList results;
   const auto trimmedTitle = wordTitle.trimmed();
   if (languageCode.isEmpty() || trimmedTitle.isEmpty() || limit <= 0) {
     return results;
   }
 
+  const auto targetSemanticContext =
+    combineSemanticContext(meaning.trimmed(), dictionarySummary.trimmed());
+
   QSqlQuery query(db);
   query.prepare(
-    "SELECT id, parent_id, title, type, meaning FROM items WHERE language_code = :language_code");
+    "SELECT id, parent_id, title, type, meaning, dictionary_summary, cached_translation "
+    "FROM items WHERE language_code = :language_code");
   query.bindValue(":language_code", languageCode);
   if (!query.exec()) {
     qWarning() << "Failed to load items for group suggestions:" << query.lastError();
@@ -169,7 +173,7 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(const QSqlDatabase& db
   }
 
   QHash<int, QString> titles;
-  QHash<int, QString> meanings;
+  QHash<int, QString> semanticContexts;
   QHash<int, LibrarySectionType> typeById;
   QHash<int, QVector<int>> childrenByParent;
   QVector<int> subjectGroupIds;
@@ -185,7 +189,9 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(const QSqlDatabase& db
                                                             : query.value("parent_id").toInt();
 
     titles.insert(id, query.value("title").toString());
-    meanings.insert(id, query.value("meaning").toString());
+    semanticContexts.insert(id, combineSemanticContext(query.value("meaning").toString(),
+                                                         query.value("dictionary_summary").toString(),
+                                                         query.value("cached_translation").toString()));
     typeById.insert(id, type);
     childrenByParent[parentId].append(id);
 
@@ -209,11 +215,11 @@ QVariantList LibraryGroupSuggestion::suggestSubjectGroups(const QSqlDatabase& db
 
     QVector<QPair<QString, QString>> wordsInGroup;
     for (const auto wordId : descendantWordIds(groupId, childrenByParent, typeById)) {
-      wordsInGroup.append({titles.value(wordId), meanings.value(wordId)});
+      wordsInGroup.append({titles.value(wordId), semanticContexts.value(wordId)});
     }
 
     const auto groupTitle = titles.value(groupId);
-    const auto score = scoreGroup(trimmedTitle, meaning.trimmed(), groupTitle, wordsInGroup);
+    const auto score = scoreGroup(trimmedTitle, targetSemanticContext, groupTitle, wordsInGroup);
     if (score < 0.12) {
       continue;
     }

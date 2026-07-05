@@ -8,6 +8,7 @@
 #include <QTemporaryFile>
 
 #include "app_settings.hpp"
+#include "dictionary.hpp"
 #include "library_item.hpp"
 #include "library_section.hpp"
 #include "pronunciation.hpp"
@@ -33,6 +34,11 @@ class Library : public QObject {
     QString title;
   };
 
+  struct PendingDictionaryRequest {
+    int itemId = -1;
+    QString title;
+  };
+
  private:
   QVector<LibrarySection*> _sections;
   QString _language;
@@ -40,10 +46,14 @@ class Library : public QObject {
   SectionTypeManager _typeManager;
   AppSettings _settings;
   Pronunciation* _pronunciation = nullptr;
+  Dictionary* _dictionary = nullptr;
   CurrentItem _audioItem;
   int _pendingAudioItemId = -1;
   bool _audioFetchInProgress = false;
   QVector<PendingAudioRequest> _audioRequestQueue;
+  int _pendingDictionaryItemId = -1;
+  bool _dictionaryFetchInProgress = false;
+  QVector<PendingDictionaryRequest> _dictionaryRequestQueue;
   QString _databasePath;
   QHash<int, QUrl> _imageUrlCache;
   QHash<int, QTemporaryFile*> _imageFiles;
@@ -65,6 +75,9 @@ class Library : public QObject {
   Q_INVOKABLE void refreshAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE void updateCachedTranslation(int id, const QString& translation);
+  Q_INVOKABLE void storeDictionarySummary(int id, const QString& summary);
+  Q_INVOKABLE void prefetchDictionary(const QString& title);
+  Q_INVOKABLE QString buildDictionarySummary(const QVector<Definition*>& definitions) const;
   Q_INVOKABLE TreeModel* getStructure();
   Q_INVOKABLE bool exportLanguage(const QString& language, const QUrl& fileUrl);
   Q_INVOKABLE bool importLanguage(const QUrl& fileUrl);
@@ -102,6 +115,10 @@ class Library : public QObject {
   void requestAudioForItem(int id, const QString& title);
   void processAudioQueue();
   void finishAudioFetch(int itemId, const QByteArray& audio);
+  void requestDictionarySummaryForItem(int id, const QString& title);
+  void processDictionaryQueue();
+  void finishDictionaryFetch(int itemId, const QVector<Definition*>& definitions);
+  void persistDictionarySummary(int id, const QString& summary);
   void closeDatabaseConnection();
   void clearSections();
   LibrarySection* getSection(LibrarySectionType type);
@@ -118,6 +135,8 @@ class Library : public QObject {
 
  private slots:
   void updateAudio(QByteArray audio);
+  void onDictionaryDefinitionsReady(const QVector<Definition*>& definitions);
+  void onDictionaryError();
 
  signals:
   void dummy();

@@ -163,6 +163,56 @@ class SchemaMigrationTest : public QObject {
     }
     QSqlDatabase::removeDatabase("migration_test");
   }
+
+  void upgradeAddsDictionarySummaryColumn() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const auto dbPath = tempDir.path() + "/v3.db";
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+
+      QSqlQuery query(db);
+      QVERIFY(query.exec("CREATE TABLE schema_version (version INTEGER NOT NULL)"));
+      QVERIFY(query.exec("INSERT INTO schema_version(version) VALUES (3)"));
+      QVERIFY(query.exec("CREATE TABLE languages (code TEXT PRIMARY KEY)"));
+      QVERIFY(query.exec("CREATE TABLE items ("
+                         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                         "language_code TEXT NOT NULL,"
+                         "parent_id INTEGER,"
+                         "title TEXT NOT NULL,"
+                         "type INTEGER NOT NULL,"
+                         "creation_time TEXT NOT NULL,"
+                         "modification_time TEXT NOT NULL,"
+                         "color TEXT,"
+                         "meaning TEXT,"
+                         "cached_translation TEXT,"
+                         "frequency_rank INTEGER,"
+                         "frequency_tier TEXT)"));
+      db.close();
+    }
+
+    {
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "migration_test");
+      db.setDatabaseName(dbPath);
+      QVERIFY(db.open());
+      QVERIFY(lexis::SchemaMigration::ensureSchema(db));
+
+      bool hasDictionarySummary = false;
+      QSqlQuery columns("PRAGMA table_info(items)", db);
+      while (columns.next()) {
+        if (columns.value("name").toString() == "dictionary_summary") {
+          hasDictionarySummary = true;
+          break;
+        }
+      }
+      QVERIFY(hasDictionarySummary);
+      db.close();
+    }
+    QSqlDatabase::removeDatabase("migration_test");
+  }
 };
 
 QTEST_MAIN(SchemaMigrationTest)

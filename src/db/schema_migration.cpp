@@ -65,6 +65,7 @@ bool SchemaMigration::createSchemaV1(QSqlDatabase& db) {
     "  color TEXT,"
     "  meaning TEXT,"
     "  cached_translation TEXT,"
+    "  dictionary_summary TEXT,"
     "  frequency_rank INTEGER,"
     "  frequency_tier TEXT,"
     "  image BLOB,"
@@ -132,11 +133,31 @@ bool SchemaMigration::migrateToV3(QSqlDatabase& db) {
   return true;
 }
 
+bool SchemaMigration::migrateToV4(QSqlDatabase& db) {
+  QSqlQuery query(db);
+  query.prepare("PRAGMA table_info(items)");
+  if (!query.exec()) {
+    qWarning() << "read items schema:" << query.lastError();
+    return false;
+  }
+
+  while (query.next()) {
+    if (query.value("name").toString() == QStringLiteral("dictionary_summary")) {
+      return true;
+    }
+  }
+
+  return execSql(db, "ALTER TABLE items ADD COLUMN dictionary_summary TEXT");
+}
+
 bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
   if (!migrateToV2(db)) {
     return false;
   }
   if (!migrateToV3(db)) {
+    return false;
+  }
+  if (!migrateToV4(db)) {
     return false;
   }
   if (currentVersion(db) < kSchemaVersion) {

@@ -55,6 +55,19 @@ Rectangle {
       text: title
       Layout.fillWidth: true
       placeholder: qsTr("Title")
+
+      onTextEdited: dictionaryPrefetchTimer.restart()
+    }
+
+    Timer {
+      id: dictionaryPrefetchTimer
+      interval: 400
+      repeat: false
+      onTriggered: {
+        if (types[type.currentIndex] === "Word" && titleItem.text.trim().length > 0) {
+          library.prefetchDictionary(titleItem.text.trim())
+        }
+      }
     }
 
     RowLayout {

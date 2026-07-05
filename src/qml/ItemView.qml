@@ -271,6 +271,10 @@ Pane {
     }
 
     function onDefinitionsReady(definitions) {
+      const summary = library.buildDictionarySummary(definitions)
+      if (summary.length > 0) {
+        library.storeDictionarySummary(itemID, summary)
+      }
       const hasMultipleDefinitions = definitions.length > 1;
       var dictionaryText = String();
       if (hasMultipleDefinitions) {

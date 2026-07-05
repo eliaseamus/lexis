@@ -30,6 +30,7 @@ class LibraryArchive {
     QString modificationTime;
     QString color;
     QString meaning;
+    QString dictionarySummary;
     QByteArray image;
     QByteArray audio;
     int frequencyRank = -1;
