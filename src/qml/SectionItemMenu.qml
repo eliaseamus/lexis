@@ -28,6 +28,11 @@ Menu {
     }
   }
   MenuItem {
+    text: qsTr("Suggest group")
+    enabled: type === "Word" && (!gridItem.isSelected || libraryView.selectedItems.length === 1)
+    onTriggered: libraryView.suggestGroupForItem(buildItemDict())
+  }
+  MenuItem {
     text: qsTr("Delete")
     onTriggered: {
       if (libraryView.isSelectMode) {

@@ -994,15 +994,56 @@ QString Library::parentBreadcrumb(int parentId) const {
                                  parentId);
 }
 
+int Library::itemParentId(int itemId) const {
+  if (_language.isEmpty() || itemId <= 0) {
+    return kRootParentId;
+  }
+
+  QSqlQuery query;
+  query.prepare("SELECT parent_id FROM items WHERE id = :id AND language_code = :language_code");
+  query.bindValue(":id", itemId);
+  query.bindValue(":language_code", _language);
+
+  if (!query.exec() || !query.next()) {
+    return kRootParentId;
+  }
+  return parentIdFromVariant(query.value("parent_id"));
+}
+
 QVariantList Library::suggestSubjectGroups(const QString& wordTitle, const QString& meaning,
-                                           int excludeItemId) const {
+                                           int excludeItemId, int currentParentId) const {
   if (_language.isEmpty()) {
     return {};
   }
-  const auto dictionarySummary = _dictionary->cachedSummary(wordTitle.trimmed());
+
+  const auto trimmedTitle = wordTitle.trimmed();
+  auto effectiveMeaning = meaning.trimmed();
+  auto dictionarySummary = _dictionary->cachedSummary(trimmedTitle);
+
+  if (excludeItemId > 0 && (effectiveMeaning.isEmpty() || dictionarySummary.isEmpty())) {
+    QSqlQuery query;
+    query.prepare(
+      "SELECT meaning, dictionary_summary, cached_translation "
+      "FROM items WHERE id = :id AND language_code = :language_code");
+    query.bindValue(":id", excludeItemId);
+    query.bindValue(":language_code", _language);
+    if (query.exec() && query.next()) {
+      if (effectiveMeaning.isEmpty()) {
+        effectiveMeaning = query.value("meaning").toString().trimmed();
+      }
+      if (dictionarySummary.isEmpty()) {
+        dictionarySummary = query.value("dictionary_summary").toString().trimmed();
+        if (dictionarySummary.isEmpty()) {
+          dictionarySummary = query.value("cached_translation").toString().trimmed();
+        }
+      }
+    }
+  }
+
+  const int parentId = currentParentId >= 0 ? currentParentId : _currentParentId;
   return LibraryGroupSuggestion::suggestSubjectGroups(QSqlDatabase::database(), _language,
-                                                      wordTitle, meaning, dictionarySummary,
-                                                      excludeItemId, _currentParentId);
+                                                      wordTitle, effectiveMeaning, dictionarySummary,
+                                                      excludeItemId, parentId);
 }
 
 QVariantList Library::ancestorPath(int itemId) const {

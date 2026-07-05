@@ -9,6 +9,7 @@ Dialog {
   property string wordTitle: ""
   property int currentParentId: 0
   property int selectedGroupId: -1
+  property bool moveOnly: false
 
   modal: true
   padding: 16
@@ -47,7 +48,9 @@ Dialog {
     PrettyLabel {
       Layout.fillWidth: true
       dimmed: true
-      title: qsTr("Choose where to save this word:")
+      title: suggestionDialog.moveOnly
+             ? qsTr("Choose where to move this word:")
+             : qsTr("Choose where to save this word:")
       wrapMode: Text.WordWrap
     }
 

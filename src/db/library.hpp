@@ -99,8 +99,10 @@ class Library : public QObject {
     return _currentParentId;
   }
   Q_INVOKABLE QString parentBreadcrumb(int parentId) const;
+  Q_INVOKABLE int itemParentId(int itemId) const;
   Q_INVOKABLE QVariantList suggestSubjectGroups(const QString& wordTitle, const QString& meaning = {},
-                                                int excludeItemId = -1) const;
+                                                int excludeItemId = -1,
+                                                int currentParentId = -1) const;
   Q_INVOKABLE QVariantList ancestorPath(int itemId) const;
   Q_INVOKABLE LibraryItem* getItem(int id);
   Q_INVOKABLE QUrl itemImageUrl(int id);

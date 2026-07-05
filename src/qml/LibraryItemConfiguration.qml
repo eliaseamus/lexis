@@ -12,6 +12,7 @@ Rectangle {
   property int typesNum
   property bool editMode
   property int itemID
+  property int itemParentId: 0
   property int currentType
   property string title
   property string image
@@ -25,6 +26,7 @@ Rectangle {
     imageItem.source = image
     imageItem.visible = image.length > 0
     cover.color = backgroundColor
+    itemParentId = library.itemParentId(itemID)
   }
 
   function clear() {
@@ -210,7 +212,7 @@ Rectangle {
         return;
       }
     }
-    if (itemType === "Word" && !editMode) {
+    if (itemType === "Word") {
       offerSubjectGroupSuggestion();
       return;
     }
@@ -218,14 +220,17 @@ Rectangle {
   }
 
   function offerSubjectGroupSuggestion() {
-    const suggestions = library.suggestSubjectGroups(titleItem.text, meaning);
+    const excludeId = editMode ? itemID : -1;
+    const parentId = editMode ? itemParentId : library.currentParentId();
+    const suggestions = library.suggestSubjectGroups(titleItem.text, meaning, excludeId, parentId);
     if (suggestions.length === 0 || suggestions[0].confidence < 40) {
       commitItem();
       return;
     }
     subjectGroupSuggestionDialog.wordTitle = titleItem.text;
     subjectGroupSuggestionDialog.suggestions = suggestions;
-    subjectGroupSuggestionDialog.currentParentId = library.currentParentId();
+    subjectGroupSuggestionDialog.currentParentId = parentId;
+    subjectGroupSuggestionDialog.moveOnly = false;
     subjectGroupSuggestionDialog.init();
     subjectGroupSuggestionDialog.open();
   }
@@ -233,6 +238,9 @@ Rectangle {
   function commitItem(parentOverride) {
     if (editMode) {
       library.updateItem(newDbRecord, currentType);
+      if (parentOverride !== undefined && parentOverride >= 0 && parentOverride !== itemParentId) {
+        library.moveItem(itemID, parentOverride);
+      }
     } else if (parentOverride !== undefined && parentOverride >= 0) {
       library.addItem(newDbRecord, parentOverride);
     } else {
@@ -259,5 +267,6 @@ Rectangle {
     y: (main.height - height) / 2
 
     onAccepted: commitItem(selectedGroupId)
+    onRejected: commitItem()
   }
 }

@@ -227,6 +227,38 @@ Pane {
     }
   }
 
+  SubjectGroupSuggestionDialog {
+    id: subjectGroupSuggestionDialog
+    property int pendingItemId: -1
+    property int pendingParentId: 0
+    parent: ApplicationWindow.overlay
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    moveOnly: true
+
+    onAccepted: {
+      if (pendingItemId > 0 && selectedGroupId >= 0 && selectedGroupId !== pendingParentId) {
+        library.moveItem(pendingItemId, selectedGroupId);
+        refresh();
+      }
+    }
+  }
+
+  Dialog {
+    id: suggestGroupInfoDialog
+    property string message: ""
+    x: (main.width - width) / 2 - sideBar.width
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+    standardButtons: Dialog.Ok
+    title: qsTr("Suggest group")
+    Label {
+      text: suggestGroupInfoDialog.message
+      wrapMode: Text.WordWrap
+      width: Math.min(360, main.width - sideBar.width - 80)
+    }
+  }
+
   RowLayout {
     id: dragItems
     spacing: -195
@@ -299,6 +331,25 @@ Pane {
     itemConfiguration.meaning = item["meaning"];
     itemConfiguration.init();
     stackView.push(itemConfiguration);
+  }
+
+  function suggestGroupForItem(item) {
+    const itemId = item["itemID"];
+    const parentId = library.itemParentId(itemId);
+    const suggestions = library.suggestSubjectGroups(item["title"], item["meaning"] || "",
+                                                     itemId, parentId);
+    if (suggestions.length === 0 || suggestions[0].confidence < 40) {
+      suggestGroupInfoDialog.message = qsTr("No strong group match found for this word.");
+      suggestGroupInfoDialog.open();
+      return;
+    }
+    subjectGroupSuggestionDialog.pendingItemId = itemId;
+    subjectGroupSuggestionDialog.pendingParentId = parentId;
+    subjectGroupSuggestionDialog.wordTitle = item["title"];
+    subjectGroupSuggestionDialog.suggestions = suggestions;
+    subjectGroupSuggestionDialog.currentParentId = parentId;
+    subjectGroupSuggestionDialog.init();
+    subjectGroupSuggestionDialog.open();
   }
 
   function deleteItem(item) {

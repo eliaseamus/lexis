@@ -59,6 +59,11 @@
         <translation>Выберите, куда сохранить это слово:</translation>
     </message>
     <message>
+        <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="52"/>
+        <source>Choose where to move this word:</source>
+        <translation>Выберите, куда переместить это слово:</translation>
+    </message>
+    <message>
         <location filename="../src/qml/SubjectGroupSuggestionDialog.qml" line="64"/>
         <source>%1% match</source>
         <translation>совпадение %1%</translation>
@@ -247,6 +252,16 @@ and drop it in this area</source>
         <location filename="../src/qml/LibraryView.qml" line="222"/>
         <source>Quiz</source>
         <translation>Викторина</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="254"/>
+        <source>Suggest group</source>
+        <translation>Предложить группу</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="342"/>
+        <source>No strong group match found for this word.</source>
+        <translation>Для этого слова не найдено подходящей группы.</translation>
     </message>
     <message>
         <location filename="../src/qml/LibraryView.qml" line="475"/>
@@ -451,16 +466,21 @@ in the right bottom corner.</source>
     </message>
     <message>
         <location filename="../src/qml/SectionItemMenu.qml" line="31"/>
+        <source>Suggest group</source>
+        <translation>Предложить группу</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItemMenu.qml" line="36"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="41"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="46"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="50"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="55"/>
         <source>Quiz</source>
         <translation>Викторина</translation>
     </message>
