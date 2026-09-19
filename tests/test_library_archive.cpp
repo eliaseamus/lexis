@@ -59,6 +59,7 @@ class LibraryArchiveTest : public QObject {
       QVERIFY(lastId.next());
       const auto parentId = lastId.value(0).toInt();
       QVERIFY(insertItem(db, "en", parentId, "ingenious", 0, "clever"));
+      QVERIFY(QSqlQuery(db).exec("UPDATE items SET known = 1, pinned = 1 WHERE title = 'ingenious'"));
 
       QVERIFY(lexis::LibraryArchive::exportLanguage(db, "en", archivePath));
       db.close();
@@ -81,12 +82,15 @@ class LibraryArchiveTest : public QObject {
       QVERIFY(countQuery.next());
       QCOMPARE(countQuery.value(0).toInt(), 2);
 
-      QSqlQuery wordQuery("SELECT title, meaning, parent_id FROM items WHERE type = 0", db);
+      QSqlQuery wordQuery(
+        "SELECT title, meaning, parent_id, known, pinned FROM items WHERE type = 0", db);
       QVERIFY(wordQuery.exec());
       QVERIFY(wordQuery.next());
       QCOMPARE(wordQuery.value("title").toString(), QString("ingenious"));
       QCOMPARE(wordQuery.value("meaning").toString(), QString("clever"));
       QVERIFY(!wordQuery.value("parent_id").isNull());
+      QCOMPARE(wordQuery.value("known").toInt(), 1);
+      QCOMPARE(wordQuery.value("pinned").toInt(), 1);
 
       db.close();
     }

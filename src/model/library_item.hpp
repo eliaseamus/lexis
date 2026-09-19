@@ -28,6 +28,7 @@ class LibraryItem : public QObject {
   Q_PROPERTY(int frequencyRank READ frequencyRank WRITE setFrequencyRank NOTIFY dummy);
   Q_PROPERTY(QString frequencyTier READ frequencyTier WRITE setFrequencyTier NOTIFY dummy);
   Q_PROPERTY(bool known READ known WRITE setKnown NOTIFY dummy);
+  Q_PROPERTY(bool pinned READ pinned WRITE setPinned NOTIFY dummy);
 
  private:
   int _itemID;
@@ -44,6 +45,7 @@ class LibraryItem : public QObject {
   int _frequencyRank = -1;
   QString _frequencyTier;
   bool _known = false;
+  bool _pinned = false;
 
  public:
   explicit LibraryItem(QObject* parent = nullptr);
@@ -102,6 +104,10 @@ class LibraryItem : public QObject {
     return _known;
   }
 
+  bool pinned() const {
+    return _pinned;
+  }
+
   void setID(int id) {
     _itemID = id;
   }
@@ -152,6 +158,10 @@ class LibraryItem : public QObject {
 
   void setKnown(bool known) {
     _known = known;
+  }
+
+  void setPinned(bool pinned) {
+    _pinned = pinned;
   }
 
   void freeAssets();

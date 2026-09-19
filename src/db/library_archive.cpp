@@ -47,7 +47,7 @@ QList<LibraryArchive::ArchiveItem> LibraryArchive::readItems(QSqlDatabase& db,
   QSqlQuery query(db);
   query.prepare(
     "SELECT id, parent_id, title, type, creation_time, modification_time, color, meaning, "
-    "dictionary_summary, image, audio, frequency_rank, frequency_tier, known "
+    "dictionary_summary, image, audio, frequency_rank, frequency_tier, known, pinned "
     "FROM items WHERE language_code = :language_code ORDER BY id");
   query.bindValue(":language_code", language);
 
@@ -77,6 +77,7 @@ QList<LibraryArchive::ArchiveItem> LibraryArchive::readItems(QSqlDatabase& db,
       item.frequencyTier = query.value("frequency_tier").toString();
     }
     item.known = query.value("known").toInt() != 0;
+    item.pinned = query.value("pinned").toInt() != 0;
     items.append(item);
   }
 
@@ -109,6 +110,9 @@ QJsonObject LibraryArchive::archiveItemToJson(const ArchiveItem& item) {
   if (item.known) {
     object["known"] = true;
   }
+  if (item.pinned) {
+    object["pinned"] = true;
+  }
   return object;
 }
 
@@ -139,6 +143,7 @@ LibraryArchive::ArchiveItem LibraryArchive::archiveItemFromJson(const QJsonObjec
     item.frequencyTier = object["frequency_tier"].toString();
   }
   item.known = object.value("known").toBool();
+  item.pinned = object.value("pinned").toBool();
   return item;
 }
 
@@ -291,10 +296,10 @@ bool LibraryArchive::importLanguage(QSqlDatabase& db, const QString& filePath,
     insert.prepare(
       "INSERT INTO items"
       "(language_code, parent_id, title, creation_time, modification_time, type, image, color, "
-      "audio, meaning, dictionary_summary, frequency_rank, frequency_tier, known)"
+      "audio, meaning, dictionary_summary, frequency_rank, frequency_tier, known, pinned)"
       "VALUES (:language_code, :parent_id, :title, :creation_time, :modification_time, :type, "
       ":image, :color, :audio, :meaning, :dictionary_summary, :frequency_rank, :frequency_tier, "
-      ":known)");
+      ":known, :pinned)");
 
     insert.bindValue(":language_code", language);
     if (item.hasParent) {
@@ -323,6 +328,7 @@ bool LibraryArchive::importLanguage(QSqlDatabase& db, const QString& filePath,
       insert.bindValue(":frequency_tier", QVariant());
     }
     insert.bindValue(":known", item.known ? 1 : 0);
+    insert.bindValue(":pinned", item.pinned ? 1 : 0);
 
     if (!exec(insert, "insert imported item:")) {
       db.rollback();

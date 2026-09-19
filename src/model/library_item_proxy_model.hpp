@@ -25,6 +25,7 @@ class LibraryItemProxyModel : public QSortFilterProxyModel {
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
   void updateKnown(int id, bool known);
+  void updatePinned(int id, bool pinned);
   void removeItem(int id);
   bool isEmpty() const {
     return _source->isEmpty();

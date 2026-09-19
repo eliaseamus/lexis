@@ -487,18 +487,21 @@ Pane {
     return copy
   }
 
-  // Prefer unknown words; known words are appended so they only fill leftover slots.
+  // Prefer pinned words, then unknown; known words fill leftover slots.
   function prioritizeForQuiz(words) {
+    const pinned = []
     const unknown = []
     const known = []
     for (let i = 0; i < words.length; i++) {
-      if (words[i].known === true) {
+      if (words[i].pinned === true) {
+        pinned.push(words[i])
+      } else if (words[i].known === true) {
         known.push(words[i])
       } else {
         unknown.push(words[i])
       }
     }
-    return shuffle(unknown).concat(shuffle(known))
+    return shuffle(pinned).concat(shuffle(unknown)).concat(shuffle(known))
   }
 
   function filterWordsForQuiz(words) {

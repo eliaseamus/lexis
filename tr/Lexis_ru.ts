@@ -246,6 +246,16 @@ and drop it in this area</source>
         <translation>Отметить как знакомое</translation>
     </message>
     <message>
+        <location filename="../src/qml/LibraryView.qml" line="396"/>
+        <source>Unpin</source>
+        <translation>Открепить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="396"/>
+        <source>Pin</source>
+        <translation>Закрепить</translation>
+    </message>
+    <message>
         <location filename="../src/qml/LibraryView.qml" line="585"/>
         <source>No words match the current quiz settings in this scope.</source>
         <translation>В этой области нет слов, подходящих под текущие настройки теста.</translation>
@@ -481,7 +491,12 @@ in the right bottom corner.</source>
 <context>
     <name>SectionItem</name>
     <message>
-        <location filename="../src/qml/SectionItem.qml" line="52"/>
+        <location filename="../src/qml/SectionItem.qml" line="51"/>
+        <source>Pinned</source>
+        <translation>Закреплено</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SectionItem.qml" line="72"/>
         <source>Word frequency: %1</source>
         <translation>Частотность слова: %1</translation>
     </message>

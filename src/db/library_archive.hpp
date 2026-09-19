@@ -36,6 +36,7 @@ class LibraryArchive {
     int frequencyRank = -1;
     QString frequencyTier;
     bool known = false;
+    bool pinned = false;
   };
 
   static QJsonObject buildManifest(const QString& language, int itemCount, int wordCount);

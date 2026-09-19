@@ -46,6 +46,10 @@ void LibrarySection::updateKnown(int id, bool known) {
   _model->updateKnown(id, known);
 }
 
+void LibrarySection::updatePinned(int id, bool pinned) {
+  _model->updatePinned(id, pinned);
+}
+
 void LibrarySection::removeItem(int id) {
   _model->removeItem(id);
 }

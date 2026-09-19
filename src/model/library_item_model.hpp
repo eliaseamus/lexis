@@ -29,7 +29,8 @@ class LibraryItemModel : public QAbstractListModel {
     MeaningRole,
     FrequencyRankRole,
     FrequencyTierRole,
-    KnownRole
+    KnownRole,
+    PinnedRole
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);
@@ -38,6 +39,7 @@ class LibraryItemModel : public QAbstractListModel {
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
   void updateKnown(int id, bool known);
+  void updatePinned(int id, bool pinned);
   void removeItem(int id);
   bool isEmpty() const {
     return _items.isEmpty();

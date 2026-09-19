@@ -389,6 +389,25 @@ Pane {
     clearSelectedItems()
   }
 
+  function pinnedActionLabel(fallbackPinned) {
+    const targets = wordTargetsForKnownAction({ "pinned": fallbackPinned })
+    const allPinned = targets.length > 0 && targets.every((item) => item["pinned"] === true)
+    return allPinned ? qsTr("Unpin") : qsTr("Pin")
+  }
+
+  function togglePinnedForContext(fallbackItem) {
+    const targets = wordTargetsForKnownAction(fallbackItem)
+    if (targets.length === 0) {
+      return
+    }
+    const allPinned = targets.every((item) => item["pinned"] === true)
+    const pinned = !allPinned
+    targets.forEach((item) => {
+      library.setPinned(item["itemID"], pinned)
+    })
+    clearSelectedItems()
+  }
+
   function deleteItem(item) {
     itemToDelete = item;
     deleteItemDialog.targets = [item];
@@ -529,7 +548,8 @@ Pane {
           "audioUrl": item.audioUrl,
           "meaning": item.meaning,
           "frequencyTier": item.frequencyTier !== undefined ? item.frequencyTier : "",
-          "known": item.known === true
+          "known": item.known === true,
+          "pinned": item.pinned === true
         })
       }
     } else {

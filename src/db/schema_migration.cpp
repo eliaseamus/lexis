@@ -220,6 +220,23 @@ bool SchemaMigration::migrateToV6(QSqlDatabase& db) {
   return execSql(db, "ALTER TABLE items ADD COLUMN known INTEGER NOT NULL DEFAULT 0");
 }
 
+bool SchemaMigration::migrateToV7(QSqlDatabase& db) {
+  QSqlQuery query(db);
+  query.prepare("PRAGMA table_info(items)");
+  if (!query.exec()) {
+    qWarning() << "read items schema:" << query.lastError();
+    return false;
+  }
+
+  while (query.next()) {
+    if (query.value("name").toString() == QStringLiteral("pinned")) {
+      return true;
+    }
+  }
+
+  return execSql(db, "ALTER TABLE items ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0");
+}
+
 bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
   if (!migrateToV2(db)) {
     return false;
@@ -234,6 +251,9 @@ bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
     return false;
   }
   if (!migrateToV6(db)) {
+    return false;
+  }
+  if (!migrateToV7(db)) {
     return false;
   }
   if (currentVersion(db) < kSchemaVersion) {

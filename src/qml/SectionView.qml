@@ -99,6 +99,7 @@ Item {
         imageSource: imageUrl
         wordFrequencyTier: type === "Word" && frequencyTier !== undefined ? frequencyTier : ""
         wordKnown: type === "Word" && known === true
+        wordPinned: type === "Word" && pinned === true
         MouseArea {
           id: mouseArea
           anchors.fill: parent
@@ -234,6 +235,7 @@ Item {
           item["meaning"] = meaning;
           item["frequencyTier"] = frequencyTier;
           item["known"] = type === "Word" && known === true;
+          item["pinned"] = type === "Word" && pinned === true;
           return item;
         }
 

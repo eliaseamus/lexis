@@ -12,6 +12,7 @@ Rectangle {
   property string imageSource
   property string wordFrequencyTier: ""
   property bool wordKnown: false
+  property bool wordPinned: false
   width: 200
   height: 200
   color: backgroundColor
@@ -25,6 +26,37 @@ Rectangle {
     icon.source: "qrc:/qt/qml/QLexis/icons/check.png"
     icon.color: settings.fgColor
     Material.background: settings.accentColor
+  }
+  Rectangle {
+    id: pinBadge
+    visible: wordPinned
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.margins: 8
+    height: 22
+    width: 22
+    radius: 11
+    color: settings.accentColor
+    z: 1
+
+    Text {
+      anchors.centerIn: parent
+      text: "★"
+      color: settings.fgColor
+      font.pixelSize: 12
+    }
+
+    ToolTip {
+      visible: pinBadgeMouseArea.containsMouse
+      text: qsTr("Pinned")
+    }
+
+    MouseArea {
+      id: pinBadgeMouseArea
+      anchors.fill: parent
+      hoverEnabled: true
+      acceptedButtons: Qt.NoButton
+    }
   }
   Rectangle {
     id: frequencyBadge

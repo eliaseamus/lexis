@@ -66,6 +66,20 @@ void LibraryItemModel::updateKnown(int id, bool known) {
   emit dataChanged(modelIndex, modelIndex, {KnownRole});
 }
 
+void LibraryItemModel::updatePinned(int id, bool pinned) {
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
+    return item->id() == id;
+  });
+  if (item == _items.end()) {
+    qWarning() << QString("Failed to update pinned flag of %1: no item with such id").arg(id);
+    return;
+  }
+  (*item)->setPinned(pinned);
+  const auto row = static_cast<int>(std::distance(_items.begin(), item));
+  const auto modelIndex = index(row);
+  emit dataChanged(modelIndex, modelIndex, {PinnedRole});
+}
+
 void LibraryItemModel::removeItem(int id) {
   auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
     return item->id() == id;
@@ -119,6 +133,8 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->frequencyTier();
     case KnownRole:
       return item->known();
+    case PinnedRole:
+      return item->pinned();
   }
 
   return {};
@@ -138,6 +154,7 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[FrequencyRankRole] = "frequencyRank";
   roles[FrequencyTierRole] = "frequencyTier";
   roles[KnownRole] = "known";
+  roles[PinnedRole] = "pinned";
   return roles;
 }
 

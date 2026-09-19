@@ -41,6 +41,12 @@ void LibraryItemProxyModel::updateKnown(int id, bool known) {
   emit changed();
 }
 
+void LibraryItemProxyModel::updatePinned(int id, bool pinned) {
+  _source->updatePinned(id, pinned);
+  sort(0, _sortOrder);
+  emit changed();
+}
+
 void LibraryItemProxyModel::removeItem(int id) {
   _source->removeItem(id);
   emit changed();
@@ -71,11 +77,18 @@ void LibraryItemProxyModel::toggleSort() {
 }
 
 bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const {
+  const bool leftPinned = sourceModel()->data(lhs, LibraryItemModel::PinnedRole).toBool();
+  const bool rightPinned = sourceModel()->data(rhs, LibraryItemModel::PinnedRole).toBool();
+  if (leftPinned != rightPinned) {
+    // Keep pinned words first regardless of ascending/descending primary sort.
+    // Descending mode swaps the lessThan arguments, so invert the preference.
+    return _sortOrder == Qt::AscendingOrder ? leftPinned : !leftPinned;
+  }
+
   const bool leftKnown = sourceModel()->data(lhs, LibraryItemModel::KnownRole).toBool();
   const bool rightKnown = sourceModel()->data(rhs, LibraryItemModel::KnownRole).toBool();
   if (leftKnown != rightKnown) {
-    // Keep known words last regardless of ascending/descending primary sort.
-    // Descending mode swaps the lessThan arguments, so invert the preference.
+    // Keep known words last among equally pinned items.
     return _sortOrder == Qt::AscendingOrder ? !leftKnown : leftKnown;
   }
 

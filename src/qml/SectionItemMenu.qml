@@ -44,6 +44,12 @@ Menu {
     onTriggered: libraryView.toggleKnownForContext(buildItemDict())
   }
   MenuItem {
+    text: libraryView.pinnedActionLabel(pinned === true)
+    visible: libraryView.canMarkKnown(type === "Word")
+    height: visible ? implicitHeight : 0
+    onTriggered: libraryView.togglePinnedForContext(buildItemDict())
+  }
+  MenuItem {
     text: qsTr("Delete")
     onTriggered: {
       if (libraryView.isSelectMode) {
