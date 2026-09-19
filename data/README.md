@@ -30,12 +30,12 @@ Tiers use [Zipf frequency](https://en.wikipedia.org/wiki/Zipf%27s_law#Use_in_mea
 | Zipf | Tier |
 |------|------|
 | ≥ 4.0 | core |
-| ≥ 3.0 | common |
-| ≥ 2.0 | intermediate |
+| ≥ 3.5 | common |
+| ≥ 2.5 | intermediate |
 | ≥ 1.0 | advanced |
 | < 1.0 | rare |
 
-Examples (English): *thing* → core (5.7), *frog* → common (3.9), *freckle* → intermediate (2.4).
+Examples (English): *thing* → core (5.7), *frog* → common (3.9), *freckle* → advanced (2.4).
 
 Words are stored case-insensitively. Lookup is implemented in `FrequencyLookup` (`src/db/frequency_lookup.cpp`).
 

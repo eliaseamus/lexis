@@ -66,10 +66,10 @@ QString FrequencyLookup::tierFromZipf(double zipf) {
   if (zipf >= 4.0) {
     return QStringLiteral("core");
   }
-  if (zipf >= 3.0) {
+  if (zipf >= 3.5) {
     return QStringLiteral("common");
   }
-  if (zipf >= 2.0) {
+  if (zipf >= 2.5) {
     return QStringLiteral("intermediate");
   }
   if (zipf >= 1.0) {

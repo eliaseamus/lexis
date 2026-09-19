@@ -26,8 +26,8 @@ BATCH_SIZE = 10_000
 
 TIER_BANDS = (
     (4.0, "core"),
-    (3.0, "common"),
-    (2.0, "intermediate"),
+    (3.5, "common"),
+    (2.5, "intermediate"),
     (1.0, "advanced"),
 )
 
@@ -81,7 +81,7 @@ def write_metadata(connection: sqlite3.Connection, languages: tuple[str, ...]) -
         ("languages", ",".join(languages)),
         (
             "tier_bands",
-            "zipf>=4.0:core,zipf>=3.0:common,zipf>=2.0:intermediate,"
+            "zipf>=4.0:core,zipf>=3.5:common,zipf>=2.5:intermediate,"
             "zipf>=1.0:advanced,zipf<1.0:rare",
         ),
     ]
