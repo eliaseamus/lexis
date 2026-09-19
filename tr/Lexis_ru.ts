@@ -139,37 +139,35 @@ and drop it in this area</source>
 <context>
     <name>ItemView</name>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="83"/>
+        <location filename="../src/qml/ItemView.qml" line="73"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="107"/>
+        <location filename="../src/qml/ItemView.qml" line="97"/>
         <source>Request another pronunciation</source>
         <translation>Запросить другое произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="198"/>
+        <location filename="../src/qml/ItemView.qml" line="188"/>
         <source>Add meaning</source>
         <translation>Добавить значение</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="149"/>
+        <location filename="../src/qml/ItemView.qml" line="139"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="67"/>
         <source>Mark as unknown</source>
-        <translation>Отметить как незнакомое</translation>
+        <translation type="vanished">Отметить как незнакомое</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="67"/>
         <source>Mark as known</source>
-        <translation>Отметить как знакомое</translation>
+        <translation type="vanished">Отметить как знакомое</translation>
     </message>
     <message>
-        <location filename="../src/qml/ItemView.qml" line="378"/>
+        <location filename="../src/qml/ItemView.qml" line="368"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
     </message>
@@ -241,19 +239,27 @@ and drop it in this area</source>
         <translation>Предложить группу</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="344"/>
+        <location filename="../src/qml/LibraryView.qml" line="342"/>
         <source>No strong group match found for this word.</source>
         <translation>Для этого слова не найдено подходящей группы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="536"/>
-        <source>This scope has no words to quiz.</source>
-        <translation>В выбранной области нет слов для викторины.</translation>
+        <location filename="../src/qml/LibraryView.qml" line="552"/>
+        <source>No words match the current quiz settings in this scope.</source>
+        <translation>В этой области нет слов, подходящих под текущие настройки теста.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="539"/>
+        <location filename="../src/qml/LibraryView.qml" line="555"/>
+        <source>Need at least two matching words in this scope to start a quiz.</source>
+        <translation>Нужно как минимум два подходящих слова в этой области, чтобы начать тест.</translation>
+    </message>
+    <message>
+        <source>This scope has no words to quiz.</source>
+        <translation type="vanished">В выбранной области нет слов для викторины.</translation>
+    </message>
+    <message>
         <source>Need at least two words in this scope to start a quiz.</source>
-        <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
+        <translation type="vanished">Для викторины нужно не менее двух слов в выбранной области.</translation>
     </message>
     <message>
         <location filename="../src/qml/LibraryView.qml" line="11"/>
@@ -304,6 +310,34 @@ in the right bottom corner.</source>
         <location filename="../src/qml/OkCancel.qml" line="24"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+</context>
+<context>
+    <name>QuizSettingsDialog</name>
+    <message>
+        <location filename="../src/qml/QuizSettingsDialog.qml" line="18"/>
+        <source>Unranked</source>
+        <translation>Без ранга</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizSettingsDialog.qml" line="27"/>
+        <source>Quiz settings</source>
+        <translation>Настройки теста</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizSettingsDialog.qml" line="34"/>
+        <source>Skip known words</source>
+        <translation>Пропускать знакомые слова</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizSettingsDialog.qml" line="40"/>
+        <source>Frequency tiers</source>
+        <translation>Уровни частоты</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizSettingsDialog.qml" line="46"/>
+        <source>Leave all unchecked to include every tier.</source>
+        <translation>Оставьте все флажки снятыми, чтобы включить все уровни.</translation>
     </message>
 </context>
 <context>
@@ -396,17 +430,25 @@ in the right bottom corner.</source>
         <translation>Ещё раз</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="840"/>
+        <location filename="../src/qml/QuizView.qml" line="858"/>
+        <source>No words match the current quiz settings in this scope.</source>
+        <translation>В этой области нет слов, подходящих под текущие настройки теста.</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizView.qml" line="859"/>
+        <source>Need at least two matching words in this scope to start a quiz.</source>
+        <translation>Нужно как минимум два подходящих слова в этой области, чтобы начать тест.</translation>
+    </message>
+    <message>
         <source>This scope has no words to quiz.</source>
-        <translation>В выбранной области нет слов для викторины.</translation>
+        <translation type="vanished">В выбранной области нет слов для викторины.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="841"/>
         <source>Need at least two words in this scope to start a quiz.</source>
-        <translation>Для викторины нужно не менее двух слов в выбранной области.</translation>
+        <translation type="vanished">Для викторины нужно не менее двух слов в выбранной области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="778"/>
+        <location filename="../src/qml/QuizView.qml" line="796"/>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
@@ -546,111 +588,116 @@ in the right bottom corner.</source>
         <translation>Викторина…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="172"/>
+        <location filename="../src/qml/SideBar.qml" line="170"/>
+        <source>Quiz settings…</source>
+        <translation>Настройки теста…</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/SideBar.qml" line="179"/>
         <source>Export language…</source>
         <translation>Экспорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="179"/>
+        <location filename="../src/qml/SideBar.qml" line="186"/>
         <source>Import language…</source>
         <translation>Импорт языка…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="184"/>
+        <location filename="../src/qml/SideBar.qml" line="191"/>
         <source>Backup database…</source>
         <translation>Резервная копия базы…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="188"/>
+        <location filename="../src/qml/SideBar.qml" line="195"/>
         <source>Restore database…</source>
         <translation>Восстановить базу…</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="195"/>
+        <location filename="../src/qml/SideBar.qml" line="202"/>
         <source>Export language</source>
         <translation>Экспорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="198"/>
-        <location filename="../src/qml/SideBar.qml" line="213"/>
+        <location filename="../src/qml/SideBar.qml" line="205"/>
+        <location filename="../src/qml/SideBar.qml" line="220"/>
         <source>Lexis archive (*.lexis)</source>
         <translation>Архив Lexis (*.lexis)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="201"/>
+        <location filename="../src/qml/SideBar.qml" line="208"/>
         <source>Language exported successfully.</source>
         <translation>Язык успешно экспортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="203"/>
+        <location filename="../src/qml/SideBar.qml" line="210"/>
         <source>Failed to export language.</source>
         <translation>Не удалось экспортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="211"/>
-        <location filename="../src/qml/SideBar.qml" line="271"/>
+        <location filename="../src/qml/SideBar.qml" line="218"/>
+        <location filename="../src/qml/SideBar.qml" line="278"/>
         <source>Import language</source>
         <translation>Импорт языка</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="222"/>
+        <location filename="../src/qml/SideBar.qml" line="229"/>
         <source>Backup database</source>
         <translation>Резервная копия базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="225"/>
-        <location filename="../src/qml/SideBar.qml" line="240"/>
+        <location filename="../src/qml/SideBar.qml" line="232"/>
+        <location filename="../src/qml/SideBar.qml" line="247"/>
         <source>SQLite database (*.db)</source>
         <translation>База SQLite (*.db)</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="228"/>
+        <location filename="../src/qml/SideBar.qml" line="235"/>
         <source>Database backup created successfully.</source>
         <translation>Резервная копия базы успешно создана.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="230"/>
+        <location filename="../src/qml/SideBar.qml" line="237"/>
         <source>Failed to backup database.</source>
         <translation>Не удалось создать резервную копию базы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="238"/>
-        <location filename="../src/qml/SideBar.qml" line="293"/>
+        <location filename="../src/qml/SideBar.qml" line="245"/>
+        <location filename="../src/qml/SideBar.qml" line="300"/>
         <source>Restore database</source>
         <translation>Восстановление базы</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="243"/>
+        <location filename="../src/qml/SideBar.qml" line="250"/>
         <source>Database restored successfully.</source>
         <translation>База успешно восстановлена.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="245"/>
+        <location filename="../src/qml/SideBar.qml" line="252"/>
         <source>Failed to restore database.</source>
         <translation>Не удалось восстановить базу.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="258"/>
+        <location filename="../src/qml/SideBar.qml" line="265"/>
         <source>Lexis</source>
         <translation>Lexis</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="274"/>
+        <location filename="../src/qml/SideBar.qml" line="281"/>
         <source>Import will replace all items for the language contained in the archive. Continue?</source>
         <translation>Импорт заменит все элементы языка из архива. Продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="280"/>
+        <location filename="../src/qml/SideBar.qml" line="287"/>
         <source>Language imported successfully.</source>
         <translation>Язык успешно импортирован.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="282"/>
+        <location filename="../src/qml/SideBar.qml" line="289"/>
         <source>Failed to import language.</source>
         <translation>Не удалось импортировать язык.</translation>
     </message>
     <message>
-        <location filename="../src/qml/SideBar.qml" line="296"/>
+        <location filename="../src/qml/SideBar.qml" line="303"/>
         <source>Restore will replace the entire local library database. Continue?</source>
         <translation>Восстановление заменит всю локальную базу библиотеки. Продолжить?</translation>
     </message>

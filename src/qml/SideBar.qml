@@ -166,6 +166,13 @@ Item {
       text: qsTr("Quiz…")
       onTriggered: libraryView.openCurrentScopeQuiz()
     }
+    MenuItem {
+      text: qsTr("Quiz settings…")
+      onTriggered: {
+        quizSettingsDialog.init()
+        quizSettingsDialog.open()
+      }
+    }
     MenuSeparator {}
     MenuItem {
       enabled: settings.currentLanguage.length > 0
@@ -357,6 +364,13 @@ Item {
 
   HelpDialog {
     id: helpDialog
+    x: (main.width - width) / 2
+    y: (main.height - height) / 2
+    parent: ApplicationWindow.overlay
+  }
+
+  QuizSettingsDialog {
+    id: quizSettingsDialog
     x: (main.width - width) / 2
     y: (main.height - height) / 2
     parent: ApplicationWindow.overlay

@@ -495,6 +495,24 @@ Pane {
     return shuffle(unknown).concat(shuffle(known))
   }
 
+  function filterWordsForQuiz(words) {
+    let filtered = words.slice()
+    if (settings.quizSkipKnown) {
+      filtered = filtered.filter((word) => word.known !== true)
+    }
+    const tiers = settings.quizFrequencyTiers
+    if (tiers !== undefined && tiers.length > 0) {
+      filtered = filtered.filter((word) => {
+        const tier = word.frequencyTier !== undefined ? word.frequencyTier : ""
+        if (tier.length === 0) {
+          return tiers.indexOf("unranked") !== -1
+        }
+        return tiers.indexOf(tier) !== -1
+      })
+    }
+    return filtered
+  }
+
   function formatOptionText(translations) {
     if (!translations || translations.length === 0) {
       return ""
@@ -833,12 +851,12 @@ Pane {
     phase = "loading"
     errorMessage = ""
 
-    scopeWords = library.wordsInScope(scopeRootId)
+    scopeWords = filterWordsForQuiz(library.wordsInScope(scopeRootId))
     if (scopeWords.length < 2) {
       phase = "error"
       errorMessage = scopeWords.length === 0
-                   ? qsTr("This scope has no words to quiz.")
-                   : qsTr("Need at least two words in this scope to start a quiz.")
+                   ? qsTr("No words match the current quiz settings in this scope.")
+                   : qsTr("Need at least two matching words in this scope to start a quiz.")
       return
     }
 

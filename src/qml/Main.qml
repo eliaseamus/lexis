@@ -43,6 +43,8 @@ Window {
     property string groupSortRole: ""
     property color accentColor: Material.accentColor
     property color fgColor: "white"
+    property bool quizSkipKnown: true
+    property list<string> quizFrequencyTiers: []
   }
 
   Shortcut {
