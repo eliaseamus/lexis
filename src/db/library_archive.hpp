@@ -35,6 +35,7 @@ class LibraryArchive {
     QByteArray audio;
     int frequencyRank = -1;
     QString frequencyTier;
+    bool known = false;
   };
 
   static QJsonObject buildManifest(const QString& language, int itemCount, int wordCount);

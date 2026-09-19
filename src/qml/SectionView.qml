@@ -98,6 +98,7 @@ Item {
         itemTitle: title
         imageSource: imageUrl
         wordFrequencyTier: type === "Word" && frequencyTier !== undefined ? frequencyTier : ""
+        wordKnown: type === "Word" && known === true
         MouseArea {
           id: mouseArea
           anchors.fill: parent
@@ -232,6 +233,7 @@ Item {
           item["audioUrl"] = audioUrl;
           item["meaning"] = meaning;
           item["frequencyTier"] = frequencyTier;
+          item["known"] = type === "Word" && known === true;
           return item;
         }
 

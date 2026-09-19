@@ -45,6 +45,7 @@ void LibraryItem::init(LibraryItem&& item) {
   _meaning = std::move(item._meaning);
   _frequencyRank = item._frequencyRank;
   _frequencyTier = std::move(item._frequencyTier);
+  _known = item._known;
 }
 
 QByteArray LibraryItem::image() const {

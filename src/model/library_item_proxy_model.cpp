@@ -35,6 +35,11 @@ void LibraryItemProxyModel::updateMeaning(int id, const QString& meaning) {
   emit changed();
 }
 
+void LibraryItemProxyModel::updateKnown(int id, bool known) {
+  _source->updateKnown(id, known);
+  emit changed();
+}
+
 void LibraryItemProxyModel::removeItem(int id) {
   _source->removeItem(id);
   emit changed();

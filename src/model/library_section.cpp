@@ -42,6 +42,10 @@ void LibrarySection::updateMeaning(int id, const QString& meaning) {
   _model->updateMeaning(id, meaning);
 }
 
+void LibrarySection::updateKnown(int id, bool known) {
+  _model->updateKnown(id, known);
+}
+
 void LibrarySection::removeItem(int id) {
   _model->removeItem(id);
 }

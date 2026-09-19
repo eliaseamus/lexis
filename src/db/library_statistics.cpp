@@ -231,6 +231,7 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
   if (scopeRootId == kRootParentId) {
     query.prepare(
       "SELECT id, title, meaning, cached_translation, color, frequency_rank, frequency_tier, "
+      "known, "
       "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
       "FROM items "
       "WHERE language_code = :language_code AND type = :word_type "
@@ -247,6 +248,7 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
       "  WHERE i.language_code = :language_code"
       ") "
       "SELECT id, title, meaning, cached_translation, color, frequency_rank, frequency_tier, "
+      "known, "
       "CASE WHEN image IS NOT NULL AND length(image) > 0 THEN 1 ELSE 0 END AS has_image "
       "FROM items "
       "WHERE language_code = :language_code "
@@ -271,6 +273,7 @@ QVariantList LibraryStatistics::scopedWords(const QSqlDatabase& db, const QStrin
       {QStringLiteral("cachedTranslation"), query.value("cached_translation").toString()},
       {QStringLiteral("color"),            query.value("color").toString()            },
       {QStringLiteral("hasImage"),         query.value("has_image").toInt() != 0      },
+      {QStringLiteral("known"),            query.value("known").toInt() != 0           },
     };
 
     const auto storedRank = query.value("frequency_rank");

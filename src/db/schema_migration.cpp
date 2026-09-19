@@ -203,6 +203,23 @@ bool SchemaMigration::migrateToV5(QSqlDatabase& db) {
   return true;
 }
 
+bool SchemaMigration::migrateToV6(QSqlDatabase& db) {
+  QSqlQuery query(db);
+  query.prepare("PRAGMA table_info(items)");
+  if (!query.exec()) {
+    qWarning() << "read items schema:" << query.lastError();
+    return false;
+  }
+
+  while (query.next()) {
+    if (query.value("name").toString() == QStringLiteral("known")) {
+      return true;
+    }
+  }
+
+  return execSql(db, "ALTER TABLE items ADD COLUMN known INTEGER NOT NULL DEFAULT 0");
+}
+
 bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
   if (!migrateToV2(db)) {
     return false;
@@ -214,6 +231,9 @@ bool SchemaMigration::upgradeSchema(QSqlDatabase& db) {
     return false;
   }
   if (!migrateToV5(db)) {
+    return false;
+  }
+  if (!migrateToV6(db)) {
     return false;
   }
   if (currentVersion(db) < kSchemaVersion) {

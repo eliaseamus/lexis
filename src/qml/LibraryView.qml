@@ -352,6 +352,10 @@ Pane {
     subjectGroupSuggestionDialog.open();
   }
 
+  function toggleKnownForItem(item) {
+    library.setKnown(item["itemID"], item["known"] !== true);
+  }
+
   function deleteItem(item) {
     itemToDelete = item;
     deleteItemDialog.targets = [item];
@@ -491,7 +495,8 @@ Pane {
           "itemColor": item.color,
           "audioUrl": item.audioUrl,
           "meaning": item.meaning,
-          "frequencyTier": item.frequencyTier !== undefined ? item.frequencyTier : ""
+          "frequencyTier": item.frequencyTier !== undefined ? item.frequencyTier : "",
+          "known": item.known === true
         })
       }
     } else {

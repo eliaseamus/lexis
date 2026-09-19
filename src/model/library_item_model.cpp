@@ -52,6 +52,20 @@ void LibraryItemModel::updateMeaning(int id, const QString& meaning) {
   (*item)->setMeaning(meaning);
 }
 
+void LibraryItemModel::updateKnown(int id, bool known) {
+  auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
+    return item->id() == id;
+  });
+  if (item == _items.end()) {
+    qWarning() << QString("Failed to update known flag of %1: no item with such id").arg(id);
+    return;
+  }
+  (*item)->setKnown(known);
+  const auto row = static_cast<int>(std::distance(_items.begin(), item));
+  const auto modelIndex = index(row);
+  emit dataChanged(modelIndex, modelIndex, {KnownRole});
+}
+
 void LibraryItemModel::removeItem(int id) {
   auto item = std::find_if(_items.begin(), _items.end(), [id](auto* item) {
     return item->id() == id;
@@ -103,6 +117,8 @@ QVariant LibraryItemModel::data(const QModelIndex& index, int role) const {
       return item->frequencyRank();
     case FrequencyTierRole:
       return item->frequencyTier();
+    case KnownRole:
+      return item->known();
   }
 
   return {};
@@ -121,6 +137,7 @@ QHash<int, QByteArray> LibraryItemModel::roleNames() const {
   roles[MeaningRole] = "meaning";
   roles[FrequencyRankRole] = "frequencyRank";
   roles[FrequencyTierRole] = "frequencyTier";
+  roles[KnownRole] = "known";
   return roles;
 }
 

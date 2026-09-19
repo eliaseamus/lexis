@@ -75,6 +75,7 @@ class Library : public QObject {
   Q_INVOKABLE void refreshAudio(int id);
   Q_INVOKABLE void updateMeaning(int id, const QString& meaning);
   Q_INVOKABLE void updateCachedTranslation(int id, const QString& translation);
+  Q_INVOKABLE void setKnown(int id, bool known);
   Q_INVOKABLE void storeDictionarySummary(int id, const QString& summary);
   Q_INVOKABLE void prefetchDictionary(const QString& title);
   Q_INVOKABLE QString buildDictionarySummary(const QVector<Definition*>& definitions) const;

@@ -45,6 +45,7 @@ class LibrarySection : public QObject {
   void updateItem(LibraryItem&& item);
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
+  void updateKnown(int id, bool known);
   void removeItem(int id);
   bool isEmpty() const {
     return _model->isEmpty();

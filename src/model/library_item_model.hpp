@@ -28,7 +28,8 @@ class LibraryItemModel : public QAbstractListModel {
     AudioUrlRole,
     MeaningRole,
     FrequencyRankRole,
-    FrequencyTierRole
+    FrequencyTierRole,
+    KnownRole
   };
 
   explicit LibraryItemModel(QObject* parent = nullptr);
@@ -36,6 +37,7 @@ class LibraryItemModel : public QAbstractListModel {
   void updateItem(LibraryItem&& item);
   QUrl updateAudio(int id, QByteArray&& audio);
   void updateMeaning(int id, const QString& meaning);
+  void updateKnown(int id, bool known);
   void removeItem(int id);
   bool isEmpty() const {
     return _items.isEmpty();

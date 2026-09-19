@@ -33,6 +33,11 @@ Menu {
     onTriggered: libraryView.suggestGroupForItem(buildItemDict())
   }
   MenuItem {
+    text: known ? qsTr("Mark as unknown") : qsTr("Mark as known")
+    enabled: type === "Word" && (!gridItem.isSelected || libraryView.selectedItems.length === 1)
+    onTriggered: libraryView.toggleKnownForItem(buildItemDict())
+  }
+  MenuItem {
     text: qsTr("Delete")
     onTriggered: {
       if (libraryView.isSelectMode) {

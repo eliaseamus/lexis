@@ -11,12 +11,14 @@ Rectangle {
   property string itemTitle
   property string imageSource
   property string wordFrequencyTier: ""
+  property bool wordKnown: false
   width: 200
   height: 200
   color: backgroundColor
   border.color: borderColor
   border.width: 2
   radius: 10
+  opacity: wordKnown ? 0.45 : 1.0
   RoundButton {
     flat: true
     visible: isSelected

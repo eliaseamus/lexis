@@ -481,6 +481,20 @@ Pane {
     return copy
   }
 
+  // Prefer unknown words; known words are appended so they only fill leftover slots.
+  function prioritizeForQuiz(words) {
+    const unknown = []
+    const known = []
+    for (let i = 0; i < words.length; i++) {
+      if (words[i].known === true) {
+        known.push(words[i])
+      } else {
+        unknown.push(words[i])
+      }
+    }
+    return shuffle(unknown).concat(shuffle(known))
+  }
+
   function formatOptionText(translations) {
     if (!translations || translations.length === 0) {
       return ""
@@ -828,7 +842,7 @@ Pane {
       return
     }
 
-    questions = shuffle(scopeWords).slice(0, Math.min(10, scopeWords.length)).map((word) => ({
+    questions = prioritizeForQuiz(scopeWords).slice(0, Math.min(10, scopeWords.length)).map((word) => ({
       word: word,
       reverse: Math.random() >= 0.5
     }))
