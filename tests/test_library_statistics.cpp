@@ -77,6 +77,8 @@ class LibraryStatisticsTest : public QObject {
       return false;
     }
 
+    QSqlQuery(db).exec("UPDATE items SET known = 1 WHERE id IN (5, 6)");
+
     db.close();
     QSqlDatabase::removeDatabase("stats_test");
     return true;
@@ -98,6 +100,7 @@ class LibraryStatisticsTest : public QObject {
 
     QCOMPARE(stats.value("totalItems").toInt(), 6);
     QCOMPARE(stats.value("wordCount").toInt(), 3);
+    QCOMPARE(stats.value("knownWordCount").toInt(), 2);
     QCOMPARE(stats.value("subjectGroupCount").toInt(), 3);
 
     const auto wordsByCategory = stats.value("wordsByCategory").toList();
@@ -134,9 +137,16 @@ class LibraryStatisticsTest : public QObject {
     QCOMPARE(wordsByCategory.size(), 1);
     QCOMPARE(wordsByCategory[0].toMap().value("categoryName").toString(), QString("Traits"));
     QCOMPARE(wordsByCategory[0].toMap().value("count").toInt(), 1);
+    QCOMPARE(personalityStats.value("wordCount").toInt(), 1);
+    QCOMPARE(personalityStats.value("knownWordCount").toInt(), 0);
+
+    const auto foodStats = lexis::LibraryStatistics::itemStats(db, "en", 4, typeManager);
+    QCOMPARE(foodStats.value("wordCount").toInt(), 1);
+    QCOMPARE(foodStats.value("knownWordCount").toInt(), 1);
 
     const auto wordStats = lexis::LibraryStatistics::itemStats(db, "en", 3, typeManager);
     QVERIFY(!wordStats.contains("wordsByCategory"));
+    QVERIFY(!wordStats.contains("knownWordCount"));
 
     db.close();
     QSqlDatabase::removeDatabase("stats_test_run");

@@ -307,6 +307,13 @@ QVariantMap LibraryStatistics::languageStats(const QSqlDatabase& db, const QStri
 
   query.prepare(
     "SELECT COUNT(*) FROM items "
+    "WHERE language_code = :language_code AND type = :word_type AND known = 1");
+  query.bindValue(":language_code", languageCode);
+  query.bindValue(":word_type", static_cast<int>(LibrarySectionType::kWord));
+  stats.insert(QStringLiteral("knownWordCount"), scalarCount(query));
+
+  query.prepare(
+    "SELECT COUNT(*) FROM items "
     "WHERE language_code = :language_code AND type = :subject_group_type");
   query.bindValue(":language_code", languageCode);
   query.bindValue(":subject_group_type", static_cast<int>(LibrarySectionType::kSubjectGroup));
@@ -393,6 +400,41 @@ QVariantMap LibraryStatistics::itemStats(const QSqlDatabase& db, const QString& 
   stats.insert(QStringLiteral("descendants"), scalarCount(query));
 
   if (type != LibrarySectionType::kWord) {
+    query.prepare(
+      "WITH RECURSIVE subtree(id) AS ("
+      "  SELECT :scope_root "
+      "  UNION ALL "
+      "  SELECT i.id FROM items i "
+      "  JOIN subtree s ON i.parent_id = s.id "
+      "  WHERE i.language_code = :language_code"
+      ") "
+      "SELECT COUNT(*) FROM items "
+      "WHERE language_code = :language_code "
+      "  AND type = :word_type "
+      "  AND id IN (SELECT id FROM subtree WHERE id != :scope_root)");
+    query.bindValue(":language_code", languageCode);
+    query.bindValue(":scope_root", itemId);
+    query.bindValue(":word_type", static_cast<int>(LibrarySectionType::kWord));
+    stats.insert(QStringLiteral("wordCount"), scalarCount(query));
+
+    query.prepare(
+      "WITH RECURSIVE subtree(id) AS ("
+      "  SELECT :scope_root "
+      "  UNION ALL "
+      "  SELECT i.id FROM items i "
+      "  JOIN subtree s ON i.parent_id = s.id "
+      "  WHERE i.language_code = :language_code"
+      ") "
+      "SELECT COUNT(*) FROM items "
+      "WHERE language_code = :language_code "
+      "  AND type = :word_type "
+      "  AND known = 1 "
+      "  AND id IN (SELECT id FROM subtree WHERE id != :scope_root)");
+    query.bindValue(":language_code", languageCode);
+    query.bindValue(":scope_root", itemId);
+    query.bindValue(":word_type", static_cast<int>(LibrarySectionType::kWord));
+    stats.insert(QStringLiteral("knownWordCount"), scalarCount(query));
+
     stats.insert(QStringLiteral("wordsByCategory"),
                   buildWordsBySubjectGroup(db, languageCode, itemId, index));
   }

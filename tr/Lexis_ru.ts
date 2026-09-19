@@ -489,37 +489,37 @@ in the right bottom corner.</source>
 <context>
     <name>SectionItemMenu</name>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="6"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="8"/>
         <source>Select</source>
         <translation>Выделить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="10"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="12"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="17"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="20"/>
         <source>Move</source>
         <translation>Переместить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="31"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="35"/>
         <source>Suggest group</source>
         <translation>Предложить группу</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="41"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="47"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="51"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="57"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="60"/>
+        <location filename="../src/qml/SectionItemMenu.qml" line="67"/>
         <source>Quiz</source>
         <translation>Викторина</translation>
     </message>
@@ -798,67 +798,83 @@ in the right bottom corner.</source>
         <translation>Стартовая страница</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="77"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="79"/>
+        <source>0 / 0</source>
+        <translation>0 / 0</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="81"/>
+        <source>%1 / %2 (%3%)</source>
+        <translation>%1 / %2 (%3%)</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="99"/>
         <source>Type:</source>
         <translation>Тип:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="83"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="105"/>
         <source>Location:</source>
         <translation>Расположение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="89"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="111"/>
         <source>Creation:</source>
         <translation>Создание:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="95"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="117"/>
         <source>Last edit:</source>
         <translation>Изменение:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="101"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="123"/>
         <source>Direct children:</source>
         <translation>Прямые дочерние элементы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="107"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="129"/>
         <source>All descendants:</source>
         <translation>Все вложенные элементы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="113"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="158"/>
+        <source>Known words:</source>
+        <translation>Знакомые слова:</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/StatisticsDialog.qml" line="141"/>
         <source>Total items:</source>
         <translation>Всего элементов:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="119"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="135"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="147"/>
         <source>Words:</source>
         <translation>Слова:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="125"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="174"/>
         <source>Subject groups:</source>
         <translation>Группы:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="131"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="180"/>
         <source>Added this month:</source>
         <translation>Добавлено в этом месяце:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="137"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="186"/>
         <source>Added last 7 days:</source>
         <translation>Добавлено за 7 дней:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="143"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="192"/>
         <source>Added last 30 days:</source>
         <translation>Добавлено за 30 дней:</translation>
     </message>
     <message>
-        <location filename="../src/qml/StatisticsDialog.qml" line="159"/>
+        <location filename="../src/qml/StatisticsDialog.qml" line="208"/>
         <source>Ok</source>
         <translation>Ок</translation>
     </message>

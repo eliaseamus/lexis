@@ -59,6 +59,23 @@ Dialog {
     return statText(stats.typeName)
   }
 
+  function knownWordTotal() {
+    return stats.wordCount !== undefined ? Number(stats.wordCount) : 0
+  }
+
+  function knownWordCount() {
+    return stats.knownWordCount !== undefined ? Number(stats.knownWordCount) : 0
+  }
+
+  function knownWordProgressText() {
+    const known = knownWordCount()
+    const total = knownWordTotal()
+    if (total <= 0) {
+      return qsTr("0 / 0")
+    }
+    return qsTr("%1 / %2 (%3%)").arg(known).arg(total).arg(Math.round(100 * known / total))
+  }
+
   ScrollView {
     anchors.fill: parent
     clip: true
@@ -109,6 +126,12 @@ Dialog {
       }
 
       InfoLine {
+        visible: !libraryMode && stats.wordCount !== undefined
+        infoTitle: qsTr("Words:")
+        infoText: statText(stats.wordCount)
+      }
+
+      InfoLine {
         visible: libraryMode
         infoTitle: qsTr("Total items:")
         infoText: statText(stats.totalItems !== undefined ? stats.totalItems : 0)
@@ -118,6 +141,12 @@ Dialog {
         visible: libraryMode
         infoTitle: qsTr("Words:")
         infoText: statText(stats.wordCount !== undefined ? stats.wordCount : 0)
+      }
+
+      InfoLine {
+        visible: stats.knownWordCount !== undefined
+        infoTitle: qsTr("Known words:")
+        infoText: knownWordProgressText()
       }
 
       InfoLine {
