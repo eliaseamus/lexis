@@ -33,6 +33,7 @@ Pane {
   property bool playWhenReady: false
   property bool audioLoading: false
   property int audioRetryCount: 0
+  property var missedQuestions: []
   readonly property int maxAudioRetries: 3
 
   property var currentWord: currentIndex >= 0 && currentIndex < questions.length
@@ -324,6 +325,11 @@ Pane {
         RowLayout {
           Layout.alignment: Qt.AlignHCenter
           spacing: 12
+          PrettyButton {
+            visible: wrongCount > 0
+            text: qsTr("Practice mistakes")
+            onClicked: practiceMistakes()
+          }
           PrettyButton {
             text: qsTr("Try again")
             onClicked: init(scopeRootId, scopeTitle)
@@ -818,6 +824,10 @@ Pane {
       score++
     } else {
       wrongCount++
+      missedQuestions.push({
+        word: questions[currentIndex].word,
+        reverse: questions[currentIndex].reverse
+      })
     }
     phase = "feedback"
     feedbackTimer.restart()
@@ -832,9 +842,7 @@ Pane {
     }
   }
 
-  function init(rootId, title) {
-    scopeRootId = rootId
-    scopeTitle = title
+  function resetQuizProgress() {
     currentIndex = 0
     score = 0
     wrongCount = 0
@@ -843,13 +851,31 @@ Pane {
     loadDone = 0
     loadProgress = 0
     selectedOption = -1
-    translationListsCache = {}
     lookupQueue = []
     lookupBusy = false
     pendingResolve = null
     currentOptions = []
     phase = "loading"
     errorMessage = ""
+  }
+
+  function practiceMistakes() {
+    if (missedQuestions.length === 0) {
+      return
+    }
+    const retryQuestions = shuffle(missedQuestions.slice())
+    missedQuestions = []
+    resetQuizProgress()
+    questions = retryQuestions
+    showQuestion()
+  }
+
+  function init(rootId, title) {
+    scopeRootId = rootId
+    scopeTitle = title
+    missedQuestions = []
+    translationListsCache = {}
+    resetQuizProgress()
 
     scopeWords = filterWordsForQuiz(library.wordsInScope(scopeRootId))
     if (scopeWords.length < 2) {

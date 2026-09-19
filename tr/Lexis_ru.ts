@@ -345,99 +345,104 @@ in the right bottom corner.</source>
 <context>
     <name>QuizView</name>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="62"/>
+        <location filename="../src/qml/QuizView.qml" line="63"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="69"/>
+        <location filename="../src/qml/QuizView.qml" line="70"/>
         <source>Question %1 of %2</source>
         <translation>Вопрос %1 из %2</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="75"/>
+        <location filename="../src/qml/QuizView.qml" line="76"/>
         <source>Score: %1</source>
         <translation>Счёт: %1</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="91"/>
+        <location filename="../src/qml/QuizView.qml" line="92"/>
         <source>Loading question…</source>
         <translation>Загрузка вопроса…</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="100"/>
-        <location filename="../src/qml/QuizView.qml" line="319"/>
+        <location filename="../src/qml/QuizView.qml" line="101"/>
+        <location filename="../src/qml/QuizView.qml" line="320"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="114"/>
+        <location filename="../src/qml/QuizView.qml" line="115"/>
         <source>Quiz unavailable</source>
         <translation>Викторина недоступна</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="131"/>
-        <location filename="../src/qml/QuizView.qml" line="332"/>
+        <location filename="../src/qml/QuizView.qml" line="132"/>
+        <location filename="../src/qml/QuizView.qml" line="338"/>
         <source>Back to library</source>
         <translation>Назад в библиотеку</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="216"/>
+        <location filename="../src/qml/QuizView.qml" line="217"/>
         <source>Pronunciation</source>
         <translation>Произношение</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="225"/>
+        <location filename="../src/qml/QuizView.qml" line="226"/>
         <source>Choose the translation:</source>
         <translation>Выберите перевод:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="225"/>
+        <location filename="../src/qml/QuizView.qml" line="226"/>
         <source>Choose the word:</source>
         <translation>Выберите слово:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="289"/>
+        <location filename="../src/qml/QuizView.qml" line="290"/>
         <source>Quiz complete!</source>
         <translation>Викторина завершена!</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="296"/>
+        <location filename="../src/qml/QuizView.qml" line="297"/>
         <source>You got %1 out of %2 correct.</source>
         <translation>Правильных ответов: %1 из %2.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="307"/>
+        <location filename="../src/qml/QuizView.qml" line="308"/>
         <source>Correct:</source>
         <translation>Правильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="312"/>
+        <location filename="../src/qml/QuizView.qml" line="313"/>
         <source>Wrong:</source>
         <translation>Неправильно:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="317"/>
+        <location filename="../src/qml/QuizView.qml" line="318"/>
         <source>Accuracy:</source>
         <translation>Точность:</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="320"/>
+        <location filename="../src/qml/QuizView.qml" line="321"/>
         <source>0%</source>
         <translation>0%</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="328"/>
+        <location filename="../src/qml/QuizView.qml" line="330"/>
+        <source>Practice mistakes</source>
+        <translation>Повторить ошибки</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/QuizView.qml" line="334"/>
         <source>Try again</source>
         <translation>Ещё раз</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="858"/>
+        <location filename="../src/qml/QuizView.qml" line="884"/>
         <source>No words match the current quiz settings in this scope.</source>
         <translation>В этой области нет слов, подходящих под текущие настройки теста.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="859"/>
+        <location filename="../src/qml/QuizView.qml" line="885"/>
         <source>Need at least two matching words in this scope to start a quiz.</source>
         <translation>Нужно как минимум два подходящих слова в этой области, чтобы начать тест.</translation>
     </message>
@@ -450,12 +455,12 @@ in the right bottom corner.</source>
         <translation type="vanished">Для викторины нужно не менее двух слов в выбранной области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="796"/>
+        <location filename="../src/qml/QuizView.qml" line="802"/>
         <source>Could not load enough translations for a quiz in this scope.</source>
         <translation>Не удалось загрузить достаточно переводов для викторины в этой области.</translation>
     </message>
     <message>
-        <location filename="../src/qml/QuizView.qml" line="177"/>
+        <location filename="../src/qml/QuizView.qml" line="178"/>
         <source>Word frequency: %1</source>
         <translation>Частотность слова: %1</translation>
     </message>
