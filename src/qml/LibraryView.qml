@@ -352,8 +352,41 @@ Pane {
     subjectGroupSuggestionDialog.open();
   }
 
-  function toggleKnownForItem(item) {
-    library.setKnown(item["itemID"], item["known"] !== true);
+  function isWordItem(item) {
+    return item["type"] === 0 || item["type"] === "Word"
+  }
+
+  function wordTargetsForKnownAction(fallbackItem) {
+    if (isSelectMode && selectedItems.length > 0) {
+      return selectedItems.filter((item) => isWordItem(item))
+    }
+    return [fallbackItem]
+  }
+
+  function canMarkKnown(currentIsWord) {
+    if (isSelectMode && selectedItems.length > 0) {
+      return selectedItems.some((item) => isWordItem(item))
+    }
+    return currentIsWord === true
+  }
+
+  function knownActionLabel(fallbackKnown) {
+    const targets = wordTargetsForKnownAction({ "known": fallbackKnown })
+    const allKnown = targets.length > 0 && targets.every((item) => item["known"] === true)
+    return allKnown ? qsTr("Mark as unknown") : qsTr("Mark as known")
+  }
+
+  function toggleKnownForContext(fallbackItem) {
+    const targets = wordTargetsForKnownAction(fallbackItem)
+    if (targets.length === 0) {
+      return
+    }
+    const allKnown = targets.every((item) => item["known"] === true)
+    const known = !allKnown
+    targets.forEach((item) => {
+      library.setKnown(item["itemID"], known)
+    })
+    clearSelectedItems()
   }
 
   function deleteItem(item) {

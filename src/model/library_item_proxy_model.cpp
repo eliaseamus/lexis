@@ -37,6 +37,7 @@ void LibraryItemProxyModel::updateMeaning(int id, const QString& meaning) {
 
 void LibraryItemProxyModel::updateKnown(int id, bool known) {
   _source->updateKnown(id, known);
+  sort(0, _sortOrder);
   emit changed();
 }
 
@@ -70,6 +71,14 @@ void LibraryItemProxyModel::toggleSort() {
 }
 
 bool LibraryItemProxyModel::lessThan(const QModelIndex& lhs, const QModelIndex& rhs) const {
+  const bool leftKnown = sourceModel()->data(lhs, LibraryItemModel::KnownRole).toBool();
+  const bool rightKnown = sourceModel()->data(rhs, LibraryItemModel::KnownRole).toBool();
+  if (leftKnown != rightKnown) {
+    // Keep known words last regardless of ascending/descending primary sort.
+    // Descending mode swaps the lessThan arguments, so invert the preference.
+    return _sortOrder == Qt::AscendingOrder ? !leftKnown : leftKnown;
+  }
+
   QVariant leftData = sourceModel()->data(lhs, sortRole());
   QVariant rightData = sourceModel()->data(rhs, sortRole());
 

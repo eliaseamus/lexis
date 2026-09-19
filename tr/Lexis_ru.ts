@@ -159,14 +159,6 @@ and drop it in this area</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <source>Mark as unknown</source>
-        <translation type="vanished">Отметить как незнакомое</translation>
-    </message>
-    <message>
-        <source>Mark as known</source>
-        <translation type="vanished">Отметить как знакомое</translation>
-    </message>
-    <message>
         <location filename="../src/qml/ItemView.qml" line="368"/>
         <source>Start page</source>
         <translation>Стартовая страница</translation>
@@ -244,12 +236,22 @@ and drop it in this area</source>
         <translation>Для этого слова не найдено подходящей группы.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="552"/>
+        <location filename="../src/qml/LibraryView.qml" line="376"/>
+        <source>Mark as unknown</source>
+        <translation>Отметить как незнакомое</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="376"/>
+        <source>Mark as known</source>
+        <translation>Отметить как знакомое</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/LibraryView.qml" line="585"/>
         <source>No words match the current quiz settings in this scope.</source>
         <translation>В этой области нет слов, подходящих под текущие настройки теста.</translation>
     </message>
     <message>
-        <location filename="../src/qml/LibraryView.qml" line="555"/>
+        <location filename="../src/qml/LibraryView.qml" line="588"/>
         <source>Need at least two matching words in this scope to start a quiz.</source>
         <translation>Нужно как минимум два подходящих слова в этой области, чтобы начать тест.</translation>
     </message>
@@ -500,16 +502,6 @@ in the right bottom corner.</source>
         <location filename="../src/qml/SectionItemMenu.qml" line="31"/>
         <source>Suggest group</source>
         <translation>Предложить группу</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="36"/>
-        <source>Mark as unknown</source>
-        <translation>Отметить как незнакомое</translation>
-    </message>
-    <message>
-        <location filename="../src/qml/SectionItemMenu.qml" line="36"/>
-        <source>Mark as known</source>
-        <translation>Отметить как знакомое</translation>
     </message>
     <message>
         <location filename="../src/qml/SectionItemMenu.qml" line="41"/>
