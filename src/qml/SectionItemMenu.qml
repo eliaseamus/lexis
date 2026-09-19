@@ -2,20 +2,24 @@ import QtQuick
 import QtQuick.Controls
 
 Menu {
+  readonly property bool singleTarget: !gridItem.isSelected || libraryView.selectedItems.length === 1
+
   MenuItem {
     text: qsTr("Select")
     onTriggered: toggleSelection()
   }
   MenuItem {
     text: qsTr("Edit")
-    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
+    visible: singleTarget
+    height: visible ? implicitHeight : 0
     onTriggered: {
       libraryView.editItem(buildItemDict());
     }
   }
   MenuItem {
     text: qsTr("Move")
-    enabled: libraryView.movableTypes.indexOf(type) !== -1
+    visible: libraryView.movableTypes.indexOf(type) !== -1
+    height: visible ? implicitHeight : 0
     onTriggered: {
       if (libraryView.isSelectMode) {
         moveDialog.ids = libraryView.selectedItems.map((item) => item["itemID"]);
@@ -29,12 +33,14 @@ Menu {
   }
   MenuItem {
     text: qsTr("Suggest group")
-    enabled: type === "Word" && (!gridItem.isSelected || libraryView.selectedItems.length === 1)
+    visible: type === "Word" && singleTarget
+    height: visible ? implicitHeight : 0
     onTriggered: libraryView.suggestGroupForItem(buildItemDict())
   }
   MenuItem {
     text: libraryView.knownActionLabel(known === true)
-    enabled: libraryView.canMarkKnown(type === "Word")
+    visible: libraryView.canMarkKnown(type === "Word")
+    height: visible ? implicitHeight : 0
     onTriggered: libraryView.toggleKnownForContext(buildItemDict())
   }
   MenuItem {
@@ -49,7 +55,8 @@ Menu {
   }
   MenuItem {
     text: qsTr("Statistics")
-    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
+    visible: singleTarget
+    height: visible ? implicitHeight : 0
     onTriggered: {
       statisticsDialog.libraryMode = false
       statisticsDialog.itemId = itemID
@@ -58,7 +65,8 @@ Menu {
   }
   MenuItem {
     text: qsTr("Quiz")
-    enabled: !gridItem.isSelected || libraryView.selectedItems.length === 1
+    visible: singleTarget
+    height: visible ? implicitHeight : 0
     onTriggered: {
       if (type === "Word") {
         libraryView.openQuiz(librarySection.currentParentId, librarySection.title)
